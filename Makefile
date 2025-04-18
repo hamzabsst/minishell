@@ -10,27 +10,27 @@ SRCS	=	src/main.c \
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
-	@echo "Build complete!"
+	@echo "build complete \033[1;34m✔\033[0m"
 
 $(MYLIB):
-	@echo "Building myLib"
 	@$(MAKE) -s -C $(MYLIB_DIR)
 
 %.o: %.c inc/minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(MYLIB)
-	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
 
 clean:
-	@echo "Cleaning object files"
 	@rm -f $(OBJS)
 	@$(MAKE) -s clean -C $(MYLIB_DIR)
+	@echo "clean completed \033[1;34m✔\033[0m"
+
 
 fclean: clean
-	@echo "Removing excutable"
 	@rm -f $(NAME)
 	@$(MAKE) -s fclean -C $(MYLIB_DIR)
+	@echo "full clean completed \033[1;31m✔\033[0m"
 
 re: fclean all
 

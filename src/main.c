@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:36 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/18 09:51:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/18 10:21:20 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,9 @@
 
 int	main()
 {
-	ft_printf("hatchi khdam\n");
+	char *input;
+	while(1)
+	{
+		input = readline("minishell$> ");
+	}
 }
