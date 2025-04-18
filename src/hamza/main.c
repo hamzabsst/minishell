@@ -1,33 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/18 14:11:14 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/18 09:48:36 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/18 14:10:55 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#include "../inc/minishell.h"
 
-# include "../mylib/myLib.h"
-# include <readline/readline.h>
-# include <readline/history.h>
-
-typedef struct s_command
+int	main(void)
 {
-	char				**argv;
-	char				*infile;
-	char				*outfile;
-	int					append;
-	int					heredoc;
-	char				*delimiter;
-	struct s_command	*next;
-}	t_command;
-
-int	exec_simple_cmd(t_command *cmd, char **envp);
-
-#endif
+	t_command	cmd1 = {
+		.argv = (char *[]){"ls", "-l", NULL},
+		.infile = NULL,
+		.outfile = "out.txt",
+		.append = 0,
+		.heredoc = 0,
+		.delimiter = NULL,
+		.next = NULL
+	};
+}

@@ -5,18 +5,9 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 09:48:36 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/18 10:21:20 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/18 14:11:55 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/18 14:12:11 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
-
-int	main()
-{
-	char *input;
-	while(1)
-	{
-		input = readline("minishell$> ");
-	}
-}
+//parsi a dak trnon
