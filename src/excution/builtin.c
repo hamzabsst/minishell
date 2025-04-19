@@ -6,7 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
+<<<<<<< HEAD:src/excution/builtin.c
 /*   Updated: 2025/04/19 21:35:48 by hbousset         ###   ########.fr       */
+=======
+/*   Updated: 2025/04/19 21:51:09 by abchaman         ###   ########.fr       */
+>>>>>>> 6412ebdca851137cd14d35d0977ed70afbb71173:src/excution/build-in.c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +28,7 @@ int	builtin(char *cmd)
 		|| !ft_strcmp(cmd, "env")
 		|| !ft_strcmp(cmd, "exit"));
 }
+<<<<<<< HEAD:src/excution/builtin.c
 int	builtin_echo(char **argv)
 {
 	int	newline;
@@ -64,6 +69,9 @@ int	builtin_pwd(void)
 }
 
 int	exec_builtin(t_command *cmd, char **envp)
+=======
+int	exec_builtin(t_cmd *cmd, char **envp)
+>>>>>>> 6412ebdca851137cd14d35d0977ed70afbb71173:src/excution/build-in.c
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (builtin_echo(cmd->argv));

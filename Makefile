@@ -6,8 +6,13 @@ MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 
+<<<<<<< HEAD
 SRCS	=	src/excution/main.c src/excution/builtin.c \
 
+=======
+SRCS	=	src/parsing/main.c \
+#src/excution/main.c src/excution/build-in.c src/excution/echo.c
+>>>>>>> 6412ebdca851137cd14d35d0977ed70afbb71173
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)

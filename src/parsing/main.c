@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:15:12 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/19 15:59:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:55:34 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void init_struct(t_command *cmd)
+void init_struct(t_cmd *cmd)
 {
     cmd->argv = NULL;
     cmd->outfile = NULL;
@@ -23,33 +23,56 @@ void init_struct(t_command *cmd)
     cmd->next = NULL;
 }
 
-void    take_args(t_command *cmd, char **av)
+char **split_pipe(char *line)
 {
-    int count;
-    int i;
+    char **splitone;
+    if (!line)
+        return (NULL);
+    splitone = ft_split(line, '|');
+    if (!splitone)
+        return (NULL);
+    return (splitone);
+}
 
-    i = 0;
-    count = 0;
-    while (av[count])
-        count++;
-    cmd->argv = malloc(sizeof(char *) * (count + 1));
-    if (!cmd->argv)
-        return ;
-    while (i < count)
-    {
-        cmd->argv[i] = ft_strdup(av[i]);
-        if (!cmd->argv[i])
-            return ;
-        i++;
-    }
-    cmd->argv[count] = NULL;
+t_cmd	*ft_lstlastt(t_cmd *lst)
+{
+	if (lst == NULL)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+void	ft_lstadd_backk(t_cmd **lst, t_cmd *new)
+{
+	t_cmd	*last;
+
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return ;
+	}
+	last = ft_lstlastt(*lst);
+	last->next = new;
 }
 int main(int ac, char **av)
 {
-    t_command cmd;
-    init_struct(&cmd);
-    if (ac > 1)
+    (void)av;
+    (void)ac;
+    t_cmd *cmd_list = NULL;
+    char *line;
+    char **cmd_string;
+    int i;
+
+    i = 0;
+    line = readline("minishell$>");
+    cmd_string = split_pipe(line);
+    while (cmd_string[i])
     {
-        take_args(&cmd, &av[1]);
+        t_cmd *new = malloc(sizeof(t_cmd));
+        init_struct(new);
+        printf("%s", cmd_string[i]); 
+        ft_lstadd_backk(&cmd_list, new);
+        i++; 
     }
 }
