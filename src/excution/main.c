@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 16:02:11 by abchaman          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/19 21:51:09 by abchaman         ###   ########.fr       */
+=======
+/*   Updated: 2025/04/19 21:06:14 by hbousset         ###   ########.fr       */
+>>>>>>> 5784d933ed07120410296bbaa5c786ba2528cb8e
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +21,16 @@ int main(int ac, char **av, char **env)
 
 	if (ac != 1)
 	{
-		write(2, "Error: Invalid number of arguments.\n", 36);
+		write(2, "Error: Invalid number of arguments\n", 35);
 		exit(1);
 	}
+<<<<<<< HEAD
 	t_cmd cmd = {
 		.argv = (char *[]){"echo", "-n", "hello", "qwd", NULL},
+=======
+	t_command cmd = {
+		.argv = (char *[]){"echo", "hello", "qwd", "nta", NULL},
+>>>>>>> 5784d933ed07120410296bbaa5c786ba2528cb8e
 		.infile = NULL,
 		.outfile = NULL,
 		.append = 0,
