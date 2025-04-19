@@ -5,7 +5,11 @@ CFLAGS	= -Wall -Wextra -Werror
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
+<<<<<<< HEAD
 SRCS	=	src/abdo/main.c \
+=======
+SRCS	=	src/hamza/main.c \
+>>>>>>> 79d8ee84f90883a8b384d8957bc4b2eb8dbabe87
 
 OBJS	= $(SRCS:.c=.o)
 
