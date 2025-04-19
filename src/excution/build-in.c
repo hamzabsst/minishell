@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 16:06:36 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:51:09 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_builtin(char *cmd)
 		|| !ft_strcmp(cmd, "env")
 		|| !ft_strcmp(cmd, "exit"));
 }
-int	exec_builtin(t_command *cmd, char **envp)
+int	exec_builtin(t_cmd *cmd, char **envp)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (builtin_echo(cmd->argv));

@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 16:02:11 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/19 16:03:51 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:51:09 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int ac, char **av, char **env)
 		write(2, "Error: Invalid number of arguments.\n", 36);
 		exit(1);
 	}
-	t_command cmd = {
+	t_cmd cmd = {
 		.argv = (char *[]){"echo", "-n", "hello", "qwd", NULL},
 		.infile = NULL,
 		.outfile = NULL,

@@ -6,8 +6,8 @@ MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 
-SRCS	=	src/excution/main.c src/excution/build-in.c src/excution/echo.c \
-
+SRCS	=	src/parsing/main.c \
+#src/excution/main.c src/excution/build-in.c src/excution/echo.c
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
