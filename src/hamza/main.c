@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:36 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/18 14:10:55 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/19 14:21:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 int	main(void)
 {
