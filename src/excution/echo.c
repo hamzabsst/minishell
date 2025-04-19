@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:23:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 15:32:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:03:41 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	builtin_echo(char **argv)
 
 	newline = 1;
 	i = 1;
-	if (argv[i] && !strcmp(argv[i], "-n"))
+	if (argv[i] && !ft_strcmp(argv[i], "-n"))
 	{
 		newline = 0;
 		i++;
