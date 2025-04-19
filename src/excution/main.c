@@ -5,16 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 09:48:36 by hbousset          #+#    #+#             */
-<<<<<<< HEAD:src/excution/main.c
-/*   Updated: 2025/04/19 15:35:22 by hbousset         ###   ########.fr       */
-=======
-<<<<<<< HEAD
-/*   Updated: 2025/04/19 15:16:35 by abchaman         ###   ########.fr       */
-=======
-/*   Updated: 2025/04/19 14:21:35 by hbousset         ###   ########.fr       */
->>>>>>> 79d8ee84f90883a8b384d8957bc4b2eb8dbabe87
->>>>>>> b0052bdb18eccecb1e57cb7322516dce4ec02562:src/hamza/main.c
+/*   Created: 2025/04/19 16:02:11 by abchaman          #+#    #+#             */
+/*   Updated: 2025/04/19 16:03:51 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +21,7 @@ int main(int ac, char **av, char **env)
 		exit(1);
 	}
 	t_command cmd = {
-		.argv = (char *[]){"echo", "-n", "hello", "world", NULL},
+		.argv = (char *[]){"echo", "-n", "hello", "qwd", NULL},
 		.infile = NULL,
 		.outfile = NULL,
 		.append = 0,
