@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 16:02:11 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/19 21:06:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:35:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int main(int ac, char **av, char **env)
 		exit(1);
 	}
 	t_command cmd = {
-		.argv = (char *[]){"echo", "hello", "qwd", "nta", NULL},
+		.argv = (char *[]){"cd", NULL},
 		.infile = NULL,
 		.outfile = NULL,
 		.append = 0,
@@ -30,7 +30,7 @@ int main(int ac, char **av, char **env)
 		.next = NULL
 	};
 
-	if (is_builtin(cmd.argv[0]) && !cmd.next)
+	if (builtin(cmd.argv[0]) && !cmd.next)
 		return (exec_builtin(&cmd, env));
 	if (*av[5] == 5)
 		return (1);

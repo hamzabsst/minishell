@@ -6,7 +6,7 @@ MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 
-SRCS	=	src/excution/main.c src/excution/build-in.c src/excution/echo.c \
+SRCS	=	src/excution/main.c src/excution/builtin.c \
 
 OBJS	= $(SRCS:.c=.o)
 
