@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 21:35:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:19:31 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
 static int	copy_env(char ***env_ptr, char *new_var, int count)
 {

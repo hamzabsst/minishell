@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 21:59:11 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/20 10:19:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
 int	builtin(char *cmd)
 {

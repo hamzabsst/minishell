@@ -5,7 +5,7 @@ CFLAGS	= -Wall -Wextra -Werror
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/parsing/main.c
+SRCS	=	src/main.c src/cd.c src/builtin.c
 
 OBJS	= $(SRCS:.c=.o)
 
