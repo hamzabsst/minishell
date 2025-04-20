@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 14:50:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/20 15:08:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int main(int ac, char **av, char **env)
 		write(2, "Error: Invalid number of arguments\n", 35);
 		exit(1);
 	}
-	cmd.argv = (char *[]){"cd", "../minishell/src", NULL};
+	cmd.argv = (char *[]){"cd", "/home/hbousset/Wallpapers", NULL};
 	cmd.next = NULL;
 	g_env = dup_env(env);
 	exec_builtin(&cmd, g_env);
