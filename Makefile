@@ -1,6 +1,6 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a

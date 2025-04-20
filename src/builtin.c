@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 10:19:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/20 11:45:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ int	builtin_pwd(void)
 	return (0);
 }
 
-int	exec_builtin(t_cmd *cmd, char **envp)
+int	exec_builtin(t_cmd *cmd, char **env)
 {
 	if (!ft_strcmp(cmd->argv[0], "echo"))
 		return (builtin_echo(cmd->argv));
-	else if (!strcmp(cmd->argv[0], "pwd"))
+	else if (!ft_strcmp(cmd->argv[0], "pwd"))
 		return (builtin_pwd());
-	if (!strcmp(cmd->argv[0], "cd"))
-		return (builtin_cd(cmd->argv, &envp));
+	if (!ft_strcmp(cmd->argv[0], "cd"))
+		return (builtin_cd(cmd->argv, &env));
 	return (1);
 }
