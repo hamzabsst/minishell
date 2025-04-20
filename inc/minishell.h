@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 22:04:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/20 09:52:14 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,11 @@ typedef struct s_env
 } t_env;
 
 //pasring
-//
+t_cmd	*ft_lstlastt(t_cmd *lst);
+void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
+void init_struct(t_cmd *cmd);
+char **split_pipe(char *line);
+
 //
 //excution
 int	builtin_cd(char **argv, char ***env_ptr);
