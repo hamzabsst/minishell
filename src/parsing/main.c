@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:15:12 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/20 14:56:41 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/20 15:11:29 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int main(int ac, char **av)
     }
     i = 0;
     read_token(cmd_string, cmd_list);
-    while (cmd_list && cmd_string[i])
+    /* while (cmd_list && cmd_string[i])
     {
         i = 0;
         while (cmd_list->argv[i])
@@ -65,5 +65,5 @@ int main(int ac, char **av)
             i++;
         }
         cmd_list = cmd_list->next;
-    }
+    } */
 }
