@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:15:12 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/21 19:48:09 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:27:25 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ int main(int ac, char **av)
             ft_lstadd_backk(&cmd_list, new);
             i++;
         }
-        // int j = 0;
-        // i = 0;
-        // while (cmd_list && cmd_string[i])
-        // {
-        //     i = 0;
-        //     while (cmd_list->argv[i])
-        //     {
-        //         printf("cmd list n %d Reading command %d: %s\n",j, i ,cmd_list->argv[i]);
-        //         i++;
-        //     }
-        //     cmd_list = cmd_list->next;
-        //     j++;
-        // }
+        int j = 0;
+        i = 0;
+        while (cmd_list && cmd_string[i])
+        {
+            i = 0;
+            while (cmd_list->argv[i])
+            {
+                printf("cmd list n %d Reading command %d: %s\n",j, i ,cmd_list->argv[i]);
+                i++;
+            }
+            cmd_list = cmd_list->next;
+            j++;
+        }
     }
 }

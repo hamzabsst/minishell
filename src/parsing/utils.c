@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/21 19:18:56 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:42:55 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,14 @@ char    **smart_split(char *str)
                 i++;
             in_quote = false;
         }
+        else if (str[i] == '>' || str[i] == '<')
+        {
+            int len = 1;
+            if (str[i + 1] == str[i])
+                len = 2;
+            tokens[k++] = ft_strndup(&str[i], len);
+            i += len;
+        }
         else
         {
             while (str[i] && str[i] != '\'' && str[i] != '\"')
@@ -107,12 +115,15 @@ char    **smart_split(char *str)
         }
     }
     tokens[k] = NULL;
+    for (int j = 0; tokens[j]; j++)
+        printf("token[%d]: %s\n", j, tokens[j]);
     return (tokens);
 }
 
 // int main()
 // {
-//     char str[] = "";
+//     char str[] = "echo \"hello its me\" > file";
+//     smart_split(str);
 //     int c = count_tokens(str);
 //     printf("%d", c);
 // }
