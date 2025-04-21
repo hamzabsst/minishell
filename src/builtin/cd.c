@@ -6,68 +6,94 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/19 21:35:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:54:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
-static int	copy_env(char ***env_ptr, char *new_var, int count)
+char	**dup_env(char **env)
 {
+	int		i;
+	int		n;
+	char	**copy;
+
+	n = 0;
+	while (env[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(env[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[n] = NULL;
+	return (copy);
+}
+
+static int	copy_env(char ***env, char *new_var, int count)
+{
+	char	**old;
 	char	**new_env;
 	int		j;
 
+	old = *env;
 	new_env = malloc(sizeof(char *) * (count + 2));
 	if (!new_env)
-	{
-		free(new_var);
-		return (1);
-	}
+		return (free(new_var), 1);
 	j = 0;
 	while (j < count)
 	{
-		new_env[j] = (*env_ptr)[j];
-		j++;
+		new_env[j] = old[j];
+		++j;
 	}
 	new_env[count] = new_var;
 	new_env[count + 1] = NULL;
-	free(*env_ptr);
-	*env_ptr = new_env;
+	free(old);
+	*env = new_env;
 	return (0);
 }
 
-int	update_env(char ***env_ptr, char *name, char *value)
+static int	update_env(char ***env_ptr, const char *key, const char *value)
 {
 	char	**env;
 	char	*new_var;
 	int		i;
-	int		name_len;
 
-	if (!env_ptr || !*env_ptr || !name || !value)
-		return (1);
 	env = *env_ptr;
-	name_len = ft_strlen(name);
-	new_var = malloc(name_len + ft_strlen(value) + 2);
+	if (!env_ptr || !(env) || !key || !value)
+		return (1);
+	new_var = malloc(ft_strlen(key) + ft_strlen(value) + 2);
 	if (!new_var)
 		return (1);
-	ft_strcpy(new_var, name);
-	strcat(new_var, "=");
-	strcat(new_var, value);
+	ft_strcpy(new_var, (char *)key);
+	ft_strcat(new_var, "=");
+	ft_strcat(new_var, (char *)value);
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
+		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0 && env[i][ft_strlen(key)] == '=')
 		{
 			free(env[i]);
 			env[i] = new_var;
 			return (0);
 		}
-		i++;
+		++i;
 	}
 	return (copy_env(env_ptr, new_var, i));
 }
 
-int	builtin_cd(char **argv, char ***env_ptr)
+int	builtin_cd(char **argv, char ***env)
 {
 	char	*path;
 	char	*oldpwd;
@@ -76,53 +102,27 @@ int	builtin_cd(char **argv, char ***env_ptr)
 
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
-	{
-		perror("cd: getcwd");
-		return (1);
-	}
+		return (perror("cd: getcwd"), 1);
 	if (!argv[1] || !*argv[1])
-	{
 		path = getenv("HOME");
-		if (!path)
-		{
-			ft_putstr_fd("cd: HOME not set\n", 2);
-			free(oldpwd);
-			return (1);
-		}
-	}
-	else if (ft_strcmp(argv[1], "-") == 0)
+	else if (argv[1][0] == '~' || argv[1][0] == '-')
 	{
-		path = getenv("OLDPWD");
-		if (!path)
-		{
-			ft_putstr_fd("cd: OLDPWD not set\n", 2);
-			free(oldpwd);
-			return (1);
-		}
-		ft_putendl_fd(path, 1);
+		write(2, "cd: only absolute or relative paths are allowed\n", 48);
+		return (free(oldpwd), 1);
 	}
 	else
 		path = argv[1];
 	if (chdir(path) == -1)
 	{
-		ft_putstr_fd("cd: ", 2);
-		perror(path);
-		free(oldpwd);
-		return (1);
+		(write(2, "cd: ", 4), perror(path));
+		return (free(oldpwd), 1);
 	}
-	if (update_env(env_ptr, "OLDPWD", oldpwd) != 0)
-	{
-		free(oldpwd);
-		return (1);
-	}
+	if (update_env(env, "OLDPWD", oldpwd) != 0)
+		return (free(oldpwd), 1);
 	free(oldpwd);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-	{
-		perror("cd: getcwd");
-		return (1);
-	}
-	ret = update_env(env_ptr, "PWD", newpwd);
-	free(newpwd);
-	return (ret);
+		return (perror("cd: getcwd"), 1);
+	ret = update_env(env, "PWD", newpwd);
+	return (free(newpwd), ret);
 }

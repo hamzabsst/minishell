@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 22:21:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 09:29:47 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/21 10:58:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "myLib.h"
+#include "minishell.h"
 
-char	*ft_strchr(const char *s, int c)
+int	execute_pipeline(t_cmd *cmd, char **envp)
 {
-	int	i;
+	int		pipe_fd[2];
+	int		fd_in = STDIN_FILENO;
+	pid_t	pid;
+	int		status;
+	char	**env = envp;
 
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i])
+	while (cmd)
 	{
-		if (s[i] == (char)c)
-			return ((char *)s + i);
-		i++;
+		if (cmd->next)
+			pipe(pipe_fd);
 	}
-	if ((char)c == '\0')
-		return ((char *)s + i);
-	return (NULL);
 }
+
