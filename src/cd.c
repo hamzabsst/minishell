@@ -6,24 +6,51 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 15:08:11 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:25:17 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+char	**dup_env(char **env)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	n = 0;
+	while (env[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(env[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[n] = NULL;
+	return (copy);
+}
+
 static int	copy_env(char ***env_ptr, char *new_var, int count)
 {
-	char	**old = *env_ptr;
+	char	**old;
 	char	**new_env;
 	int		j;
 
+	old = *env_ptr;
 	new_env = malloc(sizeof(char *) * (count + 2));
 	if (!new_env)
-	{
-		free(new_var);
-		return (1);
-	}
+		return (free(new_var), 1);
 	j = 0;
 	while (j < count)
 	{
@@ -37,13 +64,14 @@ static int	copy_env(char ***env_ptr, char *new_var, int count)
 	return (0);
 }
 
-int	update_env(char ***env_ptr, const char *key, const char *value)
+static int	update_env(char ***env_ptr, const char *key, const char *value)
 {
 	char	**env;
 	char	*new_var;
 	int		i;
 
-	if (!env_ptr || !(env = *env_ptr) || !key || !value)
+	env = *env_ptr;
+	if (!env_ptr || !(env) || !key || !value)
 		return (1);
 	new_var = malloc(ft_strlen(key) + ft_strlen(value) + 2);
 	if (!new_var)

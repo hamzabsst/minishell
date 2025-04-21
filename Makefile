@@ -1,11 +1,11 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -g #-Wextra -Werror
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/main.c src/cd.c src/builtin.c
+SRCS	=	src/main.c src/cd.c src/builtin.c src/export.c \
 
 OBJS	= $(SRCS:.c=.o)
 

@@ -6,42 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 15:10:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:25:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static char	**dup_env(char **env)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	n = 0;
-	while (env[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(env[i]);
-		if (!copy[i])
-		{
-			while (--i >= 0)
-				free(copy[i]);
-			free(copy);
-			return (NULL);
-		}
-		i++;
-	}
-	copy[n] = NULL;
-	return (copy);
-}
-
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	t_cmd	cmd;
 	char	**g_env;
@@ -51,16 +22,10 @@ int main(int ac, char **av, char **env)
 		write(2, "Error: Invalid number of arguments\n", 35);
 		exit(1);
 	}
-	if (*av[5] == 6)
-	{
-		return (1);
-	}
-	cmd.argv = (char *[]){"cd", "/home/hbousset/Wallpapers", NULL};
-	cmd.next = NULL;
 	g_env = dup_env(env);
-	exec_builtin(&cmd, g_env);
-	cmd.argv = (char *[]){"pwd", NULL};
-	exec_builtin(&cmd, g_env);
-	return (0);
+	cmd.argv = (char *[]){"export", NULL};
+	exec_builtin(&cmd, &g_env);
+	// cmd.argv = (char *[]){"env", NULL};
+	// if (execve("env", cmd.argv, g_env) == -1)
+	// 	perror("env");
 }
-
