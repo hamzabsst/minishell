@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:22:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:35:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 static int	unset_env(char ***env_ptr, const char *key)
 {

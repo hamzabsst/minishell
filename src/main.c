@@ -6,17 +6,18 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:25:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:42:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 int	main(int ac, char **av, char **env)
 {
 	t_cmd	cmd;
 	char	**g_env;
 
+	(void)av;
 	if (ac != 1)
 	{
 		write(2, "Error: Invalid number of arguments\n", 35);
