@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 14:15:12 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/20 15:11:29 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/21 19:48:09 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,32 @@ int main(int ac, char **av)
     char **cmd_string;
     int i;
 
-    i = 0;
-    line = readline("minishell$>");
-    cmd_string = split_pipe(line);
-    while (cmd_string[i])
-    {
-        t_cmd *new = malloc(sizeof(t_cmd));
-        init_struct(new);
-        // printf("%s\n", cmd_string[i]);
-        ft_lstadd_backk(&cmd_list, new);
-        i++;
-    }
-    i = 0;
-    read_token(cmd_string, cmd_list);
-    /* while (cmd_list && cmd_string[i])
+    while (1)
     {
         i = 0;
-        while (cmd_list->argv[i])
+        line = readline("minishell$>");
+        add_history(line);
+        cmd_string = split_pipe(line);
+        while (cmd_string[i])
         {
-            printf("Reading command: %s\n", cmd_list->argv[i]);
+            t_cmd *new = malloc(sizeof(t_cmd));
+            init_struct(new);
+            new->argv = smart_split(cmd_string[i]);
+            ft_lstadd_backk(&cmd_list, new);
             i++;
         }
-        cmd_list = cmd_list->next;
-    } */
+        // int j = 0;
+        // i = 0;
+        // while (cmd_list && cmd_string[i])
+        // {
+        //     i = 0;
+        //     while (cmd_list->argv[i])
+        //     {
+        //         printf("cmd list n %d Reading command %d: %s\n",j, i ,cmd_list->argv[i]);
+        //         i++;
+        //     }
+        //     cmd_list = cmd_list->next;
+        //     j++;
+        // }
+    }
 }

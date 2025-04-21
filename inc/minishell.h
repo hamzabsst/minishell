@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 13:37:02 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/21 17:05:21 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../mylib/myLib.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdbool.h>
 
 typedef struct	s_cmd
 {
@@ -39,6 +40,7 @@ void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
 void init_struct(t_cmd *cmd);
 char **split_pipe(char *line);
 void read_token(char **commands, t_cmd *cmd_list);
+char    **smart_split(char *str);
 //
 //excution
 int	builtin_cd(char **argv, char ***env_ptr);
