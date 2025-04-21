@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:42:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:56:51 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,26 @@
 
 int	main(int ac, char **av, char **env)
 {
-	t_cmd	cmd;
+	t_cmd	*cmd = NULL;
 	char	**g_env;
 
+	//////////////init
+	t_cmd c1 = {
+		.argv = (char *[]){"ls", NULL},
+		.infile = NULL,
+		.outfile = NULL,
+		.append = 0,
+		.next = NULL
+	};
+	t_cmd c2 = {
+		.argv = (char *[]){"grep", ".c", NULL},
+		.infile = NULL,
+		.outfile = "result.txt",
+		.append = 0,
+		.next = NULL
+	};
+	c1.next = &c2;
+	//////////////////
 	(void)av;
 	if (ac != 1)
 	{
@@ -24,9 +41,8 @@ int	main(int ac, char **av, char **env)
 		exit(1);
 	}
 	g_env = dup_env(env);
-	cmd.argv = (char *[]){"export", NULL};
-	exec_builtin(&cmd, &g_env);
-	// cmd.argv = (char *[]){"env", NULL};
-	// if (execve("env", cmd.argv, g_env) == -1)
-	// 	perror("env");
+	if (!cmd->next && builtin(cmd->argv[0]))
+		return exec_builtin(cmd, &g_env);
+	else
+		exec_pipeline(&c1, g_env);
 }

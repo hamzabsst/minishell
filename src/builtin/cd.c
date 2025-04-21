@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:34:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:54:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ char	**dup_env(char **env)
 	return (copy);
 }
 
-static int	copy_env(char ***env_ptr, char *new_var, int count)
+static int	copy_env(char ***env, char *new_var, int count)
 {
 	char	**old;
 	char	**new_env;
 	int		j;
 
-	old = *env_ptr;
+	old = *env;
 	new_env = malloc(sizeof(char *) * (count + 2));
 	if (!new_env)
 		return (free(new_var), 1);
@@ -60,7 +60,7 @@ static int	copy_env(char ***env_ptr, char *new_var, int count)
 	new_env[count] = new_var;
 	new_env[count + 1] = NULL;
 	free(old);
-	*env_ptr = new_env;
+	*env = new_env;
 	return (0);
 }
 
@@ -93,7 +93,7 @@ static int	update_env(char ***env_ptr, const char *key, const char *value)
 	return (copy_env(env_ptr, new_var, i));
 }
 
-int	builtin_cd(char **argv, char ***env_ptr)
+int	builtin_cd(char **argv, char ***env)
 {
 	char	*path;
 	char	*oldpwd;
@@ -117,12 +117,12 @@ int	builtin_cd(char **argv, char ***env_ptr)
 		(write(2, "cd: ", 4), perror(path));
 		return (free(oldpwd), 1);
 	}
-	if (update_env(env_ptr, "OLDPWD", oldpwd) != 0)
+	if (update_env(env, "OLDPWD", oldpwd) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 		return (perror("cd: getcwd"), 1);
-	ret = update_env(env_ptr, "PWD", newpwd);
+	ret = update_env(env, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

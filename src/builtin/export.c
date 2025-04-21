@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:35:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:54:36 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,13 @@ static void	print_sorted_env(char **env)
 	ft_free(copy);
 }
 
-int	builtin_export(char **argv, char **envp)
+int	builtin_export(char **av, char **env)
 {
-	if (argv[1])
+	if (av[1])
 	{
 		write(2, "export: arguments not supported yet\n", 36);
 		return (1);
 	}
-	print_sorted_env(envp);
+	print_sorted_env(env);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:35:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:54:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,21 @@ static int	unset_env(char ***env_ptr, const char *key)
 	return (0);
 }
 
-int	builtin_unset(char **argv, char ***env_ptr)
+int	builtin_unset(char **av, char ***env)
 {
 	int	i;
 
-	if (!argv[1])
+	if (!av[1])
 		return (0);
 	i = 1;
-	while (argv[i])
+	while (av[i])
 	{
-		if (argv[i][0] == '-')
+		if (av[i][0] == '-')
 		{
 			write(2, "unset: options are not allowed\n", 32);
 			return (1);
 		}
-		unset_env(env_ptr, argv[i]);
+		unset_env(env, av[i]);
 		i++;
 	}
 	return (0);

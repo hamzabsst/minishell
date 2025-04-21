@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:35:01 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 10:53:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,22 @@ int	builtin(char *cmd)
 		|| !ft_strcmp(cmd, "exit"));
 }
 
-int	builtin_echo(char **argv)
+int	builtin_echo(char **av)
 {
 	int	newline;
 	int	i;
 
 	newline = 1;
 	i = 1;
-	if (argv[i] && !ft_strcmp(argv[i], "-n"))
+	if (av[i] && !ft_strcmp(av[i], "-n"))
 	{
 		newline = 0;
 		i++;
 	}
-	while (argv[i])
+	while (av[i])
 	{
-		printf("%s", argv[i]);
-		if (argv[i + 1])
+		printf("%s", av[i]);
+		if (av[i + 1])
 			printf(" ");
 		i++;
 	}
@@ -64,25 +64,25 @@ int	builtin_pwd(void)
 	return (0);
 }
 
-int	builtin_env(char **argv, char **envp)
+int	builtin_env(char **av, char **env)
 {
 	int	i;
 
-	if (argv[1])
+	if (av[1])
 	{
 		write(2, "env: No arguments or options allowed\n", 39);
 		return (1);
 	}
 	i = 0;
-	if (!envp)
+	if (!env)
 	{
 		printf("%s\n","command not found: env");
 		return (1);
 	}
-	while (envp[i])
+	while (env[i])
 	{
-		if (ft_strchr(envp[i], '='))
-			printf("%s\n", envp[i]);
+		if (ft_strchr(env[i], '='))
+			printf("%s\n", env[i]);
 		i++;
 	}
 	return (0);
