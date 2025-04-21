@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:53:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,19 +98,19 @@ int	builtin_exit(char **argv, char ***env)
 
 int	exec_builtin(t_cmd *cmd, char ***env)
 {
-	if (!ft_strcmp(cmd->argv[0], "echo"))
-		return (builtin_echo(cmd->argv));
-	else if (!ft_strcmp(cmd->argv[0], "pwd"))
+	if (!ft_strcmp(cmd->av[0], "echo"))
+		return (builtin_echo(cmd->av));
+	else if (!ft_strcmp(cmd->av[0], "pwd"))
 		return (builtin_pwd());
-	else if (!ft_strcmp(cmd->argv[0], "cd"))
-		return (builtin_cd(cmd->argv, env));
-	else if (!ft_strcmp(cmd->argv[0], "env"))
-		return (builtin_env(cmd->argv, *env));
-	else if (!ft_strcmp(cmd->argv[0], "unset"))
-		return (builtin_unset(cmd->argv, env));
-	else if (!ft_strcmp(cmd->argv[0], "exit"))
-		return (builtin_exit(cmd->argv, env));
-	else if(!ft_strcmp(cmd->argv[0], "export"))
-		return (builtin_export(cmd->argv, *env));
+	else if (!ft_strcmp(cmd->av[0], "cd"))
+		return (builtin_cd(cmd->av, env));
+	else if (!ft_strcmp(cmd->av[0], "env"))
+		return (builtin_env(cmd->av, *env));
+	else if (!ft_strcmp(cmd->av[0], "unset"))
+		return (builtin_unset(cmd->av, env));
+	else if (!ft_strcmp(cmd->av[0], "exit"))
+		return (builtin_exit(cmd->av, env));
+	else if(!ft_strcmp(cmd->av[0], "export"))
+		return (builtin_export(cmd->av, *env));
 	return (1);
 }
