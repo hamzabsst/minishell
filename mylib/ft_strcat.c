@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 22:21:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 09:29:47 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/20 11:38:15 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/20 11:38:24 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "myLib.h"
-
-char	*ft_strchr(const char *s, int c)
+char	*ft_strcat(char *dest, char *src)
 {
 	int	i;
+	int	j;
 
 	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i])
-	{
-		if (s[i] == (char)c)
-			return ((char *)s + i);
+	while (dest[i] != '\0')
 		i++;
+	j = 0;
+	while (src[j] != '\0')
+	{
+		dest[i + j] = src[j];
+		j++;
 	}
-	if ((char)c == '\0')
-		return ((char *)s + i);
-	return (NULL);
+	dest[i + j] = '\0';
+	return (dest);
 }

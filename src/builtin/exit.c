@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 22:21:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 09:29:47 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/22 09:51:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "myLib.h"
+#include "minishell.h"
 
-char	*ft_strchr(const char *s, int c)
+int	builtin_exit(char **argv, char ***env)
 {
-	int	i;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	while (s[i])
-	{
-		if (s[i] == (char)c)
-			return ((char *)s + i);
-		i++;
-	}
-	if ((char)c == '\0')
-		return ((char *)s + i);
-	return (NULL);
+	(void)argv;
+	write(1, "exit\n", 5);
+	ft_free(*env);
+	exit(0);
 }
