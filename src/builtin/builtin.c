@@ -6,26 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 13:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 09:58:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin(char *cmd)
-{
-	if (!cmd)
-		return (0);
-	return (!ft_strcmp(cmd, "echo")
-		|| !ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "pwd")
-		|| !ft_strcmp(cmd, "export")
-		|| !ft_strcmp(cmd, "unset")
-		|| !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "exit"));
-}
-
-int	builtin_echo(char **av)
+static int	builtin_echo(char **av)
 {
 	int	newline;
 	int	i;
@@ -49,7 +36,7 @@ int	builtin_echo(char **av)
 	return (0);
 }
 
-int	builtin_pwd(void)
+static int	builtin_pwd(void)
 {
 	char	*cwd;
 
@@ -64,7 +51,7 @@ int	builtin_pwd(void)
 	return (0);
 }
 
-int	builtin_env(char **av, char **env)
+static int	builtin_env(char **av, char **env)
 {
 	int	i;
 
@@ -73,12 +60,9 @@ int	builtin_env(char **av, char **env)
 		write(2, "env: No arguments or options allowed\n", 39);
 		return (1);
 	}
-	i = 0;
 	if (!env)
-	{
-		printf("%s\n","command not found: env");
-		return (1);
-	}
+		return (printf("%s\n", "command not found: env"), 1);
+	i = 0;
 	while (env[i])
 	{
 		if (ft_strchr(env[i], '='))
@@ -88,12 +72,17 @@ int	builtin_env(char **av, char **env)
 	return (0);
 }
 
-int	builtin_exit(char **argv, char ***env)
+int	builtin(char *cmd)
 {
-	(void)argv;
-	write(1, "exit\n", 5);
-	ft_free(*env);
-	exit(0);
+	if (!cmd)
+		return (0);
+	return (!ft_strcmp(cmd, "echo")
+		|| !ft_strcmp(cmd, "cd")
+		|| !ft_strcmp(cmd, "pwd")
+		|| !ft_strcmp(cmd, "export")
+		|| !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "env")
+		|| !ft_strcmp(cmd, "exit"));
 }
 
 int	exec_builtin(t_cmd *cmd, char ***env)
@@ -110,7 +99,7 @@ int	exec_builtin(t_cmd *cmd, char ***env)
 		return (builtin_unset(cmd->av, env));
 	else if (!ft_strcmp(cmd->av[0], "exit"))
 		return (builtin_exit(cmd->av, env));
-	else if(!ft_strcmp(cmd->av[0], "export"))
+	else if (!ft_strcmp(cmd->av[0], "export"))
 		return (builtin_export(cmd->av, *env));
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 14:00:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:12:17 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int		exec_builtin(t_cmd *cmd, char ***env);
 int		builtin_cd(char **av, char ***env);
 int		builtin_export(char **av, char **env);
 int		builtin_unset(char **av, char ***env);
+int		builtin_exit(char **argv, char ***env);
 int		exec_pipeline(t_cmd *cmd, char **env);
+void	exec_cmd(t_cmd *cmd, char **env);
 
 #endif

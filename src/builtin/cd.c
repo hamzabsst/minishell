@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:54:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:00:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,44 +79,50 @@ static int	update_env(char ***env_ptr, const char *key, const char *value)
 	ft_strcpy(new_var, (char *)key);
 	ft_strcat(new_var, "=");
 	ft_strcat(new_var, (char *)value);
-	i = 0;
-	while (env[i])
+	i = -1;
+	while (env[++i])
 	{
-		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0 && env[i][ft_strlen(key)] == '=')
+		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0
+			&& env[i][ft_strlen(key)] == '=')
 		{
 			free(env[i]);
 			env[i] = new_var;
 			return (0);
 		}
-		++i;
 	}
 	return (copy_env(env_ptr, new_var, i));
 }
 
+static int	handle_path(char *arg)
+{
+	if (!arg || !*arg)
+		return (0);
+	if (arg[0] == '~' || arg[0] == '-')
+	{
+		write(2, "cd: only absolute or relative paths are allowed\n", 48);
+		return (-1);
+	}
+	return (1);
+}
+
 int	builtin_cd(char **argv, char ***env)
 {
-	char	*path;
 	char	*oldpwd;
 	char	*newpwd;
 	int		ret;
+	char	*path;
 
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 		return (perror("cd: getcwd"), 1);
+	if (handle_path(argv[1]) == -1)
+		return (free(oldpwd), 1);
 	if (!argv[1] || !*argv[1])
 		path = getenv("HOME");
-	else if (argv[1][0] == '~' || argv[1][0] == '-')
-	{
-		write(2, "cd: only absolute or relative paths are allowed\n", 48);
-		return (free(oldpwd), 1);
-	}
 	else
 		path = argv[1];
 	if (chdir(path) == -1)
-	{
-		(write(2, "cd: ", 4), perror(path));
-		return (free(oldpwd), 1);
-	}
+		return (write(2, "cd: ", 4), perror(path), free(oldpwd), 1);
 	if (update_env(env, "OLDPWD", oldpwd) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);

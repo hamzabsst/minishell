@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 14:48:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:11:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	main(int ac, char **av, char **env)
 {
 	char	**g_env;
 
-	//////////////init
  	t_cmd cmd= {
 		.av = (char *[]){"ls", NULL},
 		.infile = NULL,
@@ -32,7 +31,6 @@ int	main(int ac, char **av, char **env)
 		.next = NULL
 	};
 	cmd.next = &c2;
-	//////////////////
 	(void)av;
 	if (ac != 1)
 	{
