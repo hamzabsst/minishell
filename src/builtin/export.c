@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:54:36 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:00:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,16 @@ static void	sort_env(char **env)
 	}
 }
 
-static void	print_sorted_env(char **env)
+static void	print_export(char **env)
 {
-	int		i = 0;
+	int		i;
 	char	**copy;
 	char	*equal_pos;
 
+	i = 0;
 	copy = dup_env(env);
 	if (!copy)
-		return;
+		return ;
 	sort_env(copy);
 	while (copy[i])
 	{
@@ -69,6 +70,6 @@ int	builtin_export(char **av, char **env)
 		write(2, "export: arguments not supported yet\n", 36);
 		return (1);
 	}
-	print_sorted_env(env);
+	print_export(env);
 	return (0);
 }

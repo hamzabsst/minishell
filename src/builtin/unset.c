@@ -6,40 +6,50 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/21 10:54:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:00:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	unset_env(char ***env_ptr, const char *key)
+static void	filter_env(char **env, char **new_env, char *var, int *found)
 {
-	char	**env;
-	char	**new_env;
+	int	i;
+	int	j;
 
-	int (i), (j), (found);
-	env = *env_ptr;
 	i = 0;
 	j = 0;
-	found = 0;
-	while (env[i])
-		i++;
-	new_env = malloc(sizeof(char *) * i);
-	if (!new_env)
-		return (1);
-	i = 0;
 	while (env[i])
 	{
-		if (!found && ft_strcmp(env[i], key) == 0 && env[i][ft_strlen(key)] == '=')
+		if (!found && ft_strcmp(env[i], var) == 0
+			&& env[i][ft_strlen(var)] == '=')
 		{
 			free(env[i]);
-			found = 1;
+			*found = 1;
 		}
 		else
 			new_env[j++] = env[i];
 		i++;
 	}
 	new_env[j] = NULL;
+}
+
+static int	unset_env(char ***env_ptr, char *var)
+{
+	char	**env;
+	char	**new_env;
+	int		i;
+	int		found;
+
+	env = *env_ptr;
+	i = 0;
+	found = 0;
+	while (env[i])
+		i++;
+	new_env = malloc(sizeof(char *) * i);
+	if (!new_env)
+		return (1);
+	filter_env(env, new_env, var, &found);
 	if (found)
 		free(*env_ptr);
 	*env_ptr = new_env;

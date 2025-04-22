@@ -10,7 +10,9 @@ SRCS	=	src/main.c \
 			src/builtin/builtin.c \
 			src/builtin/export.c \
 			src/builtin/unset.c \
-			src/pipe/pipeline.c \
+			src/builtin/exit.c \
+			src/pipe/pipe.c \
+			src/pipe/get_cmds.c \
 
 OBJS	= $(SRCS:.c=.o)
 
