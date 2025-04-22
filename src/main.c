@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:13:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:30:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,15 @@ int	main(int ac, char **av, char **env)
 {
 	char	**g_env;
 
- 	t_cmd cmd= {
-		.av = (char *[]){"ls", NULL},
-		.infile = NULL,
-		.outfile = NULL,
+	t_cmd cmd = {
+		.av = (char *[]){"cat", NULL},
+		.infile = "Makefile",
+		.outfile = "out.txt",
 		.append = 0,
+		.heredoc = 0,
+		.delimiter = NULL,
 		.next = NULL
 	};
- 	t_cmd cmd1 = {
-		.av = (char *[]){"wc", NULL},
-		.infile = NULL,
-		.outfile = "result.txt",
-		.append = 0,
-		.next = NULL
-	};
-	cmd.next = &cmd1;
 	(void)av;
 	if (ac != 1)
 	{

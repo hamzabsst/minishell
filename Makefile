@@ -13,6 +13,7 @@ SRCS	=	src/main.c \
 			src/builtin/exit.c \
 			src/pipe/pipe.c \
 			src/pipe/get_cmds.c \
+			src/pipe/redirection.c \
 
 #src/parsing/main.c
 #src/parsing/add_node_back.c

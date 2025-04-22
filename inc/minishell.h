@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:55:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:29:24 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int		builtin_unset(char **av, char ***env);
 int		builtin_exit(char **argv, char ***env);
 int		exec_pipeline(t_cmd *cmd, char **env);
 void	exec_cmd(t_cmd *cmd, char **env);
+void	handle_redirection(t_cmd *cmd);
+
 
 #endif
 
