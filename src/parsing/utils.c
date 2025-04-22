@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/21 21:42:55 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:53:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static char *ft_strndup(char *str, size_t len)
 {
-    size_t	i;
+	size_t	i;
 	char	*results;
 
 	results = (char *) malloc((len + 1) * sizeof(char));
@@ -35,7 +35,7 @@ static int count_tokens(char *str)
     int i = 0;
     // bool in_quote = false;
     char quote_type = '\0';
-    
+
     while (str[i])
     {
         while (str[i] == ' ')
@@ -48,7 +48,7 @@ static int count_tokens(char *str)
             // in_quote = true;
             quote_type = str[i++];
             while (str[i] && str[i] != quote_type)
-                i++;  
+                i++;
             if (str[i] == quote_type)
                 i++;
             // in_quote = false;
@@ -68,7 +68,7 @@ char    **smart_split(char *str)
     char quote_type;
     char **tokens;
     int token_count;
-    
+
     k = 0;
     i = 0;
     start = 0;

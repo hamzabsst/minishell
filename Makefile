@@ -5,7 +5,10 @@ CFLAGS	= -Wall -Wextra -Werror -Iinc
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/main.c \
+SRCS	=	src/parsing/main.c
+			src/parsing/add_node_back.c \
+ 			src/parsing/utils.c \
+			src/main.c \
 			src/builtin/cd.c \
 			src/builtin/builtin.c \
 			src/builtin/export.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:45:53 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:55:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../mylib/myLib.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
+# include <stdbool.h>
 
 typedef struct s_cmd
 {
@@ -28,16 +30,22 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-typedef struct s_env
-{
-	char	**envp;
-} t_env;
+//parsing
+void	init_struct(t_cmd *cmd);
+char	**split_pipe(char *line);
+void	read_token(char **commands, t_cmd *cmd_list);
+char	**smart_split(char *str);
 
-//pasring
-//
-//
 //excution
-int	builtin_cd(char **argv, char ***env_ptr);
-int	builtin(char *cmd);
-int	exec_builtin(t_cmd *cmd, char **envp);
+char	**dup_env(char **env);
+int		builtin(char *cmd);
+int		exec_builtin(t_cmd *cmd, char ***env);
+int		builtin_cd(char **av, char ***env);
+int		builtin_export(char **av, char **env);
+int		builtin_unset(char **av, char ***env);
+int		builtin_exit(char **argv, char ***env);
+int		exec_pipeline(t_cmd *cmd, char **env);
+void	exec_cmd(t_cmd *cmd, char **env);
+
 #endif
+

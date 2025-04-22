@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   add_node_back.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 09:50:20 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/20 09:57:14 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:56:12 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
 t_cmd	*ft_lstlastt(t_cmd *lst)
 {
