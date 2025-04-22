@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   myLib.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:54:37 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/20 11:40:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:46:37 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MYLIB_H
 # define MYLIB_H
@@ -95,6 +96,7 @@ char	*ft_strjoin_gnl(char *s1, char *s2);
 long	ft_atol(const char	*str);
 char	*ft_strcpy(char *s1, char *s2);
 int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcat(char *dest, char *src);
 char	*ft_strcat(char *dest, char *src);
 void	*ft_free(char **str);
 #endif
