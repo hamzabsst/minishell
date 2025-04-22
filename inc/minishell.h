@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:55:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:02:23 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	init_struct(t_cmd *cmd);
 char	**split_pipe(char *line);
 void	read_token(char **commands, t_cmd *cmd_list);
 char	**smart_split(char *str);
+void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
 
 //excution
 char	**dup_env(char **env);

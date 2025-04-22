@@ -5,18 +5,18 @@ CFLAGS	= -Wall -Wextra -Werror -Iinc
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/parsing/main.c
+SRCS	=	src/parsing/main.c \
 			src/parsing/add_node_back.c \
  			src/parsing/utils.c \
-			src/main.c \
-			src/builtin/cd.c \
-			src/builtin/builtin.c \
-			src/builtin/export.c \
-			src/builtin/unset.c \
-			src/builtin/exit.c \
-			src/pipe/pipe.c \
-			src/pipe/get_cmds.c \
 
+# src/main.c
+# src/builtin/cd.c
+# src/builtin/builtin.c
+# src/builtin/export.c
+# src/builtin/unset.c
+# src/builtin/exit.c
+# src/pipe/pipe.c
+# src/pipe/get_cmds.c
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
