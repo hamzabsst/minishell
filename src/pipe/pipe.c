@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:10:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:29:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	exec_child(t_cmd *cmd, char **env, int in, int out)
 		close(in);
 	if (out != STDOUT_FILENO)
 		close(out);
+	handle_redirection(cmd);
 	if (builtin(cmd->av[0]) && !cmd->next)
 		exit(exec_builtin(cmd, &env));
 	exec_cmd(cmd, env);

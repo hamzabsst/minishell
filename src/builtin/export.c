@@ -6,12 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:00:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:57:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+//dont forget to handle arguments
 static void	sort_env(char **env)
 {
 	int		i;

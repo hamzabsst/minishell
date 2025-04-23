@@ -6,35 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 09:58:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:52:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	builtin_echo(char **av)
-{
-	int	newline;
-	int	i;
-
-	newline = 1;
-	i = 1;
-	if (av[i] && !ft_strcmp(av[i], "-n"))
-	{
-		newline = 0;
-		i++;
-	}
-	while (av[i])
-	{
-		printf("%s", av[i]);
-		if (av[i + 1])
-			printf(" ");
-		i++;
-	}
-	if (newline)
-		printf("\n");
-	return (0);
-}
 
 static int	builtin_pwd(void)
 {
@@ -42,10 +18,7 @@ static int	builtin_pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-	{
-		perror("pwd");
-		return (1);
-	}
+		return (perror("pwd"), 1);
 	printf("%s\n", cwd);
 	free(cwd);
 	return (0);
