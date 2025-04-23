@@ -59,16 +59,16 @@ int main(int ac, char **av)
         }
         int j = 0;
         i = 0;
-        while (cmd_list && cmd_string[i])
-        {
-            i = 0;
-            while (cmd_list->av[i])
-            {
-                printf("cmd list n %d Reading command %d: %s\n",j, i ,cmd_list->av[i]);
-                i++;
-            }
-            cmd_list = cmd_list->next;
-            j++;
-        }
+        // while (cmd_list && cmd_string[i])
+        // {
+        //     i = 0;
+        //     while (cmd_list->av[i])
+        //     {
+        //         printf("cmd list n %d Reading command %d: %s\n",j, i ,cmd_list->av[i]);
+        //         i++;
+        //     }
+        //     cmd_list = cmd_list->next;
+        //     j++;
+        // }
     }
 }
