@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:12:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:41:06 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int	main(int ac, char **av, char **env)
 
 	while (1)
 	{
-		snprintf(prompt, sizeof(prompt), "%sminishell%s$ ", RED, RESET);
+		snprintf(prompt, sizeof(prompt), "%sminishell%s%s$ ", RED, BLUE, RESET);
 		line = readline(prompt);
 		if (!line)
 		{

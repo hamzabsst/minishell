@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:14:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:52:20 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_flag(char **av, int *i, int *newline)
+static void	handle_flag(char **av, int *i, int *newline)
 {
 	int		valid;
 	char	*ptr;
