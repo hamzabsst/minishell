@@ -7,6 +7,7 @@ MYLIB		= $(MYLIB_DIR)/myLib.a
 
 SRCS	=	src/main.c \
 			src/builtin/cd.c \
+			src/builtin/echo.c \
 			src/builtin/builtin.c \
 			src/builtin/export.c \
 			src/builtin/unset.c \

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 10:13:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:12:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	char	**g_env = dup_env(env);
 	int 	g_exit_status = 0;
+	char prompt[100];
 
 	if (ac != 1)
 	{
@@ -169,7 +170,8 @@ int	main(int ac, char **av, char **env)
 
 	while (1)
 	{
-		line = readline("minishell$ ");
+		snprintf(prompt, sizeof(prompt), "%sminishell%s$ ", RED, RESET);
+		line = readline(prompt);
 		if (!line)
 		{
 			write(1, "exit\n", 5);
@@ -181,13 +183,9 @@ int	main(int ac, char **av, char **env)
 		if (cmd)
 		{
 			if (builtin(cmd->av[0]))
-			{
 				g_exit_status = exec_builtin(cmd, &g_env);
-			}
 			else
-			{
 				g_exit_status = exec_pipeline(cmd, g_env);
-			}
 			free_cmd_list(cmd);
 		}
 		else if (*line)
@@ -195,7 +193,6 @@ int	main(int ac, char **av, char **env)
 			printf("Parse error.\n");
 			g_exit_status = 1;
 		}
-
 		free(line);
 	}
 	ft_free(g_env);
