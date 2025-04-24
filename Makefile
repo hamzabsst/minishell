@@ -6,7 +6,7 @@ MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 SRCS	=	src/parsing/main.c \
-			src/parsing/add_node_back.c \
+			src/parsing/token.c \
  			src/parsing/utils.c \
 
 # src/main.c

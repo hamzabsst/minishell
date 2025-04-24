@@ -33,7 +33,6 @@ static int count_tokens(char *str)
 {
     int count = 0;
     int i = 0;
-    // bool in_quote = false;
     char quote_type = '\0';
 
     while (str[i])
@@ -45,16 +44,22 @@ static int count_tokens(char *str)
         count++;
         if (str[i] == '\"' || str[i] == '\'')
         {
-            // in_quote = true;
             quote_type = str[i++];
             while (str[i] && str[i] != quote_type)
                 i++;
             if (str[i] == quote_type)
                 i++;
-            // in_quote = false;
+        }
+        else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
+        {
+            if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
+                i += 2;
+            else
+                i++;
         }
         else
-            while (str[i] && str[i] != ' ' && str[i] != '\'' && str[i] != '\"')
+            while (str[i] && str[i] != ' ' && str[i] != '>' && str[i] != '<' &&
+                str[i] != '|' && str[i] != '\'' && str[i] != '\"')
                 i++;
     }
     return (count);
@@ -64,7 +69,7 @@ char    **smart_split(char *str)
     int i;
     int k;
     int start;
-    bool in_quote;
+    int in_quote;
     char quote_type;
     char **tokens;
     int token_count;
@@ -72,7 +77,7 @@ char    **smart_split(char *str)
     k = 0;
     i = 0;
     start = 0;
-    in_quote = false;
+    in_quote = 0;
     quote_type = '\0';
     token_count = count_tokens(str);
     tokens = malloc(sizeof(char *) * (token_count + 1));
@@ -85,20 +90,33 @@ char    **smart_split(char *str)
         if (!str[i])
             break;
         start = i;
-        if (str[i] == '\"' || str[i] == '\'')
+        if (str[i] == '\"')
         {
-            in_quote = true;
+            in_quote = 1;
             quote_type = str[i];
             i++;
             start = i;
             while (str[i] && str[i] != quote_type)
                 i++;
             tokens[k++] = ft_strndup(&str[start], i - start);
-            if (str[i] == quote_type)
+            if (str[i] == quote_type && in_quote == 1)
                 i++;
-            in_quote = false;
+            in_quote = 0;
         }
-        else if (str[i] == '>' || str[i] == '<')
+        else if (str[i] == '\'')
+        {
+            in_quote = 1;
+            quote_type = str[i];
+            i++;
+            start = i;
+            while (str[i] && str[i] != quote_type)
+                i++;
+            tokens[k++] = ft_strndup(&str[start], i - start);
+            if (str[i] == quote_type && in_quote == 1)
+                i++;
+            in_quote = 0;
+        }
+        else if (str[i] == '>')
         {
             int len = 1;
             if (str[i + 1] == str[i])
@@ -106,23 +124,40 @@ char    **smart_split(char *str)
             tokens[k++] = ft_strndup(&str[i], len);
             i += len;
         }
+        else if (str[i] == '<')
+        {
+            int len = 1;
+            if (str[i + 1] == str[i])
+                len = 2;
+            tokens[k++] = ft_strndup(&str[i], len);
+            i += len;
+        }
+        else if (str[i] == '|')
+        {
+            if (str[i + 1] != str[i])
+            {
+                tokens[k++] = ft_strndup(&str[i], 1);
+            }
+            i++;
+        }
         else
         {
-            while (str[i] && str[i] != '\'' && str[i] != '\"')
+            while (str[i] && str[i] != ' ' && str[i] != '\'' && str[i] != '\"' &&
+                str[i] != '>' && str[i] != '<' && str[i] != '|')
                 i++;
             if (i > start)
                 tokens[k++] = ft_strndup(&str[start], i - start);
         }
     }
     tokens[k] = NULL;
-    for (int j = 0; tokens[j]; j++)
-        printf("token[%d]: %s\n", j, tokens[j]);
+    // for (int j = 0; tokens[j]; j++)
+    //     printf("token[%d]: %s\n", j, tokens[j]);
     return (tokens);
 }
 
 // int main()
 // {
-//     char str[] = "echo \"hello its me\" > file";
+//     char str[] = "echo hello | more >> out.txt";
 //     smart_split(str);
 //     int c = count_tokens(str);
 //     printf("%d", c);

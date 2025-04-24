@@ -19,23 +19,31 @@
 # include <sys/wait.h>
 # include <stdbool.h>
 
+typedef struct s_token
+{
+    char *content;         // "echo" ">" "hello"
+    char *type;            // "WORD" "REDIR_IN" "REDIR_OUT" ...
+    struct s_token *next;
+}   t_token;
+
 typedef struct s_cmd
 {
-	char			**av;
-	char			*infile;
-	char			*outfile;
-	int				append;
-	int				heredoc;
-	char			*delimiter;
+	char			**av; //{"cat", "file.txt", NULL}
+	char			*infile; // <
+	char			*outfile; // >
+	int				append; //1 if >>
+	char			*heredoc; // >>
 	struct s_cmd	*next;
 }	t_cmd;
 
 //parsing
 void	init_struct(t_cmd *cmd);
-char	**split_pipe(char *line);
-void	read_token(char **commands, t_cmd *cmd_list);
 char	**smart_split(char *str);
 void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
+void 	print_tokens(t_token *tokens);
+void add_token_back(t_token **head, t_token *new);
+t_token *allocate_token(char *content, char *type);
+t_token *tokenize(char **tokens);
 
 //excution
 char	**dup_env(char **env);
