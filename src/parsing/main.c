@@ -12,33 +12,45 @@
 
 #include "minishell.h"
 
-void init_struct(t_cmd *cmd)
-{
-	cmd->av = NULL;
-	cmd->outfile = NULL;
-	cmd->infile = NULL;
-	cmd->append = 0;
-	cmd->heredoc = NULL;
-	cmd->next = NULL;
-}
-
 int main(int ac, char **av)
 {
     (void)av;
     (void)ac;
     t_token *list_of_tokens;
+    t_cmd *parsing;
     
+    int i = 0;
     char *line;
-    char **cmd_string;
+    char **splited;
     while (1)
     {
         line = readline("minishell$>");
         add_history(line);
-        cmd_string = smart_split(line);
-        list_of_tokens = tokenize(cmd_string);
+        splited = smart_split(line);
+        if (splited == NULL)
+            return (1);
+        list_of_tokens = tokenize(splited);
         print_tokens(list_of_tokens);
+        parsing = start_of_parsing(list_of_tokens);
         // int j = 0;
-        // i = 0;
+        i = 0;
+        while (parsing)
+        {
+            while (parsing->av[i])
+            {
+                printf("arg [%d] : %s\n", i, parsing->av[i]);
+                i++;
+            }
+            if (parsing->infile)
+                printf("Infile: %s\n", parsing->infile);
+            if (parsing->outfile)
+                printf("Outfile: %s\n", parsing->outfile);
+            if (parsing->append)
+                printf("Append: Yes\n");
+            if (parsing->heredoc)
+                printf("Heredoc: %s\n", parsing->heredoc);
+            parsing = parsing->next;
+        }
         // while (cmd_list && cmd_string[i])
         // {
         //     i = 0;

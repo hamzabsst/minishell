@@ -44,6 +44,7 @@ void 	print_tokens(t_token *tokens);
 void add_token_back(t_token **head, t_token *new);
 t_token *allocate_token(char *content, char *type);
 t_token *tokenize(char **tokens);
+t_cmd    *start_of_parsing(t_token *tokens);
 
 //excution
 char	**dup_env(char **env);

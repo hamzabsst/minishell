@@ -98,9 +98,16 @@ char    **smart_split(char *str)
             start = i;
             while (str[i] && str[i] != quote_type)
                 i++;
-            tokens[k++] = ft_strndup(&str[start], i - start);
             if (str[i] == quote_type && in_quote == 1)
+            {
+                tokens[k++] = ft_strndup(&str[start], i - start);
                 i++;
+            }
+            else
+            {
+                printf("Error : unmatched quotes\n");
+                return (NULL);
+            }
             in_quote = 0;
         }
         else if (str[i] == '\'')
@@ -111,26 +118,39 @@ char    **smart_split(char *str)
             start = i;
             while (str[i] && str[i] != quote_type)
                 i++;
-            tokens[k++] = ft_strndup(&str[start], i - start);
             if (str[i] == quote_type && in_quote == 1)
+            {
+                tokens[k++] = ft_strndup(&str[start], i - start);
                 i++;
+            }
+            else
+            {
+                printf("Error : unmatched quotes\n");
+                return (NULL);
+            }
             in_quote = 0;
         }
         else if (str[i] == '>')
         {
-            int len = 1;
-            if (str[i + 1] == str[i])
-                len = 2;
-            tokens[k++] = ft_strndup(&str[i], len);
-            i += len;
+            if (in_quote == 0)
+            {
+                int len = 1;
+                if (str[i + 1] == str[i])
+                    len = 2;
+                tokens[k++] = ft_strndup(&str[i], len);
+                i += len;
+            }
         }
         else if (str[i] == '<')
         {
-            int len = 1;
-            if (str[i + 1] == str[i])
-                len = 2;
-            tokens[k++] = ft_strndup(&str[i], len);
-            i += len;
+            if (in_quote == 0)
+            {
+                int len = 1;
+                if (str[i + 1] == str[i])
+                    len = 2;
+                tokens[k++] = ft_strndup(&str[i], len);
+                i += len;
+            }
         }
         else if (str[i] == '|')
         {
