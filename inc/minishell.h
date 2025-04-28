@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 10:00:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:16:12 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_cmd
 }	t_cmd;
 
 //env
-int		update_env(char ***env_ptr, const char *key, const char *value);
+int		update_env(char ***env_ptr, char *key, char *value);
 char	**dup_env(char **env);
 
 //built-in cmds

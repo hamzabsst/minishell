@@ -6,11 +6,40 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 09:55:57 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:14:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**dup_env(char **env)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	n = 0;
+	while (env[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(env[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[n] = NULL;
+	return (copy);
+}
 
 static int	builtin_pwd(void)
 {
