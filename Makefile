@@ -15,6 +15,7 @@ SRCS	=	src/main.c \
 			src/pipe/pipe.c \
 			src/pipe/get_cmds.c \
 			src/pipe/redirection.c \
+			src/utils.c
 
 OBJS	= $(SRCS:.c=.o)
 

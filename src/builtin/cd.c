@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 10:15:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:38:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ static char	*make_env_var(char *key, char *value)
 	return (var);
 }
 
-static int	handle_path(char *arg)
+static int	handle_path(const char *arg)
 {
 	if (!arg || !*arg)
 		return (0);
 	if (arg[0] == '~' || arg[0] == '-')
 	{
-		write(2, "cd: only absolute or relative paths are allowed\n", 48);
+		ft_perror("cd: only absolute or relative paths are allowed\n");
 		return (-1);
 	}
 	return (1);
@@ -103,11 +103,11 @@ int	builtin_cd(char **argv, char ***env)
 	if (handle_path(argv[1]) == -1)
 		return (free(oldpwd), 1);
 	if (!argv[1] || !*argv[1])
-		path = getenv("HOME");
+		path = ft_getenv(*env, "HOME");
 	else
 		path = argv[1];
 	if (chdir(path) == -1)
-		return (write(2, "cd: ", 4), perror(path), free(oldpwd), 1);
+		return (ft_perror("cd: "), perror(path), free(oldpwd), 1);
 	if (update_env(env, "OLDPWD", oldpwd) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);

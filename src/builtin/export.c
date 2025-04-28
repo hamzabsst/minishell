@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 10:19:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:49:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_valid_identifier(char *s)
+static int	_identifier(const char *s)
 {
 	if (!s || (!ft_isalpha(*s) && *s != '_'))
 		return (0);
@@ -81,7 +81,7 @@ static int	print_export(char **env)
 	return (0);
 }
 
-static char	*find_key(char *arg)
+static char	*find_key(const char *arg)
 {
 	int	len;
 
@@ -91,7 +91,7 @@ static char	*find_key(char *arg)
 	return (ft_substr(arg, 0, len));
 }
 
-static char	*get_env_value(char **env, char *key)
+char	*ft_getenv(char **env, const char *key)
 {
 	int		i;
 	size_t	key_len;
@@ -114,7 +114,7 @@ static int	update_env_append(char ***env, char *key, char *value)
 	char	*old_value;
 	char	*new_value;
 
-	old_value = get_env_value(*env, key);
+	old_value = ft_getenv(*env, key);
 	if (old_value)
 		new_value = ft_strjoin(old_value, value);
 	else
@@ -137,11 +137,11 @@ int	builtin_export(char **av, char ***env)
 		return (print_export(*env));
 	while (av[i])
 	{
-		if (!is_valid_identifier(av[i]))
+		if (!_identifier(av[i]))
 		{
-			ft_putstr_fd("export: `", 2);
-			ft_putstr_fd(av[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
+			ft_perror("export: `");
+			ft_perror(av[i]);
+			ft_perror("': not a valid identifier\n");
 			i++;
 			continue;
 		}
@@ -154,7 +154,7 @@ int	builtin_export(char **av, char ***env)
 			else
 				update_env(env, key, equal + 1);
 		}
-		else if (!get_env_value(*env, key))
+		else if (!ft_getenv(*env, key))
 			update_env(env, key, "");
 		free(key);
 		i++;

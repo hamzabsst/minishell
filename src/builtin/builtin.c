@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 10:14:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:39:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,9 @@ static int	builtin_env(char **av, char **env)
 	int	i;
 
 	if (av[1])
-	{
-		write(2, "env: No arguments or options allowed\n", 39);
-		return (1);
-	}
+		return(ft_perror("env: No arguments or options allowed\n"));
 	if (!env)
-		return (printf("%s\n", "command not found: env"), 1);
+		return (ft_perror("command not found: env"));
 	i = 0;
 	while (env[i])
 	{
