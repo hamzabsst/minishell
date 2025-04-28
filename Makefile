@@ -16,9 +16,6 @@ SRCS	=	src/main.c \
 			src/pipe/get_cmds.c \
 			src/pipe/redirection.c \
 
-#src/parsing/main.c
-#src/parsing/add_node_back.c
-#src/parsing/utils.c
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)

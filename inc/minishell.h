@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:11:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:00:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,25 +38,23 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-//parsing
-void	init_struct(t_cmd *cmd);
-char	**split_pipe(char *line);
-void	read_token(char **commands, t_cmd *cmd_list);
-char	**smart_split(char *str);
-
-//excution
+//env
+int		update_env(char ***env_ptr, const char *key, const char *value);
 char	**dup_env(char **env);
+
+//built-in cmds
 int		builtin(char *cmd);
 int		exec_builtin(t_cmd *cmd, char ***env);
 int		builtin_echo(char **av);
 int		builtin_cd(char **av, char ***env);
-int		builtin_export(char **av, char **env);
+int		builtin_export(char **av, char ***env);
 int		builtin_unset(char **av, char ***env);
 int		builtin_exit(char **argv, char ***env);
+
+//exceve
 int		exec_pipeline(t_cmd *cmd, char **env);
 void	exec_cmd(t_cmd *cmd, char **env);
 void	handle_redirection(t_cmd *cmd);
-
 
 #endif
 

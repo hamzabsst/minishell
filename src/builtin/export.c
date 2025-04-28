@@ -6,17 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/26 18:54:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:00:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-//dont forget to handle avuments
-// export VAR=value     ✅
-// export VAR           ✅ (sets empty string)
-// export VAR+=value    ✅ (append if exists)
-// export 1VAR=xx       ❌ (invalid)
-// export =             ❌ (invalid)
 
 static int	is_valid(char *s)
 {
@@ -104,15 +98,33 @@ static int	print_export(char **env)
 	return (0);
 }
 
-int	builtin_export(char **av, char **env)
+char	*get_env_value(char **env, const char *key)
+{
+	int		i;
+	size_t	key_len;
+
+	if (!env || !key)
+		return (NULL);
+	key_len = ft_strlen(key);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
+			return (env[i] + key_len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
+int builtin_export(char **av, char ***env)
 {
 	int		i;
 	char	*key;
 	char	*value;
 
-	i = 0;
+	i = 1;
 	if (!av[1])
-		return (print_export(env));
+		return (print_export(*env));
 	while (av[i])
 	{
 		if (!is_valid(av[i]))
@@ -128,7 +140,7 @@ int	builtin_export(char **av, char **env)
 			return (1);
 		if (value)
 			update_env(env, key, value);
-		else if (!get_env_value(env, key))
+		else if (!get_env_value(*env, key))
 			update_env(env, key, "");
 		free(key);
 		free(value);

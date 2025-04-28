@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:52:50 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 09:55:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ int	exec_builtin(t_cmd *cmd, char ***env)
 	else if (!ft_strcmp(cmd->av[0], "exit"))
 		return (builtin_exit(cmd->av, env));
 	else if (!ft_strcmp(cmd->av[0], "export"))
-		return (builtin_export(cmd->av, *env));
+		return (builtin_export(cmd->av, env));
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:00:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 09:45:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	copy_env(char ***env, char *new_var, int count)
 	return (0);
 }
 
-static int	update_env(char ***env_ptr, const char *key, const char *value)
+int	update_env(char ***env_ptr, const char *key, const char *value)
 {
 	char	**env;
 	char	*new_var;
