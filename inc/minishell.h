@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 13:51:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:10:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,28 @@ typedef struct s_cmd
 	char			*infile;
 	char			*outfile;
 	int				append;
-	int				heredoc;
+	char			*heredoc;
 	char			*delimiter;
 	struct s_cmd	*next;
 }	t_cmd;
+
+typedef struct s_token
+{
+	char			*content;		//"echo" ">" "hello"
+	char			*type;			//"WORD" "REDIR_IN" "REDIR_OUT"
+	struct s_token	*next;
+}	t_token;
+
+//parsing
+void	init_struct(t_cmd *cmd);
+char	**smart_split(char *str);
+void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
+void	print_tokens(t_token *tokens);
+void	add_token_back(t_token **head, t_token *new);
+t_token	*allocate_token(char *content, char *type);
+t_token	*tokenize(char **tokens);
+t_cmd	*start_of_parsing(t_token *tokens);
+void	free_token_list(t_token *token);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value);

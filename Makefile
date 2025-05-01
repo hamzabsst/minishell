@@ -2,10 +2,15 @@ NAME	= minishell
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror -Iinc
 
+
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 SRCS	=	src/main.c \
+			src/parsing/add_node_back.c \
+			src/parsing/parsing.c \
+			src/parsing/token.c \
+			src/parsing/utils.c \
 			src/builtin/cd.c \
 			src/builtin/echo.c \
 			src/builtin/builtin.c \
