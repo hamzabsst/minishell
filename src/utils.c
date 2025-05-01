@@ -1,18 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_redirections.c                               :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/22 10:56:17 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
+/*   Updated: 2025/04/28 11:39:58 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parse_redirections(t_cmd *current)
+int	ft_perror(char *msg)
 {
-
+	if (!msg)
+		return (1);
+	ft_putstr_fd(msg, 2);
+	ft_putstr_fd("\n", 2);
+	return (1);
 }

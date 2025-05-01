@@ -6,11 +6,40 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:52:50 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:39:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**dup_env(char **env)
+{
+	int		i;
+	int		n;
+	char	**copy;
+
+	n = 0;
+	while (env[n])
+		n++;
+	copy = malloc(sizeof(char *) * (n + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (i < n)
+	{
+		copy[i] = ft_strdup(env[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[n] = NULL;
+	return (copy);
+}
 
 static int	builtin_pwd(void)
 {
@@ -29,12 +58,9 @@ static int	builtin_env(char **av, char **env)
 	int	i;
 
 	if (av[1])
-	{
-		write(2, "env: No arguments or options allowed\n", 39);
-		return (1);
-	}
+		return(ft_perror("env: No arguments or options allowed\n"));
 	if (!env)
-		return (printf("%s\n", "command not found: env"), 1);
+		return (ft_perror("command not found: env"));
 	i = 0;
 	while (env[i])
 	{
@@ -73,6 +99,6 @@ int	exec_builtin(t_cmd *cmd, char ***env)
 	else if (!ft_strcmp(cmd->av[0], "exit"))
 		return (builtin_exit(cmd->av, env));
 	else if (!ft_strcmp(cmd->av[0], "export"))
-		return (builtin_export(cmd->av, *env));
+		return (builtin_export(cmd->av, env));
 	return (1);
 }

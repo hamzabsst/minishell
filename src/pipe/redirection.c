@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 09:31:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:38:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static void	in_from_heredoc(t_cmd *cmd)
 	unlink("/tmp/.heredoc_tmp");
 	tmp_fd = open("/tmp/.here_doc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
-		(ft_putstr_fd("cannot open tmp file", 2), exit(EXIT_FAILURE));
+		(ft_perror("cannot open tmp file"), exit(1));
 	joined = ft_strjoin(cmd->delimiter, "\n");
 	if (!joined)
-		(close(tmp_fd), unlink("/tmp/.here_doc_tmp"), exit(EXIT_FAILURE));
+		(close(tmp_fd), unlink("/tmp/.here_doc_tmp"), exit(1));
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
@@ -40,9 +40,9 @@ static void	in_from_heredoc(t_cmd *cmd)
 	(free(joined), close(tmp_fd));
 	tmp_fd = open("/tmp/.heredoc_tmp", O_RDONLY);
 	if (tmp_fd < 0)
-		(ft_putstr_fd("cannot open tmp file", 2), exit(EXIT_FAILURE));
+		(ft_perror("cannot open tmp file"), exit(1));
 	if (dup2(tmp_fd, STDIN_FILENO) == -1)
-		(perror("dup2 heredoc"), exit(EXIT_FAILURE));
+		(perror("dup2 heredoc"), exit(1));
 	close(tmp_fd);
 }
 

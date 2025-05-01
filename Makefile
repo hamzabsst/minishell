@@ -2,10 +2,15 @@ NAME	= minishell
 CC		= cc
 CFLAGS	= -Wall -Wextra -Werror -Iinc
 
+
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
 SRCS	=	src/main.c \
+			src/parsing/add_node_back.c \
+			src/parsing/parsing.c \
+			src/parsing/token.c \
+			src/parsing/utils.c \
 			src/builtin/cd.c \
 			src/builtin/echo.c \
 			src/builtin/builtin.c \
@@ -15,10 +20,8 @@ SRCS	=	src/main.c \
 			src/pipe/pipe.c \
 			src/pipe/get_cmds.c \
 			src/pipe/redirection.c \
+			src/utils.c
 
-#src/parsing/main.c
-#src/parsing/add_node_back.c
-#src/parsing/utils.c
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
