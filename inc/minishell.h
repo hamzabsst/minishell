@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 11:40:08 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 13:51:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ void	handle_redirection(t_cmd *cmd);
 int	ft_perror(char *msg);
 
 #endif
-
