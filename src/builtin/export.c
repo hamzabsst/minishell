@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 10:49:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:38:38 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	_identifier(const char *s)
+static int	identifier(const char *s)
 {
 	if (!s || (!ft_isalpha(*s) && *s != '_'))
 		return (0);
@@ -33,7 +33,8 @@ static int	_identifier(const char *s)
 
 static void	sort_env(char **env)
 {
-	int		i, j;
+	int		i;
+	int		j;
 	char	*tmp;
 
 	i = 0;
@@ -57,9 +58,10 @@ static void	sort_env(char **env)
 static int	print_export(char **env)
 {
 	char	**copy;
-	int		i = 0;
+	int		i;
 	char	*equal;
 
+	i = 0;
 	copy = dup_env(env);
 	if (!copy)
 		return (1);
@@ -81,82 +83,42 @@ static int	print_export(char **env)
 	return (0);
 }
 
-static char	*find_key(const char *arg)
+static void	process_av(char *arg, char ***env)
 {
-	int	len;
+	char	*key;
+	char	*equal;
 
-	len = 0;
-	while (arg[len] && arg[len] != '=' && !(arg[len] == '+' && arg[len + 1] == '='))
-		len++;
-	return (ft_substr(arg, 0, len));
-}
-
-char	*ft_getenv(char **env, const char *key)
-{
-	int		i;
-	size_t	key_len;
-
-	if (!env || !key)
-		return (NULL);
-	key_len = ft_strlen(key);
-	i = 0;
-	while (env[i])
+	key = find_key(arg);
+	equal = ft_strchr(arg, '=');
+	if (equal)
 	{
-		if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
-			return (env[i] + key_len + 1);
-		i++;
+		if (*(equal - 1) == '+')
+			update_env_append(env, key, equal + 1);
+		else
+			update_env(env, key, equal + 1);
 	}
-	return (NULL);
-}
-
-static int	update_env_append(char ***env, char *key, char *value)
-{
-	char	*old_value;
-	char	*new_value;
-
-	old_value = ft_getenv(*env, key);
-	if (old_value)
-		new_value = ft_strjoin(old_value, value);
-	else
-		new_value = ft_strdup(value);
-	if (!new_value)
-		return (1);
-	update_env(env, key, new_value);
-	free(new_value);
-	return (0);
+	else if (!ft_getenv(*env, key))
+		update_env(env, key, "");
+	free(key);
 }
 
 int	builtin_export(char **av, char ***env)
 {
-	int		i;
-	char	*key;
-	char	*equal;
+	int	i;
 
 	i = 1;
 	if (!av[1])
 		return (print_export(*env));
 	while (av[i])
 	{
-		if (!_identifier(av[i]))
+		if (!identifier(av[i]))
 		{
 			ft_perror("export: `");
 			ft_perror(av[i]);
 			ft_perror("': not a valid identifier\n");
-			i++;
-			continue;
 		}
-		key = find_key(av[i]);
-		equal = ft_strchr(av[i], '=');
-		if (equal)
-		{
-			if (*(equal - 1) == '+')
-				update_env_append(env, key, equal + 1);
-			else
-				update_env(env, key, equal + 1);
-		}
-		else if (!ft_getenv(*env, key))
-			update_env(env, key, "");
-		free(key);
+		else
+			process_av(av[i], env);
 		i++;
 	}
 	return (0);

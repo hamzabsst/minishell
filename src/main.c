@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:03:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:27:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
-	char	**g_env = dup_env(env);
+	char	**g_env;
 	int		g_exit_status = 0;
 	t_token	*token_list;
 	t_cmd	*cmd;
@@ -24,10 +24,10 @@ int	main(int ac, char **av, char **env)
 
 	if (ac != 1)
 	{
-		write(2, "Invalid number of arguments\n", 29);
-		ft_free(g_env);
+		ft_perror("Invalid number of arguments\n");
 		exit(1);
 	}
+	g_env = dup_env(env);
 	while (1)
 	{
 		line = readline("minishell$> ");
@@ -55,7 +55,7 @@ int	main(int ac, char **av, char **env)
 		}
 		else if (*line)
 		{
-			ft_putstr_fd("Parse error.\n", 2);
+			ft_perror("Parse error.\n");
 			g_exit_status = 1;
 		}
 		free(cmd);

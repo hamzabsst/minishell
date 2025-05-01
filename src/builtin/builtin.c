@@ -6,40 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 11:39:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:40:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**dup_env(char **env)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	n = 0;
-	while (env[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(env[i]);
-		if (!copy[i])
-		{
-			while (--i >= 0)
-				free(copy[i]);
-			free(copy);
-			return (NULL);
-		}
-		i++;
-	}
-	copy[n] = NULL;
-	return (copy);
-}
 
 static int	builtin_pwd(void)
 {
@@ -58,9 +29,9 @@ static int	builtin_env(char **av, char **env)
 	int	i;
 
 	if (av[1])
-		return(ft_perror("env: No arguments or options allowed\n"));
+		return (ft_perror("env: No arguments or options allowed\n"));
 	if (!env)
-		return (ft_perror("command not found: env"));
+		return (ft_perror("command not found: env\n"));
 	i = 0;
 	while (env[i])
 	{
