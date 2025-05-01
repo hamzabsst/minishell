@@ -6,40 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:00:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:38:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	**dup_env(char **env)
-{
-	int		i;
-	int		n;
-	char	**copy;
-
-	n = 0;
-	while (env[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		copy[i] = ft_strdup(env[i]);
-		if (!copy[i])
-		{
-			while (--i >= 0)
-				free(copy[i]);
-			free(copy);
-			return (NULL);
-		}
-		i++;
-	}
-	copy[n] = NULL;
-	return (copy);
-}
 
 static int	copy_env(char ***env, char *new_var, int count)
 {
@@ -64,45 +35,59 @@ static int	copy_env(char ***env, char *new_var, int count)
 	return (0);
 }
 
-static int	update_env(char ***env_ptr, const char *key, const char *value)
+static char	*make_env_var(char *key, char *value)
 {
-	char	**env;
-	char	*new_var;
-	int		i;
+	char	*var;
+	size_t	len;
 
-	env = *env_ptr;
-	if (!env_ptr || !(env) || !key || !value)
-		return (1);
-	new_var = malloc(ft_strlen(key) + ft_strlen(value) + 2);
-	if (!new_var)
-		return (1);
-	ft_strcpy(new_var, (char *)key);
-	ft_strcat(new_var, "=");
-	ft_strcat(new_var, (char *)value);
-	i = -1;
-	while (env[++i])
-	{
-		if (ft_strncmp(env[i], key, ft_strlen(key)) == 0
-			&& env[i][ft_strlen(key)] == '=')
-		{
-			free(env[i]);
-			env[i] = new_var;
-			return (0);
-		}
-	}
-	return (copy_env(env_ptr, new_var, i));
+	len = ft_strlen(key) + ft_strlen(value) + 2;
+	var = malloc(len);
+	if (!var)
+		return (NULL);
+	ft_strcpy(var, key);
+	ft_strcat(var, "=");
+	ft_strcat(var, value);
+	return (var);
 }
 
-static int	handle_path(char *arg)
+static int	handle_path(const char *arg)
 {
 	if (!arg || !*arg)
 		return (0);
 	if (arg[0] == '~' || arg[0] == '-')
 	{
-		write(2, "cd: only absolute or relative paths are allowed\n", 48);
+		ft_perror("cd: only absolute or relative paths are allowed\n");
 		return (-1);
 	}
 	return (1);
+}
+
+int	update_env(char ***env_ptr, char *key, char *value)
+{
+	char	**env;
+	char	*new_var;
+	size_t	key_len;
+	int		i;
+
+	if (!env_ptr || !*env_ptr || !key || !value)
+		return (1);
+	env = *env_ptr;
+	key_len = ft_strlen(key);
+	new_var = make_env_var(key ,value);
+	if (!new_var)
+		return (1);
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], key, key_len) && env[i][key_len] == '=')
+		{
+			free(env[i]);
+			env[i] = new_var;
+			return (0);
+		}
+		i++;
+	}
+	return (copy_env(env_ptr, new_var, i));
 }
 
 int	builtin_cd(char **argv, char ***env)
@@ -118,11 +103,11 @@ int	builtin_cd(char **argv, char ***env)
 	if (handle_path(argv[1]) == -1)
 		return (free(oldpwd), 1);
 	if (!argv[1] || !*argv[1])
-		path = getenv("HOME");
+		path = ft_getenv(*env, "HOME");
 	else
 		path = argv[1];
 	if (chdir(path) == -1)
-		return (write(2, "cd: ", 4), perror(path), free(oldpwd), 1);
+		return (ft_perror("cd: "), perror(path), free(oldpwd), 1);
 	if (update_env(env, "OLDPWD", oldpwd) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);

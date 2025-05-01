@@ -6,16 +6,34 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:00:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:49:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	_identifier(const char *s)
+{
+	if (!s || (!ft_isalpha(*s) && *s != '_'))
+		return (0);
+	s++;
+	while (*s && *s != '=' && *s != '+')
+	{
+		if (!ft_isalnum(*s) && *s != '_')
+			return (0);
+		s++;
+	}
+	if (*s == '+')
+	{
+		if (*(s + 1) != '=')
+			return (0);
+	}
+	return (1);
+}
+
 static void	sort_env(char **env)
 {
-	int		i;
-	int		j;
+	int		i, j;
 	char	*tmp;
 
 	i = 0;
@@ -36,40 +54,110 @@ static void	sort_env(char **env)
 	}
 }
 
-static void	print_export(char **env)
+static int	print_export(char **env)
 {
-	int		i;
 	char	**copy;
-	char	*equal_pos;
+	int		i = 0;
+	char	*equal;
 
-	i = 0;
 	copy = dup_env(env);
 	if (!copy)
-		return ;
+		return (1);
 	sort_env(copy);
 	while (copy[i])
 	{
-		equal_pos = ft_strchr(copy[i], '=');
-		if (equal_pos)
+		equal = ft_strchr(copy[i], '=');
+		if (equal)
 		{
-			*equal_pos = '\0';
-			printf("declare -x %s=\"%s\"\n", copy[i], equal_pos + 1);
-			*equal_pos = '=';
+			*equal = '\0';
+			printf("declare -x %s=\"%s\"\n", copy[i], equal + 1);
+			*equal = '=';
 		}
 		else
 			printf("declare -x %s\n", copy[i]);
 		i++;
 	}
 	ft_free(copy);
+	return (0);
 }
 
-int	builtin_export(char **av, char **env)
+static char	*find_key(const char *arg)
 {
-	if (av[1])
+	int	len;
+
+	len = 0;
+	while (arg[len] && arg[len] != '=' && !(arg[len] == '+' && arg[len + 1] == '='))
+		len++;
+	return (ft_substr(arg, 0, len));
+}
+
+char	*ft_getenv(char **env, const char *key)
+{
+	int		i;
+	size_t	key_len;
+
+	if (!env || !key)
+		return (NULL);
+	key_len = ft_strlen(key);
+	i = 0;
+	while (env[i])
 	{
-		write(2, "export: arguments not supported yet\n", 36);
-		return (1);
+		if (ft_strncmp(env[i], key, key_len) == 0 && env[i][key_len] == '=')
+			return (env[i] + key_len + 1);
+		i++;
 	}
-	print_export(env);
+	return (NULL);
+}
+
+static int	update_env_append(char ***env, char *key, char *value)
+{
+	char	*old_value;
+	char	*new_value;
+
+	old_value = ft_getenv(*env, key);
+	if (old_value)
+		new_value = ft_strjoin(old_value, value);
+	else
+		new_value = ft_strdup(value);
+	if (!new_value)
+		return (1);
+	update_env(env, key, new_value);
+	free(new_value);
+	return (0);
+}
+
+int	builtin_export(char **av, char ***env)
+{
+	int		i;
+	char	*key;
+	char	*equal;
+
+	i = 1;
+	if (!av[1])
+		return (print_export(*env));
+	while (av[i])
+	{
+		if (!_identifier(av[i]))
+		{
+			ft_perror("export: `");
+			ft_perror(av[i]);
+			ft_perror("': not a valid identifier\n");
+			i++;
+			continue;
+		}
+		key = find_key(av[i]);
+		equal = ft_strchr(av[i], '=');
+		if (equal)
+		{
+			if (*(equal - 1) == '+')
+				update_env_append(env, key, equal + 1);
+			else
+				update_env(env, key, equal + 1);
+		}
+		else if (!ft_getenv(*env, key))
+			update_env(env, key, "");
+		free(key);
+		i++;
+	}
 	return (0);
 }

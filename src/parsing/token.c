@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/01 14:03:59 by hbousset          #+#    #+#             */
+/*   Updated: 2025/05/01 14:03:59 by hbousset         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void print_tokens(t_token *tokens)
@@ -65,3 +77,18 @@ t_token *tokenize(char **tokens)
     }
     return (head);
 }
+
+void	free_token_list(t_token *token)
+{
+	t_token *next;
+
+	while (token)
+	{
+		next = token->next;
+		free(token->content);
+		free(token->type);
+		free(token);
+		token = next;
+	}
+}
+

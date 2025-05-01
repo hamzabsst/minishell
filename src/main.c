@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:13:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:03:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,56 @@
 
 int	main(int ac, char **av, char **env)
 {
-	char	**g_env;
-
- 	t_cmd cmd= {
-		.av = (char *[]){"ls", NULL},
-		.infile = NULL,
-		.outfile = NULL,
-		.append = 0,
-		.next = NULL
-	};
- 	t_cmd cmd1 = {
-		.av = (char *[]){"wc", NULL},
-		.infile = NULL,
-		.outfile = "result.txt",
-		.append = 0,
-		.next = NULL
-	};
-	cmd.next = &cmd1;
+	char	*line;
+	char	**g_env = dup_env(env);
+	int		g_exit_status = 0;
+	t_token	*token_list;
+	t_cmd	*cmd;
+	char	**splited;
 	(void)av;
+
 	if (ac != 1)
 	{
-		write(2, "Error: Invalid number of arguments\n", 35);
+		write(2, "Invalid number of arguments\n", 29);
+		ft_free(g_env);
 		exit(1);
 	}
-	g_env = dup_env(env);
-	if (!cmd.next && builtin(cmd.av[0]))
-		return exec_builtin(&cmd, &g_env);
-	else
-		exec_pipeline(&cmd, g_env);
+	while (1)
+	{
+		line = readline("minishell$> ");
+		if (!line)
+		{
+			write(1, "exit\n", 5);
+			break;
+		}
+		if (*line)
+			add_history(line);
+		splited = smart_split(line);
+		if (!splited)
+		{
+			free(line);
+			continue;
+		}
+		token_list = tokenize(splited);
+		cmd = start_of_parsing(token_list);
+		if (cmd)
+		{
+			if (builtin(cmd->av[0]) && !cmd->next)
+				g_exit_status = exec_builtin(cmd, &g_env);
+			else
+				g_exit_status = exec_pipeline(cmd, g_env);
+		}
+		else if (*line)
+		{
+			ft_putstr_fd("Parse error.\n", 2);
+			g_exit_status = 1;
+		}
+		free(cmd);
+		ft_free(splited);
+		free_token_list(token_list);
+		free(line);
+	}
+	ft_free(g_env);
+	return (g_exit_status);
 }
+

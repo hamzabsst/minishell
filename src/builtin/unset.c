@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:00:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 10:52:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static int	unset_env(char ***env_ptr, char *var)
 		return (1);
 	filter_env(env, new_env, var, &found);
 	if (found)
-		free(*env_ptr);
+		return (free(*env_ptr), 0);
+	free(*env_ptr);
 	*env_ptr = new_env;
 	return (0);
 }
@@ -66,10 +67,7 @@ int	builtin_unset(char **av, char ***env)
 	while (av[i])
 	{
 		if (av[i][0] == '-')
-		{
-			write(2, "unset: options are not allowed\n", 32);
-			return (1);
-		}
+			return (ft_perror("unset: options are not allowed\n"));
 		unset_env(env, av[i]);
 		i++;
 	}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_redirections.c                               :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/22 10:56:17 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:09:58 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_cmd    *start_of_parsing(t_token *tokens)
             new_cmd = malloc(sizeof(t_cmd));
             if (!new_cmd)
                 return (NULL);
-            init_struct(new_cmd); 
+            init_struct(new_cmd);
             current->next = new_cmd;
             current = new_cmd;
             i = 0;
@@ -61,7 +61,7 @@ t_cmd    *start_of_parsing(t_token *tokens)
             tokens = tokens->next;
             if (tokens)
                 current->outfile = tokens->content;
-        }    
+        }
         else if (ft_strcmp(tokens->type, "REDIRECTION_IN") == 0)
         {
             tokens = tokens->next;

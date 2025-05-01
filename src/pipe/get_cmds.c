@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:11:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:37:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	**get_path(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 
-char	*find_in_paths(char *cmd, char **paths)
+static char	*find_in_paths(char *cmd, char **paths)
 {
 	char	*full;
 	int		i;
@@ -46,7 +46,7 @@ char	*find_in_paths(char *cmd, char **paths)
 	return (NULL);
 }
 
-char	*get_cmd_path(t_cmd *cmd, char **env)
+static char	*get_cmd_path(t_cmd *cmd, char **env)
 {
 	char	**paths;
 	char	*resolved;
@@ -74,14 +74,14 @@ void	exec_cmd(t_cmd *cmd, char **env)
 
 	if (!cmd->av || !cmd->av[0])
 	{
-		write(2, "empty command\n", 14);
+		ft_perror("empty command\n");
 		exit(127);
 	}
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->av[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		ft_perror(": command not found\n");
 		exit(127);
 	}
 	execve(path, cmd->av, env);
