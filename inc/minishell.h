@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:10:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:40:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ void	free_token_list(t_token *token);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value);
+int		update_env_append(char ***env, char *key, char *value);
 char	**dup_env(char **env);
 char	*ft_getenv(char **env, const char *key);
 
 //built-in cmds
-int		builtin(char *cmd);
 int		exec_builtin(t_cmd *cmd, char ***env);
+int		builtin(char *cmd);
 int		builtin_echo(char **av);
 int		builtin_cd(char **av, char ***env);
 int		builtin_export(char **av, char ***env);
@@ -77,5 +78,6 @@ void	handle_redirection(t_cmd *cmd);
 
 //utils
 int	ft_perror(char *msg);
+char	*find_key(const char *arg);
 
 #endif
