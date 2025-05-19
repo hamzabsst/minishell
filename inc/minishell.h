@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:40:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:34:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../mylib/myLib.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include <sys/wait.h>
 # include <stdbool.h>
 
@@ -77,7 +78,10 @@ void	exec_cmd(t_cmd *cmd, char **env);
 void	handle_redirection(t_cmd *cmd);
 
 //utils
-int	ft_perror(char *msg);
+int		ft_perror(char *msg);
 char	*find_key(const char *arg);
+
+//signal
+void	handle_sigint(int sig);
 
 #endif

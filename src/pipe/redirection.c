@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 11:38:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:04:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,9 @@ static void	in_from_file(char *infile)
 
 	fd = open(infile, O_RDONLY);
 	if (fd == -1)
-	{
-		perror(infile);
-		exit(1);
-	}
+		(perror(infile), exit(1));
 	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("dup2 infile");
-		exit(1);
-	}
+		(perror("dup2 infile"),exit(1));
 	close(fd);
 }
 
@@ -73,18 +67,11 @@ static void	out_to_file(char *outfile, int append)
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
-
 	fd = open(outfile, flags, 0644);
 	if (fd == -1)
-	{
-		perror(outfile);
-		exit(1);
-	}
+		(perror(outfile), exit(1));
 	if (dup2(fd, STDOUT_FILENO) == -1)
-	{
-		perror("dup2 outfile");
-		exit(1);
-	}
+		(perror("dup2 outfile"), exit(1));
 	close(fd);
 }
 

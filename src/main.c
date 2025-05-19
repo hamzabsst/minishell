@@ -6,20 +6,24 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:27:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 09:01:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int		sig = 0;
+
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
 	char	**g_env;
-	int		g_exit_status = 0;
+	int		g_exit = 0;
 	t_token	*token_list;
 	t_cmd	*cmd;
 	char	**splited;
+	int		stdin_copy;
+	int		stdout_copy;
 	(void)av;
 
 	if (ac != 1)
@@ -28,6 +32,10 @@ int	main(int ac, char **av, char **env)
 		exit(1);
 	}
 	g_env = dup_env(env);
+	stdin_copy = dup(STDIN_FILENO);
+	stdout_copy = dup(STDOUT_FILENO);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = readline("minishell$> ");
@@ -49,14 +57,21 @@ int	main(int ac, char **av, char **env)
 		if (cmd)
 		{
 			if (builtin(cmd->av[0]) && !cmd->next)
-				g_exit_status = exec_builtin(cmd, &g_env);
+			{
+				handle_redirection(cmd);
+				g_exit = exec_builtin(cmd, &g_env);
+				dup2(stdin_copy, STDIN_FILENO);
+				dup2(stdout_copy, STDOUT_FILENO);
+				close(stdin_copy);
+				close(stdout_copy);
+			}
 			else
-				g_exit_status = exec_pipeline(cmd, g_env);
+				g_exit = exec_pipeline(cmd, g_env);
 		}
 		else if (*line)
 		{
 			ft_perror("Parse error.\n");
-			g_exit_status = 1;
+			g_exit = 1;
 		}
 		free(cmd);
 		ft_free(splited);
@@ -64,6 +79,6 @@ int	main(int ac, char **av, char **env)
 		free(line);
 	}
 	ft_free(g_env);
-	return (g_exit_status);
+	exit(g_exit);
 }
 
