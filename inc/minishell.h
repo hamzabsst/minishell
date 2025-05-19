@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/19 09:03:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 10:39:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 typedef struct s_cmd
 {
 	char			**av;
-	char			*infile;
-	char			*outfile;
-	int				append;
+	char			**infiles;
+	char			**outfiles;
+	int				*append_flags;
 	char			*heredoc;
 	char			*delimiter;
 	struct s_cmd	*next;
@@ -65,9 +65,9 @@ int		builtin_unset(char **av, char ***env);
 int		builtin_exit(char **av, char ***env);
 
 //exceve
-int		exec_pipeline(t_cmd *cmd, char **env);
+int		ft_exec(t_cmd *cmd, char **env);
 void	exec_cmd(t_cmd *cmd, char **env);
-void	handle_redirection(t_cmd *cmd);
+void	redirection(t_cmd *cmd);
 
 //utils
 int		ft_perror(char *msg);

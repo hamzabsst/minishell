@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/18 16:04:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 11:24:14 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	in_from_heredoc(t_cmd *cmd)
+static void	heredoc(t_cmd *cmd)
 {
 	int		tmp_fd;
 	char	*line;
@@ -46,42 +46,57 @@ static void	in_from_heredoc(t_cmd *cmd)
 	close(tmp_fd);
 }
 
-static void	in_from_file(char *infile)
+static void	redirect_input(char **infiles)
 {
 	int	fd;
+	int	i = 0;
 
-	fd = open(infile, O_RDONLY);
-	if (fd == -1)
-		(perror(infile), exit(1));
-	if (dup2(fd, STDIN_FILENO) == -1)
-		(perror("dup2 infile"),exit(1));
-	close(fd);
+	while (infiles && infiles[i])
+	{
+		fd = open(infiles[i], O_RDONLY);
+		if (fd == -1)
+			(perror(infiles[i]), exit(1));
+		if (!infiles[i + 1])
+		{
+			if (dup2(fd, STDIN_FILENO) == -1)
+				(perror("dup2 infiles"), exit(1));
+		}
+		close(fd);
+		i++;
+	}
 }
 
-static void	out_to_file(char *outfile, int append)
+static void	redirect_output(t_cmd *cmd)
 {
-	int	flags;
 	int	fd;
+	int	i = 0;
 
-	if (append)
-		flags = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(outfile, flags, 0644);
-	if (fd == -1)
-		(perror(outfile), exit(1));
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		(perror("dup2 outfile"), exit(1));
-	close(fd);
+	while (cmd->outfiles && cmd->outfiles[i])
+	{
+		int flags = cmd->append_flags[i];
+		if (flags == 1)
+			flags = O_WRONLY | O_CREAT | O_APPEND;
+		else
+			flags = O_WRONLY | O_CREAT | O_TRUNC;
+		fd = open(cmd->outfiles[i], flags, 0644);
+		if (fd == -1)
+			(perror(cmd->outfiles[i]), exit(1));
+		if (!cmd->outfiles[i + 1])
+		{
+			if (dup2(fd, STDOUT_FILENO) == -1)
+				(perror("dup2 outfiles"), exit(1));
+		}
+		close(fd);
+		i++;
+	}
 }
 
-void	handle_redirection(t_cmd *cmd)
+void	redirection(t_cmd *cmd)
 {
 	if (cmd->heredoc)
-		in_from_heredoc(cmd);
-	else if (cmd->infile)
-		in_from_file(cmd->infile);
-	if (cmd->outfile)
-		out_to_file(cmd->outfile, cmd->append);
+		heredoc(cmd);
+	else if(cmd->infiles)
+		redirect_input(cmd->infiles);
+	else if (cmd->outfiles)
+		redirect_output(cmd);
 }
-

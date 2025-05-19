@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/19 09:01:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 11:14:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int	main(int ac, char **av, char **env)
 		exit(1);
 	}
 	g_env = dup_env(env);
-	stdin_copy = dup(STDIN_FILENO);
-	stdout_copy = dup(STDOUT_FILENO);
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
@@ -58,15 +56,17 @@ int	main(int ac, char **av, char **env)
 		{
 			if (builtin(cmd->av[0]) && !cmd->next)
 			{
-				handle_redirection(cmd);
+				stdin_copy = dup(STDIN_FILENO);
+				stdout_copy = dup(STDOUT_FILENO);
+				redirection(cmd);
 				g_exit = exec_builtin(cmd, &g_env);
-				dup2(stdin_copy, STDIN_FILENO);
+ 				dup2(stdin_copy, STDIN_FILENO);
 				dup2(stdout_copy, STDOUT_FILENO);
 				close(stdin_copy);
 				close(stdout_copy);
 			}
 			else
-				g_exit = exec_pipeline(cmd, g_env);
+				g_exit = ft_exec(cmd, g_env);
 		}
 		else if (*line)
 		{
