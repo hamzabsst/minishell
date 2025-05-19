@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/23 11:52:20 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:30:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ static void	handle_flag(char **av, int *i, int *newline)
 			if (*ptr != 'n')
 			{
 				valid = 0;
-				break;
+				break ;
 			}
 			ptr++;
 		}
 		if (!valid)
-			break;
+			break ;
 		*newline = 0;
 		(*i)++;
 	}
 }
+
 int	builtin_echo(char **av)
 {
 	int		i;

@@ -52,9 +52,9 @@ t_token *allocate_token(char *content, char *type)
 }
 t_token *tokenize(char **tokens)
 {
-    t_token *head;
-    int i;
-    char *type;
+	t_token	*head;
+	int		i;
+	char	*type;
     t_token *new;
     i = 0;
     head = NULL;

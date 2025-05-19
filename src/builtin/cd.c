@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 11:38:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:30:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	update_env(char ***env_ptr, char *key, char *value)
 		return (1);
 	env = *env_ptr;
 	key_len = ft_strlen(key);
-	new_var = make_env_var(key ,value);
+	new_var = make_env_var(key, value);
 	if (!new_var)
 		return (1);
 	i = 0;

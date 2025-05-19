@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 11:29:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 10:19:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,12 @@
 static void	exec_child(t_cmd *cmd, char **env, int in, int out)
 {
 	if (dup2(in, STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
-	{
-		perror("dup2");
-		exit(1);
-	}
+		(perror("dup2"), exit(1));
 	if (in != STDIN_FILENO)
 		close(in);
 	if (out != STDOUT_FILENO)
 		close(out);
-	handle_redirection(cmd);
+	redirection(cmd);
 	if (builtin(cmd->av[0]) && !cmd->next)
 		exit(exec_builtin(cmd, &env));
 	exec_cmd(cmd, env);
@@ -35,26 +32,32 @@ static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
 	if (cmd->next)
 	{
 		if (pipe(pipe_fd) == -1)
-		{
-			perror("pipe");
-			exit(1);
-		}
+			(perror("pipe"), exit(1));
 	}
 	else
 		pipe_fd[1] = STDOUT_FILENO;
 }
 
-static void	wait_for_all(int *status)
+static void	wait_for_all(int *status, pid_t last_pid)
 {
-	while (wait(status) > 0)
-		;
+	pid_t	pid;
+	int		tmp;
+
+	*status = 0;
+	pid = 0;
+	while ((pid = wait(&tmp)) > 0)
+	{
+		if (pid == last_pid)
+			*status = tmp;
+	}
 }
 
-int	exec_pipeline(t_cmd *cmd, char **env)
+int	ft_exec(t_cmd *cmd, char **env)
 {
 	int		pipe_fd[2];
 	int		fd_in;
 	pid_t	pid;
+	pid_t	last_pid;
 	int		status;
 
 	fd_in = STDIN_FILENO;
@@ -72,9 +75,12 @@ int	exec_pipeline(t_cmd *cmd, char **env)
 			fd_in = pipe_fd[0];
 		}
 		else
+		{
 			fd_in = STDIN_FILENO;
+			last_pid = pid;
+		}
 		cmd = cmd->next;
 	}
-	wait_for_all(&status);
+	wait_for_all(&status, last_pid);;
 	return (WEXITSTATUS(status));
 }

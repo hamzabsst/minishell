@@ -1,6 +1,6 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc
+CFLAGS	= -Wall -Wextra -Werror -Iinc -g
 
 
 MYLIB_DIR	= mylib
@@ -20,7 +20,8 @@ SRCS	=	src/main.c \
 			src/pipe/pipe.c \
 			src/pipe/get_cmds.c \
 			src/pipe/redirection.c \
-			src/utils.c
+			src/utils.c \
+			src/signal.c
 
 OBJS	= $(SRCS:.c=.o)
 

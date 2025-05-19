@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:10:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 10:39:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,16 @@
 # include "../mylib/myLib.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include <sys/wait.h>
 # include <stdbool.h>
-
-#define RED     "\001\033[1;31m\002"
-#define GREEN   "\001\033[1;32m\002"
-#define YELLOW  "\001\033[1;33m\002"
-#define BLUE    "\001\033[1;34m\002"
-#define MAGENTA "\001\033[1;35m\002"
-#define CYAN    "\001\033[1;36m\002"
-#define RESET   "\001\033[0m\002"
 
 typedef struct s_cmd
 {
 	char			**av;
-	char			*infile;
-	char			*outfile;
-	int				append;
+	char			**infiles;
+	char			**outfiles;
+	int				*append_flags;
 	char			*heredoc;
 	char			*delimiter;
 	struct s_cmd	*next;
@@ -58,12 +51,13 @@ void	free_token_list(t_token *token);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value);
+int		update_env_append(char ***env, char *key, char *value);
 char	**dup_env(char **env);
 char	*ft_getenv(char **env, const char *key);
 
 //built-in cmds
-int		builtin(char *cmd);
 int		exec_builtin(t_cmd *cmd, char ***env);
+int		builtin(char *cmd);
 int		builtin_echo(char **av);
 int		builtin_cd(char **av, char ***env);
 int		builtin_export(char **av, char ***env);
@@ -71,11 +65,15 @@ int		builtin_unset(char **av, char ***env);
 int		builtin_exit(char **av, char ***env);
 
 //exceve
-int		exec_pipeline(t_cmd *cmd, char **env);
+int		ft_exec(t_cmd *cmd, char **env);
 void	exec_cmd(t_cmd *cmd, char **env);
-void	handle_redirection(t_cmd *cmd);
+void	redirection(t_cmd *cmd);
 
 //utils
-int	ft_perror(char *msg);
+int		ft_perror(char *msg);
+char	*find_key(const char *arg);
+
+//signal
+void	handle_sigint(int sig);
 
 #endif

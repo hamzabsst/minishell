@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/28 11:37:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/19 09:05:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,7 @@ void	exec_cmd(t_cmd *cmd, char **env)
 	char	*path;
 
 	if (!cmd->av || !cmd->av[0])
-	{
-		ft_perror("empty command\n");
-		exit(127);
-	}
+		exit(0);
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
