@@ -6,13 +6,26 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/19 11:14:25 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/20 09:53:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		sig = 0;
+int		g_sig = 0;
+
+void	handle_sigint(int sig)
+{
+	if(g_sig == 1)
+		return ;
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -66,7 +79,11 @@ int	main(int ac, char **av, char **env)
 				close(stdout_copy);
 			}
 			else
+			{
+				g_sig = 1;
 				g_exit = ft_exec(cmd, g_env);
+				g_sig = 0;
+			}
 		}
 		else if (*line)
 		{
