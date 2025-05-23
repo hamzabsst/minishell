@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/19 11:24:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/23 10:24:55 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	heredoc(t_cmd *cmd)
 		(close(tmp_fd), unlink("/tmp/.here_doc_tmp"), exit(1));
 	while (1)
 	{
-		write(1, "heredoc> ", 9);
+		write(1, "> ", 2);
 		line = get_next_line(STDIN_FILENO);
 		if (!line || !ft_strcmp(line, cmd->delimiter) || !ft_strcmp(line, joined))
 		{
