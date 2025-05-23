@@ -71,6 +71,8 @@ t_token *tokenize(char **tokens)
             type = "APPEND";
         else if (ft_strcmp(tokens[i], "<<") == 0)
             type = "HEREDOC";
+        else if(ft_strcmp(tokens[i - 1], "<<") == 0)
+            type = "DELIMITER";
         new = allocate_token(tokens[i], type);
         add_token_back(&head, new);
         i++;
