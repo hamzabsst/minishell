@@ -61,7 +61,9 @@ t_token *tokenize(char **tokens)
     while (tokens[i])
     {
         type = "WORD";
-        if (ft_strcmp(tokens[i], "|") == 0)
+		if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
+			type = "DELIMITER";
+        else if (ft_strcmp(tokens[i], "|") == 0)
             type = "PIPE";
         else if (ft_strcmp(tokens[i], ">") == 0)
             type = "REDIRECTION_OUT";
@@ -71,8 +73,6 @@ t_token *tokenize(char **tokens)
             type = "APPEND";
         else if (ft_strcmp(tokens[i], "<<") == 0)
             type = "HEREDOC";
-        else if(ft_strcmp(tokens[i - 1], "<<") == 0)
-            type = "DELIMITER";
         new = allocate_token(tokens[i], type);
         add_token_back(&head, new);
         i++;
