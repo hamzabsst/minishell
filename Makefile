@@ -47,6 +47,10 @@ fclean: clean
 	@$(MAKE) -s fclean -C $(MYLIB_DIR)
 	@echo "full clean completed \033[1;31m✔\033[0m"
 
+t: clean all
+	@rm -f $(OBJS)
+	@./$(NAME)
+
 re: fclean all
 
 .PHONY: all clean fclean re
