@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/24 19:48:23 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/25 11:55:17 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,71 +108,24 @@ char    **smart_split(char *str)
     while (str[i])
     {
         while (str[i] == ' ')
+        start = i;
             i++;
         if (!str[i])
             break;
-        start = i;
-        if (str[i] == '\"')
+        if (str[i] == '\"' || str[i] == '\'')
         {
-            count = 0;
             in_quote = 1;
             quote_type = str[i];
-            j = i;
             i++;
             start = i;
-            while (str[j] && str[j] != ' ')
-            {
-                if(str[j] == quote_type)
-                {
-                    count++;
-                    position = j;
-                }
-                j++;
-            }
-            while (str[i] && position != i)
+            while (str[i] && quote_type != str[i])
                 i++;
-            if(count % 2 == 1)
-            {
-                printf("Error : unmatched quotes\n");
-                return (NULL);
-            }
-            else if (str[i] == quote_type && in_quote == 1)
+            if (str[i] == quote_type && in_quote == 1)
             {
                 tokens[k++] = ft_strndup(&str[start], i - start, quote_type);
                 i++;
+                in_quote = 0;
             }
-            in_quote = 0;
-        }
-        else if (str[i] == '\'')
-        {
-            count = 0;
-            in_quote = 1;
-            quote_type = str[i];
-            j = i;
-            i++;
-            start = i;
-            while (str[j] && str[j] != ' ')
-            {
-                if(str[j] == quote_type)
-                {
-                    count++;
-                    position = j;
-                }
-                j++;
-            }
-            while (str[i] && position != i)
-                i++;
-            if(count % 2 == 1)
-            {
-                printf("Error : unmatched quotes\n");
-                return (NULL);
-            }
-            else if (str[i] == quote_type && in_quote == 1)
-            {
-                tokens[k++] = ft_strndup(&str[start], i - start, quote_type);
-                i++;
-            }
-            in_quote = 0;
         }
         else if (str[i] == '>')
         {
