@@ -14,83 +14,90 @@
 
 void print_tokens(t_token *tokens)
 {
-    int i = 0;
-    while (tokens)
-    {
-        printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
-        tokens = tokens->next;
-        i++;
-    }
+	int i = 0;
+	while (tokens)
+	{
+		printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
+		tokens = tokens->next;
+		i++;
+	}
 }
 void add_token_back(t_token **head, t_token *new)
 {
-    t_token *tmp;
-    if (!*head)
-    {
-        *head = new;
-        return ;
-    }
-    tmp = *head;
-    while (tmp->next)
-    {
-        tmp = tmp->next;
-    }
-    tmp->next = new;
+	t_token *tmp;
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	tmp = *head;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	tmp->next = new;
 }
 
-t_token *allocate_token(char *content, char *type)
+char	*ft_sstrdup(t_cmd *cmd, const char *s)
 {
-    t_token *new;
+	size_t	i;
+	size_t	size;
+	char	*results;
 
-    new = malloc(sizeof(t_token));
-    if (!new)
-        return (NULL);
-    new->content = ft_strdup(content);
-    new->type = ft_strdup(type);
-    new->next = NULL;
-    return (new);
+	size = ft_strlen(s);
+	results = ft_malloc(cmd->mem_manager, (size + 1) * sizeof(char));
+	if (!results)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		results[i] = s[i];
+		i++;
+	}
+	results[i] = '\0';
+	return (results);
 }
-t_token *tokenize(char **tokens)
+
+t_token *allocate_token(t_cmd *cmd, char *content, char *type)
+{
+	t_token *new;
+
+	new = ft_malloc(cmd->mem_manager ,sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->content = ft_sstrdup(cmd, content);
+	new->type = ft_sstrdup(cmd, type);
+	new->next = NULL;
+	return (new);
+}
+t_token *tokenize(t_cmd *cmd, char **tokens)
 {
 	t_token	*head;
 	int		i;
 	char	*type;
-    t_token *new;
-    i = 0;
-    head = NULL;
-    while (tokens[i])
-    {
-        type = "WORD";
+	t_token *new;
+	i = 0;
+	head = NULL;
+	while (tokens[i])
+	{
+		type = "WORD";
 		if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
 			type = "DELIMITER";
-        else if (ft_strcmp(tokens[i], "|") == 0)
-            type = "PIPE";
-        else if (ft_strcmp(tokens[i], ">") == 0)
-            type = "REDIRECTION_OUT";
-        else if (ft_strcmp(tokens[i], "<") == 0)
-            type = "REDIRECTION_IN";
-        else if(ft_strcmp(tokens[i], ">>") == 0)
-            type = "APPEND";
-        else if (ft_strcmp(tokens[i], "<<") == 0)
-            type = "HEREDOC";
-        new = allocate_token(tokens[i], type);
-        add_token_back(&head, new);
-        i++;
-    }
-    return (head);
-}
-
-void	free_token_list(t_token *token)
-{
-	t_token *next;
-
-	while (token)
-	{
-		next = token->next;
-		free(token->content);
-		free(token->type);
-		free(token);
-		token = next;
+		else if (ft_strcmp(tokens[i], "|") == 0)
+			type = "PIPE";
+		else if (ft_strcmp(tokens[i], ">") == 0)
+			type = "REDIRECTION_OUT";
+		else if (ft_strcmp(tokens[i], "<") == 0)
+			type = "REDIRECTION_IN";
+		else if(ft_strcmp(tokens[i], ">>") == 0)
+			type = "APPEND";
+		else if (ft_strcmp(tokens[i], "<<") == 0)
+			type = "HEREDOC";
+		new = allocate_token(cmd, tokens[i], type);
+		add_token_back(&head, new);
+		i++;
 	}
+	return (head);
 }
+
 

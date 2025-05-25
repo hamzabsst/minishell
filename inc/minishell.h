@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/20 12:45:20 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/25 11:20:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../mylib/myLib.h"
+# include "ft_mem.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -29,6 +30,7 @@ typedef struct s_cmd
 	char			*heredoc;
 	char			*delimiter;
 	struct s_cmd	*next;
+	t_mem			*mem_manager;
 }	t_cmd;
 
 typedef struct s_token
@@ -40,14 +42,13 @@ typedef struct s_token
 
 //parsing
 void	init_struct(t_cmd *cmd);
-char	**smart_split(char *str);
+char	**smart_split(t_cmd *cmd, char *str);
 void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
 void	print_tokens(t_token *tokens);
 void	add_token_back(t_token **head, t_token *new);
-t_token	*allocate_token(char *content, char *type);
-t_token	*tokenize(char **tokens);
-t_cmd	*start_of_parsing(t_token *tokens);
-void	free_token_list(t_token *token);
+t_token	*allocate_token(t_cmd *cmd, char *content, char *type);
+t_token *tokenize(t_cmd *cmd, char **tokens);
+t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value);
