@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:03:59 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:13:55 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:45:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 	quote_type = '\0';
 	token_count = count_tokens(str);
 
-	tokens = ft_malloc(cmd->mem_manager , token_count + 1);
+	tokens = ft_malloc(cmd->mem_manager , sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);
 	while (str[i] == ' ')

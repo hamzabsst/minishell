@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/25 11:37:40 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:55:14 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void init_struct(t_cmd *cmd)
 	cmd->next = NULL;
 	cmd->delimiter = NULL;
 }
-//khouya i had to handle this alone ma nigga do your work
+
 void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
 	int		i;
@@ -105,13 +105,14 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			new_cmd = ft_malloc(cmd->mem_manager, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
+			new_cmd->mem_manager = cmd->mem_manager;
 			init_struct(new_cmd);
 			current->next = new_cmd;
 			current = new_cmd;
 			i = 0;
 		}
 		else if (ft_strcmp(tokens->type, "WORD") == 0)
-			current->av[i++] = tokens->content;
+				current->av[i++] = tokens->content;
 		else if (ft_strcmp(tokens->type, "REDIRECTION_OUT") == 0)
 		{
 			tokens = tokens->next;
@@ -136,7 +137,8 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			if (tokens)
 				current->heredoc = tokens->content;
 		}
-		tokens = tokens->next;
+		if (tokens)
+			tokens = tokens->next;
 	}
 	return (head);
 }
