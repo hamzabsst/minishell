@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:13:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:45:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ static void	sort_env(char **env)
 	}
 }
 
-static int	print_export(char **env, t_mem *manager)
+static int	print_export(char **env, t_mem *collector)
 {
 	char	**copy;
 	int		i;
 	char	*equal;
 
 	i = 0;
-	copy = dup_env(env, manager);
+	copy = dup_env(env, collector);
 	sort_env(copy);
 	while (copy[i])
 	{
@@ -80,7 +80,7 @@ static int	print_export(char **env, t_mem *manager)
 	return (0);
 }
 
-static void	process_av(char *arg, char ***env, t_mem *manager)
+static void	process_av(char *arg, char ***env, t_mem *collector)
 {
 	char	*key;
 	char	*equal;
@@ -90,22 +90,22 @@ static void	process_av(char *arg, char ***env, t_mem *manager)
 	if (equal)
 	{
 		if (*(equal - 1) == '+')
-			update_env_append(env, key, equal + 1, manager);
+			update_env_append(env, key, equal + 1, collector);
 		else
-			update_env(env, key, equal + 1, manager);
+			update_env(env, key, equal + 1, collector);
 	}
 	else if (!ft_getenv(*env, key))
-		update_env(env, key, "", manager);
+		update_env(env, key, "", collector);
 	free(key);
 }
 
-int	builtin_export(char **av, char ***env, t_mem *manager)
+int	builtin_export(char **av, char ***env, t_mem *collector)
 {
 	int	i;
 
 	i = 1;
 	if (!av[1])
-		return (print_export(*env, manager));
+		return (print_export(*env, collector));
 	while (av[i])
 	{
 		if (!identifier(av[i]))
@@ -115,7 +115,7 @@ int	builtin_export(char **av, char ***env, t_mem *manager)
 			ft_perror("': not a valid identifier\n");
 		}
 		else
-			process_av(av[i], env, manager);
+			process_av(av[i], env, collector);
 		i++;
 	}
 	return (0);

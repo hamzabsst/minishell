@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:12:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:46:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*find_key(const char *arg)
 	return (ft_substr(arg, 0, len));
 }
 
-int	update_env_append(char ***env, char *key, char *value, t_mem *manager)
+int	update_env_append(char ***env, char *key, char *value, t_mem *collector)
 {
 	char	*old_value;
 	char	*new_value;
@@ -35,12 +35,12 @@ int	update_env_append(char ***env, char *key, char *value, t_mem *manager)
 		new_value = ft_strdup(value);
 	if (!new_value)
 		return (1);
-	update_env(env, key, new_value, manager);
+	update_env(env, key, new_value, collector);
 	free(new_value);
 	return (0);
 }
 
-char	**dup_env(char **env, t_mem *manager)
+char	**dup_env(char **env, t_mem *collector)
 {
 	int		len;
 	int		i;
@@ -50,12 +50,12 @@ char	**dup_env(char **env, t_mem *manager)
 	i = 0;
 	while (env[len])
 		len++;
-	copy = ft_malloc(manager, sizeof(char *) * (len + 1));
+	copy = ft_malloc(collector, sizeof(char *) * (len + 1));
 	if (!copy)
 		return (NULL);
 	while(i < len)
 	{
-		copy[i] = ft_malloc(manager, strlen(env[i]) + 1);
+		copy[i] = ft_malloc(collector, strlen(env[i]) + 1);
 		if (!copy[i])
 			return (NULL);
 		strcpy(copy[i], env[i]);

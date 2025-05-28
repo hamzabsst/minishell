@@ -6,24 +6,24 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:51:50 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:49:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:45:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_mem.h"
 
-void	init_mem(t_mem *manager)
+void	init_mem(t_mem *collector)
 {
-	if (manager)
-		manager->head = NULL;
+	if (collector)
+		collector->head = NULL;
 }
 
-void *ft_malloc(t_mem *manager, size_t size)
+void *ft_malloc(t_mem *collector, size_t size)
 {
 	void		*ptr;
 	t_mem_node	*new_node;
 
-	if (!manager || size == 0)
+	if (!collector || size == 0)
 		return (NULL);
 	ptr = malloc(size);
 	if (!ptr)
@@ -35,33 +35,33 @@ void *ft_malloc(t_mem *manager, size_t size)
 		return (NULL);
 	}
 	new_node->ptr = ptr;
-	new_node->next = manager->head;
-	manager->head = new_node;
+	new_node->next = collector->head;
+	collector->head = new_node;
 	return (ptr);
 }
 
-int	ft_add_ptr(t_mem *manager, void *ptr)
+int	ft_add_ptr(t_mem *collector, void *ptr)
 {
 	t_mem_node	*new_node;
-	if (!manager || !ptr)
+	if (!collector || !ptr)
 		return (0);
 	new_node = malloc(sizeof(t_mem_node));
 	if (!new_node)
 		return (0);
 	new_node->ptr = ptr;
-	new_node->next = manager->head;
-	manager->head = new_node;
+	new_node->next = collector->head;
+	collector->head = new_node;
 	return (1);
 }
 
-void	ft_free_ptr(t_mem *manager, void *ptr)
+void	ft_free_ptr(t_mem *collector, void *ptr)
 {
 	t_mem_node	*current;
 	t_mem_node	*prev;
 
-	if (!manager || !ptr)
+	if (!collector || !ptr)
 		return;
-	current = manager->head;
+	current = collector->head;
 	prev = NULL;
 	while (current)
 	{
@@ -70,7 +70,7 @@ void	ft_free_ptr(t_mem *manager, void *ptr)
 			if (prev)
 				prev->next = current->next;
 			else
-				manager->head = current->next;
+				collector->head = current->next;
 			free(current->ptr);
 			free(current);
 			return;
@@ -80,14 +80,14 @@ void	ft_free_ptr(t_mem *manager, void *ptr)
 	}
 }
 
-void	ft_free_all(t_mem *manager)
+void	ft_free_all(t_mem *collector)
 {
 	t_mem_node *current;
 	t_mem_node *next;
 
-	if (!manager)
+	if (!collector)
 		return;
-	current = manager->head;
+	current = collector->head;
 	while (current)
 	{
 		next = current->next;
@@ -95,5 +95,5 @@ void	ft_free_all(t_mem *manager)
 		free(current);
 		current = next;
 	}
-	manager->head = NULL;
+	collector->head = NULL;
 }

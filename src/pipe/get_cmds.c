@@ -6,16 +6,16 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:13:47 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:44:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void cleanup_child(t_mem *manager)
+void cleanup_child(t_mem *collector)
 {
-	if (manager)
-		ft_free_all(manager);
+	if (collector)
+		ft_free_all(collector);
 }
 
 static char	**get_path(char **env)
@@ -74,20 +74,20 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	return (resolved);
 }
 
-void	exec_cmd(t_cmd *cmd, char **env, t_mem *manager)
+void	exec_cmd(t_cmd *cmd, char **env, t_mem *collector)
 {
 	char	*path;
 
 	if (!cmd->av || !cmd->av[0])
-		(cleanup_child(manager), exit(0));
+		(cleanup_child(collector), exit(0));
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->av[0], 2);
 		ft_perror(": command not found\n");
-		(cleanup_child(manager), exit(127));
+		(cleanup_child(collector), exit(127));
 	}
-	//cleanup_child(manager);
+	//cleanup_child(collector);
 	execve(path, cmd->av, env);
 	perror("execve");
 	free(path);
