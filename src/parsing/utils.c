@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 10:36:11 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:43:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
 	int k;
 
 	k = 0;
-	results = ft_malloc(cmd->mem_manager, len + 1);
+	results = ft_malloc(cmd->collector, len + 1);
 	if (!results)
 		return (NULL);
 	i = 0;
@@ -40,42 +40,42 @@ static int count_tokens(char *str)
 	int i = 0;
 	char quote_type = '\0';
 
-    while (str[i])
-    {
-        while (str[i] == ' ')
-            i++;
-        if (!str[i])
-            break;
-        count++;
-        if (str[i] == '\"' || str[i] == '\'')
-        {
-            quote_type = str[i++];
-            while (str[j])
-            {
-                if (str[j] == quote_type)
-                    position = j;
-                j++;
-            }
-            while (str[i] && i != position)
-                i++;
-            if (str[i] == quote_type)
-                i++;
-        }
-        else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
-        {
-            if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
-                i += 2;
-            else
-                i++;
-        }
-        else
-            while (str[i] && str[i] != ' ' && str[i] != '>' && str[i] != '<' &&
-                str[i] != '|' && str[i] != '\'' && str[i] != '\"')
-                i++;
-    }
-    // printf("%s\n", str);
-    // printf("%d\n", count);
-    return (count);
+	while (str[i])
+	{
+		while (str[i] == ' ')
+			i++;
+		if (!str[i])
+			break;
+		count++;
+		if (str[i] == '\"' || str[i] == '\'')
+		{
+			quote_type = str[i++];
+			while (str[j])
+			{
+				if (str[j] == quote_type)
+					position = j;
+				j++;
+			}
+			while (str[i] && i != position)
+				i++;
+			if (str[i] == quote_type)
+				i++;
+		}
+		else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
+		{
+			if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
+				i += 2;
+			else
+				i++;
+		}
+		else
+			while (str[i] && str[i] != ' ' && str[i] != '>' && str[i] != '<' &&
+				str[i] != '|' && str[i] != '\'' && str[i] != '\"')
+				i++;
+	}
+	// printf("%s\n", str);
+	// printf("%d\n", count);
+	return (count);
 }
 
 char	**smart_split(t_cmd *cmd, char *str)
@@ -99,7 +99,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 	quote_type = '\0';
 	token_count = count_tokens(str);
 
-	tokens = ft_malloc(cmd->mem_manager , sizeof(char *) * (token_count + 1));
+	tokens = ft_malloc(cmd->collector , sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);
 	while (str[i] == ' ')

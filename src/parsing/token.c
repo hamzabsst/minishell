@@ -45,7 +45,7 @@ char	*ft_sstrdup(t_cmd *cmd, const char *s)
 	char	*results;
 
 	size = ft_strlen(s);
-	results = ft_malloc(cmd->mem_manager, (size + 1) * sizeof(char));
+	results = ft_malloc(cmd->collector, (size + 1) * sizeof(char));
 	if (!results)
 		return (NULL);
 	i = 0;
@@ -62,7 +62,7 @@ t_token *allocate_token(t_cmd *cmd, char *content, char *type)
 {
 	t_token *new;
 
-	new = ft_malloc(cmd->mem_manager ,sizeof(t_token));
+	new = ft_malloc(cmd->collector ,sizeof(t_token));
 	if (!new)
 		return (NULL);
 	new->content = ft_sstrdup(cmd, content);
