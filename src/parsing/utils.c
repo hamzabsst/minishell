@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 10:31:20 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:36:11 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,5 @@ char	**smart_split(t_cmd *cmd, char *str)
 		}
 	}
 	tokens[k] = NULL;
-	printf("%d\n", k);
 	return (tokens);
 }

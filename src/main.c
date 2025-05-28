@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:33:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:35:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,10 @@ int main(int ac, char **av, char **env)
 		}
 		//ft_free_all(&mem_manager);
 		//init_mem(&mem_manager);
-	}
 		ft_free_all(&mem_manager);
 		init_mem(&mem_manager);
 		free(line);
 	}
-	if (g_env)
-		ft_free(g_env);
 	ft_free_all(&mem_manager);
 	exit(g_exit);
 }
