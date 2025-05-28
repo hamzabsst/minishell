@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:38:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:13:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,14 @@ static void	sort_env(char **env)
 	}
 }
 
-static int	print_export(char **env)
+static int	print_export(char **env, t_mem *manager)
 {
 	char	**copy;
 	int		i;
 	char	*equal;
 
 	i = 0;
-	copy = dup_env(env);
-	if (!copy)
-		return (1);
+	copy = dup_env(env, manager);
 	sort_env(copy);
 	while (copy[i])
 	{
@@ -79,11 +77,10 @@ static int	print_export(char **env)
 			printf("declare -x %s\n", copy[i]);
 		i++;
 	}
-	ft_free(copy);
 	return (0);
 }
 
-static void	process_av(char *arg, char ***env)
+static void	process_av(char *arg, char ***env, t_mem *manager)
 {
 	char	*key;
 	char	*equal;
@@ -93,22 +90,22 @@ static void	process_av(char *arg, char ***env)
 	if (equal)
 	{
 		if (*(equal - 1) == '+')
-			update_env_append(env, key, equal + 1);
+			update_env_append(env, key, equal + 1, manager);
 		else
-			update_env(env, key, equal + 1);
+			update_env(env, key, equal + 1, manager);
 	}
 	else if (!ft_getenv(*env, key))
-		update_env(env, key, "");
+		update_env(env, key, "", manager);
 	free(key);
 }
 
-int	builtin_export(char **av, char ***env)
+int	builtin_export(char **av, char ***env, t_mem *manager)
 {
 	int	i;
 
 	i = 1;
 	if (!av[1])
-		return (print_export(*env));
+		return (print_export(*env, manager));
 	while (av[i])
 	{
 		if (!identifier(av[i]))
@@ -118,7 +115,7 @@ int	builtin_export(char **av, char ***env)
 			ft_perror("': not a valid identifier\n");
 		}
 		else
-			process_av(av[i], env);
+			process_av(av[i], env, manager);
 		i++;
 	}
 	return (0);

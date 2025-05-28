@@ -6,20 +6,20 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:30:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:10:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	copy_env(char ***env, char *new_var, int count)
+static int	copy_env(char ***env, char *new_var, int count, t_mem *manager)
 {
 	char	**old;
 	char	**new_env;
 	int		j;
 
 	old = *env;
-	new_env = malloc(sizeof(char *) * (count + 2));
+	new_env = ft_malloc(manager, sizeof(char *) * (count + 2));
 	if (!new_env)
 		return (free(new_var), 1);
 	j = 0;
@@ -30,18 +30,17 @@ static int	copy_env(char ***env, char *new_var, int count)
 	}
 	new_env[count] = new_var;
 	new_env[count + 1] = NULL;
-	free(old);
 	*env = new_env;
 	return (0);
 }
 
-static char	*make_env_var(char *key, char *value)
+static char	*make_env_var(char *key, char *value, t_mem *manager)
 {
 	char	*var;
 	size_t	len;
 
 	len = ft_strlen(key) + ft_strlen(value) + 2;
-	var = malloc(len);
+	var = ft_malloc(manager, len);
 	if (!var)
 		return (NULL);
 	ft_strcpy(var, key);
@@ -62,7 +61,7 @@ static int	handle_path(const char *arg)
 	return (1);
 }
 
-int	update_env(char ***env_ptr, char *key, char *value)
+int	update_env(char ***env_ptr, char *key, char *value, t_mem *manager)
 {
 	char	**env;
 	char	*new_var;
@@ -73,7 +72,7 @@ int	update_env(char ***env_ptr, char *key, char *value)
 		return (1);
 	env = *env_ptr;
 	key_len = ft_strlen(key);
-	new_var = make_env_var(key, value);
+	new_var = make_env_var(key, value, manager);
 	if (!new_var)
 		return (1);
 	i = 0;
@@ -81,16 +80,15 @@ int	update_env(char ***env_ptr, char *key, char *value)
 	{
 		if (!ft_strncmp(env[i], key, key_len) && env[i][key_len] == '=')
 		{
-			free(env[i]);
 			env[i] = new_var;
 			return (0);
 		}
 		i++;
 	}
-	return (copy_env(env_ptr, new_var, i));
+	return (copy_env(env_ptr, new_var, i, manager));
 }
 
-int	builtin_cd(char **argv, char ***env)
+int	builtin_cd(char **argv, char ***env, t_mem *manager)
 {
 	char	*oldpwd;
 	char	*newpwd;
@@ -108,12 +106,12 @@ int	builtin_cd(char **argv, char ***env)
 		path = argv[1];
 	if (chdir(path) == -1)
 		return (ft_perror("cd: "), perror(path), free(oldpwd), 1);
-	if (update_env(env, "OLDPWD", oldpwd) != 0)
+	if (update_env(env, "OLDPWD", oldpwd, manager) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 		return (perror("cd: getcwd"), 1);
-	ret = update_env(env, "PWD", newpwd);
+	ret = update_env(env, "PWD", newpwd, manager);
 	return (free(newpwd), ret);
 }

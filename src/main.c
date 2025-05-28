@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:59:20 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:26:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,42 +27,29 @@ void	handle_sigint(int sig)
 	}
 }
 
-void debug_mem_count(t_mem *manager)
-{
-	t_mem_node *current = manager->head;
-	int count = 0;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	printf("Memory manager has %d allocations\n", count);
-}
-
+// Important Notes:
+// You must pass your memory manager to ft_exec() and all related functions
+// Make sure all your mallocs use ft_malloc(manager, size) instead of regular malloc()
+// Any pointers from external functions (like strdup(), split(), etc.) should be added to the manager with ft_add_ptr()
 int main(int ac, char **av, char **env)
 {
 	char	*line;
 	char	**g_env;
-	int	 g_exit = 0;
-	t_token *token_list;
-	t_cmd   *cmd;
 	char	**splited;
-	int	 stdin_copy;
-	int	 stdout_copy;
-	t_mem   mem_manager;
+	int		g_exit;
+	int		stdin_copy;
+	int		stdout_copy;
+	t_mem	mem_manager;
+	t_token	*token_list;
+	t_cmd	*cmd;
 	(void)av;
 
 	if (ac != 1)
-	{
-		ft_perror("Invalid number of arguments\n");
-		exit(1);
-	}
-
-	g_env = dup_env(env);
+		exit(ft_perror("Invalid number of arguments\n"));
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 	init_mem(&mem_manager);
-
+	g_env = dup_env(env, &mem_manager);
 	while (1)
 	{
 		line = readline("minishell$> ");
@@ -71,34 +58,26 @@ int main(int ac, char **av, char **env)
 			write(1, "exit\n", 5);
 			break;
 		}
-
 		if (*line)
 			add_history(line);
 		cmd = ft_malloc(&mem_manager, sizeof(t_cmd));
 		if (!cmd)
-		{
-			free(line);
 			continue;
-		}
 		cmd->mem_manager = &mem_manager;
 		init_struct(cmd);
 		splited = smart_split(cmd, line);
 		if (!splited)
-		{
-			free(line);
 			continue;
-		}
 		token_list = tokenize(cmd, splited);
 		cmd = start_of_parsing(cmd, token_list);
-
 		if (cmd)
 		{
 			if (builtin(cmd->av[0]) && !cmd->next)
 			{
 				stdin_copy = dup(STDIN_FILENO);
 				stdout_copy = dup(STDOUT_FILENO);
-				redirection(cmd);
-				g_exit = exec_builtin(cmd, &g_env);
+				redirection(cmd, &mem_manager);
+				g_exit = exec_builtin(cmd, &g_env, &mem_manager);
 				dup2(stdin_copy, STDIN_FILENO);
 				dup2(stdout_copy, STDOUT_FILENO);
 				close(stdin_copy);
@@ -107,7 +86,7 @@ int main(int ac, char **av, char **env)
 			else
 			{
 				g_sig = 1;
-				g_exit = ft_exec(cmd, g_env);
+				g_exit = ft_exec(cmd, g_env, &mem_manager);
 				g_sig = 0;
 			}
 		}
@@ -116,19 +95,9 @@ int main(int ac, char **av, char **env)
 			ft_perror("Parse error.\n");
 			g_exit = 1;
 		}
-		debug_mem_count(&mem_manager);
-		ft_free_all(&mem_manager);
-		init_mem(&mem_manager);
-		free(line);
+		//ft_free_all(&mem_manager);
+		//init_mem(&mem_manager);
 	}
-	if (g_env)
-	{
-		int i = 0;
-		while (g_env[i])
-			free(g_env[i++]);
-		free(g_env);
-	}
-	debug_mem_count(&mem_manager);
 	ft_free_all(&mem_manager);
 	exit(g_exit);
 }

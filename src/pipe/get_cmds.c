@@ -6,11 +6,17 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/19 09:05:57 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:13:47 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void cleanup_child(t_mem *manager)
+{
+	if (manager)
+		ft_free_all(manager);
+}
 
 static char	**get_path(char **env)
 {
@@ -68,19 +74,20 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	return (resolved);
 }
 
-void	exec_cmd(t_cmd *cmd, char **env)
+void	exec_cmd(t_cmd *cmd, char **env, t_mem *manager)
 {
 	char	*path;
 
 	if (!cmd->av || !cmd->av[0])
-		exit(0);
+		(cleanup_child(manager), exit(0));
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->av[0], 2);
 		ft_perror(": command not found\n");
-		exit(127);
+		(cleanup_child(manager), exit(127));
 	}
+	//cleanup_child(manager);
 	execve(path, cmd->av, env);
 	perror("execve");
 	free(path);

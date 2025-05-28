@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:30:58 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 09:58:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ static int	is_numeric(const char *str)
 	return (1);
 }
 
-int	builtin_exit(char **argv, char ***env)
+int	builtin_exit(char **argv, char ***env, t_mem *manager)
 {
 	int	exit_code;
 
 	write(1, "exit\n", 5);
 	if (!argv[1])
 	{
-		ft_free(*env);
+		ft_free_ptr(manager, *env);
 		exit(0);
 	}
 	if (!is_numeric(argv[1]))
@@ -45,12 +45,12 @@ int	builtin_exit(char **argv, char ***env)
 		ft_perror("exit: ");
 		ft_perror(argv[1]);
 		ft_perror(": numeric argument required\n");
-		ft_free(*env);
+		ft_free_ptr(manager, *env);
 		exit(255);
 	}
 	if (argv[2])
 		return (ft_perror("exit: too many arguments\n"));
 	exit_code = ft_atoi(argv[1]);
-	ft_free(*env);
+	ft_free_ptr(manager, *env);
 	exit(exit_code);
 }

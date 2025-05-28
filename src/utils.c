@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:40:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:12:38 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*find_key(const char *arg)
 	return (ft_substr(arg, 0, len));
 }
 
-int	update_env_append(char ***env, char *key, char *value)
+int	update_env_append(char ***env, char *key, char *value, t_mem *manager)
 {
 	char	*old_value;
 	char	*new_value;
@@ -35,37 +35,33 @@ int	update_env_append(char ***env, char *key, char *value)
 		new_value = ft_strdup(value);
 	if (!new_value)
 		return (1);
-	update_env(env, key, new_value);
+	update_env(env, key, new_value, manager);
 	free(new_value);
 	return (0);
 }
 
-char	**dup_env(char **env)
+char	**dup_env(char **env, t_mem *manager)
 {
+	int		len;
 	int		i;
-	int		n;
 	char	**copy;
 
-	n = 0;
-	while (env[n])
-		n++;
-	copy = malloc(sizeof(char *) * (n + 1));
+	len = 0;
+	i = 0;
+	while (env[len])
+		len++;
+	copy = ft_malloc(manager, sizeof(char *) * (len + 1));
 	if (!copy)
 		return (NULL);
-	i = 0;
-	while (i < n)
+	while(i < len)
 	{
-		copy[i] = ft_strdup(env[i]);
+		copy[i] = ft_malloc(manager, strlen(env[i]) + 1);
 		if (!copy[i])
-		{
-			while (--i >= 0)
-				free(copy[i]);
-			free(copy);
 			return (NULL);
-		}
+		strcpy(copy[i], env[i]);
 		i++;
 	}
-	copy[n] = NULL;
+	copy[len] = NULL;
 	return (copy);
 }
 
