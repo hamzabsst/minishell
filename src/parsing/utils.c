@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/01 14:03:59 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/26 20:17:08 by hbousset         ###   ########.fr       */
+/*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
+/*   Updated: 2025/05/28 10:31:20 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
+char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
 {
 	size_t	i;
 	char	*results;
@@ -40,47 +40,47 @@ static int count_tokens(char *str)
 	int i = 0;
 	char quote_type = '\0';
 
-	while (str[i])
-	{
-		while (str[i] == ' ')
-			i++;
-		if (!str[i])
-			break;
-		count++;
-		if (str[i] == '\"' || str[i] == '\'')
-		{
-			quote_type = str[i++];
-			while (str[j])
-			{
-				if (str[j] == quote_type)
-					position = j;
-				j++;
-			}
-			while (str[i] && i != position)
-				i++;
-			if (str[i] == quote_type)
-				i++;
-		}
-		else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
-		{
-			if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
-				i += 2;
-			else
-				i++;
-		}
-		else
-			while (str[i] && str[i] != ' ' && str[i] != '>' && str[i] != '<' &&
-				str[i] != '|' && str[i] != '\'' && str[i] != '\"')
-				i++;
-	}
-	// printf("%s\n", str);
-	// printf("%d\n", count);
-	return (count);
+    while (str[i])
+    {
+        while (str[i] == ' ')
+            i++;
+        if (!str[i])
+            break;
+        count++;
+        if (str[i] == '\"' || str[i] == '\'')
+        {
+            quote_type = str[i++];
+            while (str[j])
+            {
+                if (str[j] == quote_type)
+                    position = j;
+                j++;
+            }
+            while (str[i] && i != position)
+                i++;
+            if (str[i] == quote_type)
+                i++;
+        }
+        else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
+        {
+            if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
+                i += 2;
+            else
+                i++;
+        }
+        else
+            while (str[i] && str[i] != ' ' && str[i] != '>' && str[i] != '<' &&
+                str[i] != '|' && str[i] != '\'' && str[i] != '\"')
+                i++;
+    }
+    // printf("%s\n", str);
+    // printf("%d\n", count);
+    return (count);
 }
 
 char	**smart_split(t_cmd *cmd, char *str)
 {
-	int j ;
+	int j;
 	int i;
 	int k;
 	int start;
@@ -88,7 +88,6 @@ char	**smart_split(t_cmd *cmd, char *str)
 	char quote_type;
 	char **tokens;
 	int token_count;
-	int count;
 	int position;
 
 	position = 0;
@@ -116,39 +115,9 @@ char	**smart_split(t_cmd *cmd, char *str)
 		if (!str[i])
 			break;
 		start = i;
-		if (str[i] == '\"')
+		if (str[i] == '\"' || str[i] == '\'')
 		{
-			count = 0;
-			in_quote = 1;
-			quote_type = str[i];
-			j = i;
-			i++;
-			start = i;
-			while (str[i] && str[i] != quote_type)
-				i++;
-			if (str[i] == quote_type && in_quote == 1)
-			{
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
-				i++;
-				in_quote = 0;
-			}
-		}
-		else if (str[i] == '\'')
-		{
-			count = 0;
-			in_quote = 1;
-			quote_type = str[i];
-			j = i;
-			i++;
-			start = i;
-			while (str[i] && str[i] != quote_type)
-				i++;
-			if (str[i] == quote_type && in_quote == 1)
-			{
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
-				i++;
-				in_quote = 0;
-			}
+			tokens[k++] = insidequotes(cmd, str, &i);
 		}
 		else if (str[i] == '>')
 		{
@@ -176,7 +145,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 		{
 			if (str[i + 1] != str[i])
 			{
-				tokens[k++] = ft_strndup(cmd, &str[i], 1 , 0);
+				tokens[k++] = ft_strndup(cmd, &str[i], 1, 0);
 			}
 			i++;
 		}
@@ -190,5 +159,6 @@ char	**smart_split(t_cmd *cmd, char *str)
 		}
 	}
 	tokens[k] = NULL;
+	printf("%d\n", k);
 	return (tokens);
 }

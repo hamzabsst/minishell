@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:14:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:33:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	handle_sigint(int sig)
 // You must pass your memory manager to ft_exec() and all related functions
 // Make sure all your mallocs use ft_malloc(manager, size) instead of regular malloc()
 // Any pointers from external functions (like strdup(), split(), etc.) should be added to the manager with ft_add_ptr()
+
 int main(int ac, char **av, char **env)
 {
 	char	*line;
@@ -98,6 +99,12 @@ int main(int ac, char **av, char **env)
 		//ft_free_all(&mem_manager);
 		//init_mem(&mem_manager);
 	}
+		ft_free_all(&mem_manager);
+		init_mem(&mem_manager);
+		free(line);
+	}
+	if (g_env)
+		ft_free(g_env);
 	ft_free_all(&mem_manager);
 	exit(g_exit);
 }

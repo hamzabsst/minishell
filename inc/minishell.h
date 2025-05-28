@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:12:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:32:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_token
 }	t_token;
 
 //parsing
+char 	*ft_strndup(t_cmd *cmd, char *str, size_t len, char skip);
 void	init_struct(t_cmd *cmd);
 char	**smart_split(t_cmd *cmd, char *str);
 void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
@@ -50,6 +51,7 @@ void	add_token_back(t_token **head, t_token *new);
 t_token	*allocate_token(t_cmd *cmd, char *content, char *type);
 t_token *tokenize(t_cmd *cmd, char **tokens);
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
+char 	*insidequotes(t_cmd *cmd, char *line, int *i);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value, t_mem *manager);
