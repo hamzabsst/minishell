@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 10:41:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 12:14:15 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,11 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 		else if (ft_strcmp(tokens->type, "HEREDOC") == 0)
 		{
 			tokens = tokens->next;
+			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
+   			{
+        		current->heredoc = tokens->content;
+        		current->delimiter = tokens->content;
+    		}
 			if (tokens)
 				current->heredoc = tokens->content;
 		}
