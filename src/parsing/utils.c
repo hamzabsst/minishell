@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:03:59 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 13:45:01 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:17:08 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ static int count_tokens(char *str)
 				str[i] != '|' && str[i] != '\'' && str[i] != '\"')
 				i++;
 	}
-	printf("%s\n", str);
-	printf("%d\n", count);
+	// printf("%s\n", str);
+	// printf("%d\n", count);
 	return (count);
 }
 

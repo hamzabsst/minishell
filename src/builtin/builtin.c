@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/01 14:40:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:10:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,21 @@ int	builtin(char *cmd)
 		|| !ft_strcmp(cmd, "exit"));
 }
 
-int	exec_builtin(t_cmd *cmd, char ***env)
+int	exec_builtin(t_cmd *cmd, char ***env, t_mem *manager)
 {
 	if (!ft_strcmp(cmd->av[0], "echo"))
 		return (builtin_echo(cmd->av));
 	else if (!ft_strcmp(cmd->av[0], "pwd"))
 		return (builtin_pwd());
 	else if (!ft_strcmp(cmd->av[0], "cd"))
-		return (builtin_cd(cmd->av, env));
+		return (builtin_cd(cmd->av, env, manager));
 	else if (!ft_strcmp(cmd->av[0], "env"))
 		return (builtin_env(cmd->av, *env));
 	else if (!ft_strcmp(cmd->av[0], "unset"))
 		return (builtin_unset(cmd->av, env));
 	else if (!ft_strcmp(cmd->av[0], "exit"))
-		return (builtin_exit(cmd->av, env));
+		return (builtin_exit(cmd->av, env, manager));
 	else if (!ft_strcmp(cmd->av[0], "export"))
-		return (builtin_export(cmd->av, env));
+		return (builtin_export(cmd->av, env, manager));
 	return (1);
 }

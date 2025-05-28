@@ -6,13 +6,14 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:20:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:12:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+#define RED "\x1b[31m"
 # include "../mylib/myLib.h"
 # include "ft_mem.h"
 # include <readline/readline.h>
@@ -51,24 +52,25 @@ t_token *tokenize(t_cmd *cmd, char **tokens);
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
 
 //env
-int		update_env(char ***env_ptr, char *key, char *value);
-int		update_env_append(char ***env, char *key, char *value);
-char	**dup_env(char **env);
+int		update_env(char ***env_ptr, char *key, char *value, t_mem *manager);
+int		update_env_append(char ***env, char *key, char *value, t_mem *manager);
+char	**dup_env(char **env, t_mem *manager);
 char	*ft_getenv(char **env, const char *key);
 
 //built-in cmds
-int		exec_builtin(t_cmd *cmd, char ***env);
+int		exec_builtin(t_cmd *cmd, char ***env, t_mem *manager);
 int		builtin(char *cmd);
 int		builtin_echo(char **av);
-int		builtin_cd(char **av, char ***env);
-int		builtin_export(char **av, char ***env);
+int		builtin_cd(char **argv, char ***env, t_mem *manager);
+int		builtin_export(char **av, char ***env, t_mem *manager);
 int		builtin_unset(char **av, char ***env);
-int		builtin_exit(char **av, char ***env);
+int		builtin_exit(char **av, char ***env, t_mem *manager);
 
 //exceve
-int		ft_exec(t_cmd *cmd, char **env);
-void	exec_cmd(t_cmd *cmd, char **env);
-void	redirection(t_cmd *cmd);
+int		ft_exec(t_cmd *cmd, char **env, t_mem *manager);
+void	exec_cmd(t_cmd *cmd, char **env, t_mem *manager);
+void	redirection(t_cmd *cmd, t_mem *manager);
+void	cleanup_child(t_mem *manager);
 
 //utils
 int		ft_perror(char *msg);
