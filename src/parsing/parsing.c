@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 12:14:15 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:42:06 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,10 @@ void	add_infile(t_cmd *cmd, char *filename)
 
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 {
-	int i;
-	t_cmd *head;
-	t_cmd *current;
-	t_cmd *new_cmd;
+	int		i;
+	t_cmd	*head;
+	t_cmd	*current;
+	t_cmd	*new_cmd;
 
 	head = ft_malloc(cmd->collector, sizeof(t_cmd));
 	if (!head)
@@ -135,9 +135,9 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 		{
 			tokens = tokens->next;
 			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
-   			{
-        		current->heredoc = tokens->content;
-        		current->delimiter = tokens->content;
+			{
+				current->heredoc = tokens->content;
+				current->delimiter = tokens->content;
     		}
 			if (tokens)
 				current->heredoc = tokens->content;

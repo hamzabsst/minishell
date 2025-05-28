@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 12:15:39 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/28 18:05:53 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 			break;
 		start = i;
 		if (str[i] == '\"' || str[i] == '\'')
-		{
-			tokens[k++] = insidequotes(cmd, str, &i);
-		}
+				tokens[k++] = insidequotes(cmd, str, &i);
 		else if (str[i] == '>')
 		{
 			if (in_quote == 0)
@@ -153,9 +151,16 @@ char	**smart_split(t_cmd *cmd, char *str)
 		{
 			while (str[i] && str[i] != ' ' && str[i] != '\'' && str[i] != '\"' &&
 				str[i] != '>' && str[i] != '<' && str[i] != '|')
-				i++;
+				{
+					while (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i + 1] == '>' || str[i + 1] == '<')
+					{
+						quote_type = str[i];
+						i++;
+					}
+					i++;
+				}
 			if (i > start)
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, 0);
+				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
 		}
 	}
 	tokens[k] = NULL;

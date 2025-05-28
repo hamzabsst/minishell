@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handling_quotes.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 10:42:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:07:29 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ char *insidequotes(t_cmd *cmd, char *line, int *i)
 			else
 				second = ft_strndup(cmd, &line[start], len, 0);
 		}
-		else if (line[*i] == ' ')
+		else if (line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 			break;
 		(*i)++;
 	}
