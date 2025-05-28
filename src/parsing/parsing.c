@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/25 11:37:40 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:03:38 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			new_cmd = ft_malloc(cmd->mem_manager, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
+			new_cmd->mem_manager = cmd->mem_manager;
 			init_struct(new_cmd);
 			current->next = new_cmd;
 			current = new_cmd;

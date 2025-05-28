@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:33:24 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/25 12:07:36 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:09:14 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
+char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
 {
 	size_t	i;
 	char	*results;
@@ -73,14 +73,14 @@ static int count_tokens(char *str)
                 str[i] != '|' && str[i] != '\'' && str[i] != '\"')
                 i++;
     }
-    printf("%s\n", str);
-    printf("%d\n", count);
+    // printf("%s\n", str);
+    // printf("%d\n", count);
     return (count);
 }
 
 char	**smart_split(t_cmd *cmd, char *str)
 {
-	int j ;
+	int j;
 	int i;
 	int k;
 	int start;
@@ -88,7 +88,6 @@ char	**smart_split(t_cmd *cmd, char *str)
 	char quote_type;
 	char **tokens;
 	int token_count;
-	int count;
 	int position;
 
 	position = 0;
@@ -100,7 +99,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 	quote_type = '\0';
 	token_count = count_tokens(str);
 
-	tokens = ft_malloc(cmd->mem_manager , token_count + 1);
+	tokens = ft_malloc(cmd->mem_manager , sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);
 	while (str[i] == ' ')
@@ -116,39 +115,9 @@ char	**smart_split(t_cmd *cmd, char *str)
 		if (!str[i])
 			break;
 		start = i;
-		if (str[i] == '\"')
+		if (str[i] == '\"' || str[i] == '\'')
 		{
-			count = 0;
-			in_quote = 1;
-			quote_type = str[i];
-			j = i;
-			i++;
-			start = i;
-			while (str[i] && str[i] != quote_type)
-				i++;
-			if (str[i] == quote_type && in_quote == 1)
-			{
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
-				i++;
-				in_quote = 0;
-			}
-		}
-		else if (str[i] == '\'')
-		{
-			count = 0;
-			in_quote = 1;
-			quote_type = str[i];
-			j = i;
-			i++;
-			start = i;
-			while (str[i] && str[i] != quote_type)
-				i++;
-			if (str[i] == quote_type && in_quote == 1)
-			{
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
-				i++;
-				in_quote = 0;
-			}
+			tokens[k++] = insidequotes(cmd, str, &i);
 		}
 		else if (str[i] == '>')
 		{
@@ -176,7 +145,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 		{
 			if (str[i + 1] != str[i])
 			{
-				tokens[k++] = ft_strndup(cmd, &str[i], 1 , 0);
+				tokens[k++] = ft_strndup(cmd, &str[i], 1, 0);
 			}
 			i++;
 		}
@@ -190,5 +159,6 @@ char	**smart_split(t_cmd *cmd, char *str)
 		}
 	}
 	tokens[k] = NULL;
+	printf("%d\n", k);
 	return (tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:59:20 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/28 10:17:39 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ void	handle_sigint(int sig)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-}
-
-void debug_mem_count(t_mem *manager)
-{
-	t_mem_node *current = manager->head;
-	int count = 0;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	printf("Memory manager has %d allocations\n", count);
 }
 
 int main(int ac, char **av, char **env)
@@ -116,19 +104,12 @@ int main(int ac, char **av, char **env)
 			ft_perror("Parse error.\n");
 			g_exit = 1;
 		}
-		debug_mem_count(&mem_manager);
 		ft_free_all(&mem_manager);
 		init_mem(&mem_manager);
 		free(line);
 	}
 	if (g_env)
-	{
-		int i = 0;
-		while (g_env[i])
-			free(g_env[i++]);
-		free(g_env);
-	}
-	debug_mem_count(&mem_manager);
+		ft_free(g_env);
 	ft_free_all(&mem_manager);
 	exit(g_exit);
 }
