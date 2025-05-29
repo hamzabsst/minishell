@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 18:05:53 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/29 10:10:03 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 				{
 					while (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i + 1] == '>' || str[i + 1] == '<')
 					{
-						quote_type = str[i];
+						quote_type = str[i + 1];
 						i++;
 					}
 					i++;
