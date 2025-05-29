@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:50:47 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:44:06 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,64 @@ void	handle_sigint(int sig)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+char *get_short_pwd(t_mem *collector)
+{
+	char	*short_pwd;
+	char	*cwd = getcwd(NULL, 0);
+	char	*home = getenv("HOME");
+	char	*last_slash;
+	size_t	home_len;
+
+	short_pwd = ft_malloc(collector, 256);
+	if (!short_pwd)
+		return (NULL);
+	if (!cwd)
+	{
+		ft_strlcpy(short_pwd, "~", 256);
+		return (short_pwd);
+	}
+	if (home && strstr(cwd, home) == cwd)
+	{
+		home_len = strlen(home);
+		ft_strlcpy(short_pwd, "~", 256);
+		ft_strlcat(short_pwd, cwd + home_len, 256);
+	}
+	else
+		ft_strlcpy(short_pwd, cwd, 256);
+	free(cwd);
+	if (strlen(short_pwd) > 25)
+	{
+		last_slash = strrchr(short_pwd, '/');
+		if (last_slash && last_slash != short_pwd)
+		{
+			ft_strlcpy(short_pwd, "...", 256);
+			ft_strlcat(short_pwd, last_slash, 256);
+		}
+	}
+	return (short_pwd);
+}
+
+char *create_prompt(t_mem *collector)
+{
+	char	*prompt;
+	char	*pwd = get_short_pwd(collector);
+	if (!pwd)
+		return (NULL);
+	prompt = ft_malloc(collector, 512);
+	if (!prompt)
+		return (NULL);
+
+	prompt[0] = '\0';
+	ft_strlcat(prompt, BRIGHT_CYAN, 512);
+	ft_strlcat(prompt, "➜  ", 512);
+	ft_strlcat(prompt, RESET, 512);
+	ft_strlcat(prompt, BOLD_BLUE, 512);
+	ft_strlcat(prompt, pwd, 512);
+	ft_strlcat(prompt, RESET, 512);
+	ft_strlcat(prompt, " ", 512);
+	return (prompt);
 }
 
 // Important Notes:
@@ -53,7 +111,7 @@ int main(int ac, char **av, char **env)
 	g_env = dup_env(env, &collector);
 	while (1)
 	{
-		line = readline("minishell$> ");
+		line = readline(create_prompt(&collector));
 		if (!line)
 		{
 			write(1, "exit\n", 5);

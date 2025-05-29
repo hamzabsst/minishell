@@ -6,14 +6,20 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:44:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:43:55 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#define RED "\x1b[31m"
+
+#define RESET	"\033[0m"
+#define BOLD_BLUE    "\033[1;34m"
+#define BRIGHT_BLUE     "\033[94m"
+#define BRIGHT_CYAN     "\033[96m"
+#define BRIGHT_MAGENTA  "\033[95m"
+
 # include "../mylib/myLib.h"
 # include "ft_mem.h"
 # include <readline/readline.h>

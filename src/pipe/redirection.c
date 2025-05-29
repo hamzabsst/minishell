@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 12:12:44 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:13:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ static void	heredoc(t_cmd *cmd, t_mem *collector)
 	char	*line;
 	char	*joined;
 
-	unlink("/tmp/.heredoc_tmp");
-	tmp_fd = open("/tmp/.heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	char *id = ft_itoa(getpid());
+	unlink(id);
+	tmp_fd = open(id, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		(ft_perror("cannot open tmp file"), cleanup_child(collector), exit(1));
 	joined = ft_strjoin(cmd->delimiter, "\n");
 	if (!joined)
-		(close(tmp_fd), unlink("/tmp/.here_doc_tmp"), cleanup_child(collector), exit(1));
+		(close(tmp_fd), unlink(id), cleanup_child(collector), exit(1));
 	while (1)
 	{
 		write(1, "> ", 2);
@@ -38,13 +39,13 @@ static void	heredoc(t_cmd *cmd, t_mem *collector)
 	}
 	get_next_line(-1);
 	(free(joined), close(tmp_fd));
-	tmp_fd = open("/tmp/.heredoc_tmp", O_RDONLY);
+	tmp_fd = open(id, O_RDONLY);
 	if (tmp_fd < 0)
 		(ft_perror("cannot open tmp file"), cleanup_child(collector), exit(1));
 	if (dup2(tmp_fd, STDIN_FILENO) == -1)
-		(perror("dup2 heredoc"), close(tmp_fd), unlink("/tmp/.heredoc_tmp"), cleanup_child(collector), exit(1));
+		(perror("dup2 heredoc"), close(tmp_fd), unlink(id), cleanup_child(collector), exit(1));
 	close(tmp_fd);
-	unlink("/tmp/.heredoc_tmp");
+	unlink(id);
 }
 
 static void	redirect_input(char **infiles)
@@ -96,8 +97,8 @@ void	redirection(t_cmd *cmd, t_mem *collector)
 {
 	if (cmd->heredoc)
 		heredoc(cmd, collector);
-	else if(cmd->infiles)
+	if(cmd->infiles)
 		redirect_input(cmd->infiles);
-	else if (cmd->outfiles)
+	if (cmd->outfiles)
 		redirect_output(cmd);
 }
