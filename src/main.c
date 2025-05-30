@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/29 11:55:31 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/30 10:15:04 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,8 @@ int main(int ac, char **av, char **env)
 			continue;
 		cmd->collector = &collector;
 		init_struct(cmd);
+		if(handle_quotes_error(line))
+			continue;
 		splited = smart_split(cmd, line);
 		if (!splited)
 			continue;

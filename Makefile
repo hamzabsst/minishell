@@ -8,6 +8,7 @@ MYLIB		= $(MYLIB_DIR)/myLib.a
 
 SRCS	=	src/main.c \
 			src/parsing/handling_quotes.c \
+			src/parsing/handle_syntax_error.c \
 			src/parsing/add_node_back.c \
 			src/parsing/parsing.c \
 			src/parsing/token.c \

@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/30 09:43:48 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/30 10:20:15 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,20 @@ int handle_quotes_error(char *line)
 	char	quote_type;
 	while (line[i])
 	{
-		if (line[i] == '\"' || line[i] == '\"')
+		if (line[i] == '\"' || line[i] == '\'')
 		{
 			quote_type = line[i];
-			while (line[i] != '\"' && line[i] != '\'')
-			{
+			i += 1;
+			while (line[i] != quote_type && line[i])
 				i++;
-			}
-			if ()
+			if(quote_type != line[i])
 			{
-				/* code */
+				printf("syntax error in quoting\n");
+				return(-1);
 			}
-
 		}
 		i++;
 	}
-
+	return (0);
 }
 
-int main()
-{
-	char str[] = "";
-	int s = handle_quotes_error(str);
-	printf("%d", s);
-}

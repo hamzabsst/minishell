@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/29 11:43:55 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/30 10:12:37 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ t_token	*allocate_token(t_cmd *cmd, char *content, char *type);
 t_token	*tokenize(t_cmd *cmd, char **tokens);
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
 char 	*insidequotes(t_cmd *cmd, char *line, int *i);
+int		handle_quotes_error(char *line);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value, t_mem *collector);
