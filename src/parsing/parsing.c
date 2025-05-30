@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 16:42:06 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/30 20:59:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,23 +65,26 @@ void	add_infile(t_cmd *cmd, char *filename)
 {
 	int		i;
 	int		j;
-	char	**new_infiles;
+	char	**infiles;
 
 	i = 0;
 	while (cmd->infiles && cmd->infiles[i])
 		i++;
-	new_infiles = ft_malloc(cmd->collector, sizeof(char *) * (i + 2));
-	if (!new_infiles)
-		exit(1);
+	infiles = ft_malloc(cmd->collector, sizeof(char *) * (i + 2));
+	if (!infiles)
+	{
+		ft_perror("Memory allocation failed\n");
+		return;
+	}
 	j = 0;
 	while (j < i)
 	{
-		new_infiles[j] = cmd->infiles[j];
+		infiles[j] = cmd->infiles[j];
 		j++;
 	}
-	new_infiles[i] = filename;
-	new_infiles[i + 1] = NULL;
-	cmd->infiles = new_infiles;
+	infiles[i] = filename;
+	infiles[i + 1] = NULL;
+	cmd->infiles = infiles;
 }
 
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)

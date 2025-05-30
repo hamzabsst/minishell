@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/30 11:49:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:33:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	handle_sigint(int sig)
 	}
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	char	*line;
 	char	**g_env;
@@ -138,7 +138,15 @@ int main(int ac, char **av, char **env)
 			{
 				stdin_copy = dup(STDIN_FILENO);
 				stdout_copy = dup(STDOUT_FILENO);
-				redirection(cmd, &collector);
+				if (redirection(cmd, &collector) != 0)
+				{
+					dup2(stdin_copy, STDIN_FILENO);
+					dup2(stdout_copy, STDOUT_FILENO);
+					close(stdin_copy);
+					close(stdout_copy);
+					g_exit = 1;
+					continue;
+				}
 				g_exit = exec_builtin(cmd, &g_env, &collector);
 				dup2(stdin_copy, STDIN_FILENO);
 				dup2(stdout_copy, STDOUT_FILENO);
@@ -147,6 +155,21 @@ int main(int ac, char **av, char **env)
 			}
 			else
 			{
+				stdin_copy = dup(STDIN_FILENO);
+				stdout_copy = dup(STDOUT_FILENO);
+				if (redirection(cmd, &collector) != 0)
+				{
+					dup2(stdin_copy, STDIN_FILENO);
+					dup2(stdout_copy, STDOUT_FILENO);
+					close(stdin_copy);
+					close(stdout_copy);
+					g_exit = 1;
+					continue;
+				}
+				dup2(stdin_copy, STDIN_FILENO);
+				dup2(stdout_copy, STDOUT_FILENO);
+				close(stdin_copy);
+				close(stdout_copy);
 				g_sig = 1;
 				g_exit = ft_exec(cmd, g_env, &collector);
 				g_sig = 0;

@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/29 11:13:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:25:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	heredoc(t_cmd *cmd, t_mem *collector)
+static int	heredoc(t_cmd *cmd, t_mem *collector)
 {
 	int		tmp_fd;
 	char	*line;
@@ -22,10 +22,10 @@ static void	heredoc(t_cmd *cmd, t_mem *collector)
 	unlink(id);
 	tmp_fd = open(id, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
-		(ft_perror("cannot open tmp file"), cleanup_child(collector), exit(1));
+		return (ft_perror("cannot open tmp file"), cleanup_child(collector), 1);
 	joined = ft_strjoin(cmd->delimiter, "\n");
 	if (!joined)
-		(close(tmp_fd), unlink(id), cleanup_child(collector), exit(1));
+		return (close(tmp_fd), unlink(id), cleanup_child(collector),1);
 	while (1)
 	{
 		write(1, "> ", 2);
@@ -41,34 +41,91 @@ static void	heredoc(t_cmd *cmd, t_mem *collector)
 	(free(joined), close(tmp_fd));
 	tmp_fd = open(id, O_RDONLY);
 	if (tmp_fd < 0)
-		(ft_perror("cannot open tmp file"), cleanup_child(collector), exit(1));
+		return (ft_perror("cannot open tmp file"), cleanup_child(collector), 1);
 	if (dup2(tmp_fd, STDIN_FILENO) == -1)
-		(perror("dup2 heredoc"), close(tmp_fd), unlink(id), cleanup_child(collector), exit(1));
+		return (perror("dup2 heredoc"), close(tmp_fd), unlink(id), cleanup_child(collector), 1);
 	close(tmp_fd);
 	unlink(id);
+	return (0);
 }
 
-static void	redirect_input(char **infiles)
+static int	input_redir(char **infiles)
 {
 	int	fd;
-	int	i = 0;
+	int	last_index;
 
-	while (infiles && infiles[i])
+	last_index = 0;
+	while (infiles[last_index])
+		last_index++;
+	last_index--;
+	fd = open(infiles[last_index], O_RDONLY);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2 infiles");
+		close(fd);
+		return (1);
+	}
+	close(fd);
+	return (0);
+}
+
+static int	output_redir(t_cmd *cmd)
+{
+	int	fd;
+	int	i;
+	int	last_index;
+	int	flags;
+
+	last_index = 0;
+	i = 0;
+	while (cmd->outfiles[last_index])
+		last_index++;
+	last_index--;
+	flags = cmd->append_flags[last_index];
+	if (flags == 1)
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	fd = open(cmd->outfiles[last_index], flags, 0644);
+	if (fd == -1)
+	{
+		perror(cmd->outfiles[last_index]);
+		return (1);
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("dup2 outfiles");
+		close(fd);
+		return (1);
+	}
+	close(fd);
+	return (0);
+}
+
+static int	valid_input(char **infiles)
+{
+	int	fd;
+	int	i;
+
+	if (!infiles)
+		return (0);
+
+	i = 0;
+	while (infiles[i])
 	{
 		fd = open(infiles[i], O_RDONLY);
 		if (fd == -1)
-			(perror(infiles[i]), exit(1));
-		if (!infiles[i + 1])
 		{
-			if (dup2(fd, STDIN_FILENO) == -1)
-				(perror("dup2 infiles"), exit(1));
+			perror(infiles[i]);
+			return (1);
 		}
 		close(fd);
 		i++;
 	}
+	return (0);
 }
 
-static void	redirect_output(t_cmd *cmd)
+static int	valid_output(t_cmd *cmd)
 {
 	int	fd;
 	int	i = 0;
@@ -80,25 +137,45 @@ static void	redirect_output(t_cmd *cmd)
 			flags = O_WRONLY | O_CREAT | O_APPEND;
 		else
 			flags = O_WRONLY | O_CREAT | O_TRUNC;
+
 		fd = open(cmd->outfiles[i], flags, 0644);
 		if (fd == -1)
-			(perror(cmd->outfiles[i]), exit(1));
-		if (!cmd->outfiles[i + 1])
 		{
-			if (dup2(fd, STDOUT_FILENO) == -1)
-				(perror("dup2 outfiles"), exit(1));
+			perror(cmd->outfiles[i]);
+			return (1);
 		}
 		close(fd);
 		i++;
 	}
+	return (0);
 }
 
-void	redirection(t_cmd *cmd, t_mem *collector)
+int	redirection(t_cmd *cmd, t_mem *collector)
 {
-	if (cmd->heredoc)
-		heredoc(cmd, collector);
-	if(cmd->infiles)
-		redirect_input(cmd->infiles);
+	if (cmd->infiles)
+	{
+		if (valid_input(cmd->infiles))
+			return (1);
+	}
 	if (cmd->outfiles)
-		redirect_output(cmd);
+	{
+		if (valid_output(cmd))
+			return (1);
+	}
+	if (cmd->heredoc)
+	{
+		if (heredoc(cmd, collector))
+			return (1);
+	}
+	else if (cmd->infiles)
+	{
+		if (input_redir(cmd->infiles))
+			return (1);
+	}
+	if (cmd->outfiles)
+	{
+		if (output_redir(cmd))
+			return (1);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/30 11:49:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:16:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ typedef struct s_cmd
 	int				*append_flags;
 	char			*heredoc;
 	char			*delimiter;
-	struct s_cmd	*next;
 	t_mem			*collector;
+	struct s_cmd	*next;
 }	t_cmd;
 
 typedef struct s_token
@@ -79,8 +79,8 @@ int		builtin_exit(char **av, char ***env, t_mem *collector);
 //exceve
 int		ft_exec(t_cmd *cmd, char **env, t_mem *collector);
 void	exec_cmd(t_cmd *cmd, char **env, t_mem *collector);
-void	redirection(t_cmd *cmd, t_mem *collector);
 void	cleanup_child(t_mem *collector);
+int		redirection(t_cmd *cmd, t_mem *collector);
 
 //utils
 int		ft_perror(char *msg);
