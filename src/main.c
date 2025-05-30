@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/30 10:15:04 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/05/30 11:49:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int		g_sig = 0;
-
-void	handle_sigint(int sig)
-{
-	if(g_sig == 1)
-	{
-		write(1, "\n", 1);
-		return ;
-	}
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
 
 char *get_short_pwd(t_mem *collector)
 {
@@ -92,6 +74,22 @@ char *create_prompt(t_mem *collector)
 // You must pass your memory manager to ft_exec() and all related functions
 // Make sure all your mallocs use ft_malloc(manager, size) instead of regular malloc()
 // Any pointers from external functions (like strdup(), split(), etc.) should be added to the manager with ft_add_ptr()
+
+void	handle_sigint(int sig)
+{
+	if(g_sig == 1)
+	{
+		write(1, "\n", 1);
+		return ;
+	}
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
 int main(int ac, char **av, char **env)
 {
