@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/29 11:44:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:55:31 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ int		g_sig = 0;
 void	handle_sigint(int sig)
 {
 	if(g_sig == 1)
+	{
+		write(1, "\n", 1);
 		return ;
+	}
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
