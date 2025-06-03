@@ -6,13 +6,13 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/29 10:27:57 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:44:09 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
+char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q)
 {
 	size_t	i;
 	char	*results;
@@ -25,7 +25,7 @@ char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip)
 	i = 0;
 	while (i < len)
 	{
-		if(str[i] != skip)
+		if(str[i] != skip_single_q && str[i] != skip_double_q)
 			results[k++] = str[i];
 		i++;
 	}
@@ -85,89 +85,110 @@ char	**smart_split(t_cmd *cmd, char *str)
 	int k;
 	int start;
 	int in_quote;
-	char quote_type;
+	char single_quote_type;
+	char double_quote_type;
 	char **tokens;
 	int token_count;
-	int position;
+	int token_inside_quote;
+	int is_space;
 
-	position = 0;
+	token_inside_quote = 0;
 	j = 0;
 	k = 0;
 	i = 0;
 	start = 0;
 	in_quote = 0;
-	quote_type = '\0';
+	single_quote_type = '\0';
+	double_quote_type = '\0';
 	token_count = count_tokens(str);
 
 	tokens = ft_malloc(cmd->collector , sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);
+	cmd->quote_flags = ft_malloc(cmd->collector, sizeof(int) * (token_count + 1));
+	if (!cmd->quote_flags)
+		return (NULL);
 	while (str[i] == ' ')
 		i++;
-	if(str[i] == '|')
-	{
-		printf("syntax error near unexpected token `%c'\n", str[i]);
-	}
 	while (str[i])
 	{
-		while (str[i] == ' ')
+		is_space = 0;
+		while (str[i] == ' ') //echo df, between echo and dd has a space, so the flag will be 0;
+		{
 			i++;
+			is_space = 1;
+		}
 		if (!str[i])
 			break;
 		start = i;
 		if (str[i] == '\"' || str[i] == '\'')
+		{
+			cmd->quote_flags[k] = 1;
+			if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
+			{
+				char *temp = ft_strjoin(tokens[k - 1] ,insidequotes(cmd, str, &i));
+				free(tokens[k - 1]);
+				tokens[k - 1] = temp;
+			}
+			else
 				tokens[k++] = insidequotes(cmd, str, &i);
-		else if (str[i] == '>')
-		{
-			if (in_quote == 0)
-			{
-				int len = 1;
-				if (str[i + 1] == str[i])
-					len = 2;
-				tokens[k++] = ft_strndup(cmd, &str[i], len, 0);
-				i += len;
-			}
 		}
-		else if (str[i] == '<')
+		else if (str[i] == '>' || str[i] == '<')
 		{
-			if (in_quote == 0)
-			{
-				int len = 1;
-				if (str[i + 1] == str[i])
-					len = 2;
-				tokens[k++] = ft_strndup(cmd, &str[i], len, 0);
-				i += len;
-			}
+			cmd->quote_flags[k] = 0;
+			int len = 1;
+			if (str[i + 1] == str[i])
+				len = 2;
+			tokens[k++] = ft_strndup(cmd, &str[i], len, 0, 0);
+			i += len;
 		}
 		else if (str[i] == '|')
 		{
+			cmd->quote_flags[k] = 0;
 			if (str[i + 1] != str[i])
-			{
-				tokens[k++] = ft_strndup(cmd, &str[i], 1, 0);
-			}
+				tokens[k++] = ft_strndup(cmd, &str[i], 1, 0, 0);
 			i++;
 		}
 		else
 		{
-			while (str[i] && str[i] != ' ' && str[i] != '\'' && str[i] != '\"' &&
-				str[i] != '>' && str[i] != '<' && str[i] != '|')
+			start = i;
+			while (str[i] && str[i] != ' ' && str[i] != '|')
+			{
+				if (str[i] == '\'')
 				{
-					while (str[i + 1] == '\'' || str[i + 1] == '\"')
-					{
-						quote_type = str[i + 1];
+					single_quote_type = str[i++];
+					while (str[i] && str[i] != single_quote_type)
 						i++;
-					}
-					if (str[i + 1] == '>' || str[i + 1] == '<')
-					{
+					if (str[i] == single_quote_type)
 						i++;
-						break;
-					}
-					i++;
 				}
+				else if (str[i] == '\"')
+				{
+					double_quote_type = str[i++];
+					while (str[i] && str[i] != double_quote_type)
+						i++;
+					if (str[i] == double_quote_type)
+						i++;
+				}
+
+				else
+					i++;
+			}
 			if (i > start)
-				tokens[k++] = ft_strndup(cmd, &str[start], i - start, quote_type);
+			{
+				cmd->quote_flags[k] = 0;
+				if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
+				{
+					char *temp = ft_strjoin(tokens[k - 1] , ft_strndup(cmd, &str[start], i - start, single_quote_type, double_quote_type));
+					free(tokens[k - 1]);
+					tokens[k - 1] = temp;
+				}
+				else
+					tokens[k++] = ft_strndup(cmd, &str[start], i - start, single_quote_type, double_quote_type);
+			}
 		}
 	}
 	tokens[k] = NULL;
+	cmd->quote_flags[k] = 0;
 	return (tokens);
 }

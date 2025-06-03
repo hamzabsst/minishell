@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/28 17:07:29 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:46:37 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,10 @@ char *insidequotes(t_cmd *cmd, char *line, int *i)
 			while (line[j])
 			{
 				if(line[j] == quote_type)
+				{
 					last = j;
+					break;
+				}
 				j++;
 			}
 			while (k < last)
@@ -76,25 +79,26 @@ char *insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start;
 			if (extra != NULL)
 			{
-				first = ft_strndup(cmd, &line[*i], len, quote_type);
+				first = ft_strndup(cmd, &line[*i], len, quote_type, 0);
 				extra = ft_strjoin(extra, first);
 				free(first);
 			}
 			else if (second != NULL)
 			{
-				first = ft_strndup(cmd, &line[*i], len, quote_type);
+				first = ft_strndup(cmd, &line[*i], len, quote_type, 0);
 				extra = ft_strjoin(second, first);
 				free(first);
 			}
 			else if(first != NULL)
 			{
-				second = ft_strndup(cmd, &line[*i], len, quote_type);
+				second = ft_strndup(cmd, &line[*i], len, quote_type, 0);
 				extra = ft_strjoin(first, second);
 				free(second);
 			}
 			else
-				first = ft_strndup(cmd, &line[*i], len, quote_type);
-			*i = last;
+				first = ft_strndup(cmd, &line[*i], len, quote_type, 0);
+			*i = last + 1;
+			break;
 		}
 		else if (line[*i] != ' ' && line[*i] != '\'' && line[*i] != '"')
 		{
@@ -106,24 +110,24 @@ char *insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start + 1;
 			if (extra != NULL)
 			{
-				second = ft_strndup(cmd, &line[start], len, 0);
+				second = ft_strndup(cmd, &line[start], len, 0, 0);
 				extra = ft_strjoin(extra, second);
 				free(second);
 			}
 			else if (first != NULL)
 			{
-				second = ft_strndup(cmd, &line[start], len, 0);
+				second = ft_strndup(cmd, &line[start], len, 0, 0);
 				extra = ft_strjoin(first, second);
 				free(second);
 			}
 			else if (second != NULL)
 			{
-				first = ft_strndup(cmd, &line[start], len, 0);
+				first = ft_strndup(cmd, &line[start], len, 0, 0);
 				extra = ft_strjoin(second, first);
 				free(first);
 			}
 			else
-				second = ft_strndup(cmd, &line[start], len, 0);
+				second = ft_strndup(cmd, &line[start], len, 0, 0);
 		}
 		else if (line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 			break;
