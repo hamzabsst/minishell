@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:58:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 23:54:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@
 #define BRIGHT_CYAN     "\033[96m"
 #define BRIGHT_MAGENTA  "\033[95m"
 
+# include <stdio.h>
 # include "../mylib/myLib.h"
 # include "ft_mem.h"
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <signal.h>
 # include <sys/wait.h>
 # include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 static int		g_sig = 0;
 typedef struct s_cmd

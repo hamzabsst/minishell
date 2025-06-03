@@ -6,20 +6,23 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 23:39:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:22:59 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // Important Notes:
-//found a case:
-// ➜  ~/minishell echo ""hamza""< > >>""pwd""
-// it create a file called >>
-//however bash
-//echo ""hamza""< > >>""pwd""
-//bash: syntax error near unexpected token `>'
+/*
+found a case:
 
+echo ""hamza""< > >>""pwd""
+it create a file called >>
+
+however bash
+echo ""hamza""< > >>""pwd""
+bash: syntax error near unexpected token `>'
+ */
 void	handle_sigint(int sig)
 {
 	if(g_sig == 1)
@@ -67,7 +70,6 @@ static int	process_command(t_cmd *cmd, char ***g_env, t_mem *collector)
 
 	stdin_copy = -1;
 	stdout_copy = -1;
-	exit_status = 0;
 	if (backup_io(&stdin_copy, &stdout_copy) == -1)
 		return (ft_perror("Failed to backup stdio\n"));
 	if (redirection(cmd, collector) != 0)
@@ -145,6 +147,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 
 	g_env = init_shell(ac, env, &collector);
+	g_exit = 0;
 	while (1)
 	{
 		input = get_input(&line, &collector);

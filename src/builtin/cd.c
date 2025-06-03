@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:44:50 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:15:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,9 @@ int	builtin_cd(char **argv, char ***env, t_mem *collector)
 	int		ret;
 	char	*path;
 
-	oldpwd = getcwd(NULL, 0);
+	oldpwd = malloc(1024);
+	if (oldpwd != NULL)
+		getcwd(oldpwd, 1024);
 	if (!oldpwd)
 		return (perror("cd: getcwd"), 1);
 	if (handle_path(argv[1]) == -1)
@@ -109,7 +111,9 @@ int	builtin_cd(char **argv, char ***env, t_mem *collector)
 	if (update_env(env, "OLDPWD", oldpwd, collector) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);
-	newpwd = getcwd(NULL, 0);
+	newpwd = malloc(1024);
+	if (newpwd != NULL)
+		getcwd(newpwd, 1024);
 	if (!newpwd)
 		return (perror("cd: getcwd"), 1);
 	ret = update_env(env, "PWD", newpwd, collector);
