@@ -6,32 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 21:52:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:58:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strndup_mem(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q)
-{
-	size_t	i;
-	char	*results;
-	int		k;
-
-	k = 0;
-	results = ft_malloc(cmd->collector, len + 1);
-	if (!results)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		if(str[i] != skip_single_q && str[i] != skip_double_q)
-			results[k++] = str[i];
-		i++;
-	}
-	results[k] = '\0';
-	return (results);
-}
 static int	count_tokens(char *str)
 {
 	int j = 0;

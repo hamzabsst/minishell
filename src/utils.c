@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:42:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:58:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,47 @@ int	ft_perror(char *msg)
 	return (1);
 }
 
+char	*ft_strndup_mem(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q)
+{
+	size_t	i;
+	char	*results;
+	int		k;
+
+	k = 0;
+	results = ft_malloc(cmd->collector, len + 1);
+	if (!results)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		if(str[i] != skip_single_q && str[i] != skip_double_q)
+			results[k++] = str[i];
+		i++;
+	}
+	results[k] = '\0';
+	return (results);
+}
+
+char	*ft_strdup_mem2(t_cmd *cmd, const char *s)
+{
+	size_t	i;
+	size_t	size;
+	char	*results;
+
+	size = ft_strlen(s);
+	results = ft_malloc(cmd->collector, (size + 1) * sizeof(char));
+	if (!results)
+		return (NULL);
+	i = 0;
+	while (s[i])
+	{
+		results[i] = s[i];
+		i++;
+	}
+	results[i] = '\0';
+	return (results);
+}
+
 char	*ft_strjoin_mem(t_mem *collector, char const *s1, char const *s2)
 {
 	char	*res;
@@ -117,22 +158,3 @@ char	*ft_strjoin_mem(t_mem *collector, char const *s1, char const *s2)
 	return (res);
 }
 
-char	*ft_strdup_mem2(t_cmd *cmd, const char *s)
-{
-	size_t	i;
-	size_t	size;
-	char	*results;
-
-	size = ft_strlen(s);
-	results = ft_malloc(cmd->collector, (size + 1) * sizeof(char));
-	if (!results)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		results[i] = s[i];
-		i++;
-	}
-	results[i] = '\0';
-	return (results);
-}

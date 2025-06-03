@@ -17,7 +17,7 @@ void	print_tokens(t_token *tokens)
 	int i = 0;
 	while (tokens)
 	{
-		printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
+		ft_printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
 		tokens = tokens->next;
 		i++;
 	}
@@ -38,7 +38,7 @@ void	add_token_back(t_token **head, t_token *new)
 	tmp->next = new;
 }
 
-t_token *allocate_token(t_cmd *cmd, char *content, char *type)
+t_token	*allocate_token(t_cmd *cmd, char *content, char *type)
 {
 	t_token *new;
 

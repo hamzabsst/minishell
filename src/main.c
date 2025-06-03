@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:42:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 23:39:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,81 +68,92 @@ static int	process_command(t_cmd *cmd, char ***g_env, t_mem *collector)
 	stdin_copy = -1;
 	stdout_copy = -1;
 	exit_status = 0;
-
 	if (backup_io(&stdin_copy, &stdout_copy) == -1)
 		return (ft_perror("Failed to backup stdio\n"));
-
 	if (redirection(cmd, collector) != 0)
 		return (restore_io(stdin_copy, stdout_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
+	{
 		exit_status = exec_builtin(cmd, g_env, collector);
+		restore_io(stdin_copy, stdout_copy);
+	}
 	else
 	{
-		restore_io(stdin_copy, stdout_copy);
-		stdin_copy = -1;
-		stdout_copy = -1;
 		g_sig = 1;
 		exit_status = ft_exec(cmd, *g_env, collector);
 		g_sig = 0;
-		return (exit_status);
+		restore_io(stdin_copy, stdout_copy);
 	}
 	restore_io(stdin_copy, stdout_copy);
 	return (exit_status);
+}
+
+static char	**init_shell(int ac, char **env, t_mem *collector)
+{
+	char	**g_env;
+
+	if (ac != 1)
+		exit(ft_perror("Invalid number of arguments\n"));
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	init_mem(collector);
+	g_env = dup_env(env, collector);
+	if (!g_env)
+		exit(ft_perror("Failed to duplicate environment\n"));
+	return (g_env);
+}
+
+static t_cmd	*parse_input(char *line, t_mem *collector)
+{
+	char	**splited;
+	t_token	*token_list;
+	t_cmd	*cmd;
+
+	cmd = ft_malloc(collector, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->collector = collector;
+	init_struct(cmd);
+	if (handle_quotes_error(line))
+		return (NULL);
+	splited = smart_split(cmd, line);
+	if (!splited)
+		return (NULL);
+	token_list = tokenize(cmd, splited);
+	return (start_of_parsing(cmd, token_list));
+}
+
+static int get_input(char **line, t_mem *collector)
+{
+	*line = readline(create_prompt(collector));
+	if (!*line)
+		return (write(1, "exit\n", 5), 0);
+	if (!**line)
+		return (free(*line), 1);
+	add_history(*line);
+	return (2);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	char	*line;
 	char	**g_env;
-	char	**splited;
 	int		g_exit;
 	t_mem	collector;
-	t_token	*token_list;
 	t_cmd	*cmd;
+	int		input;
 	(void)av;
 
-	g_exit = 0;
-	if (ac != 1)
-		exit(ft_perror("Invalid number of arguments\n"));
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	init_mem(&collector);
-	g_env = dup_env(env, &collector);
-	if (!g_env)
-		exit(ft_perror("Failed to duplicate environment\n"));
+	g_env = init_shell(ac, env, &collector);
 	while (1)
 	{
-		line = readline(create_prompt(&collector));
-		if (!line)
-		{
-			write(1, "exit\n", 5);
+		input = get_input(&line, &collector);
+		if (input == 0)
 			break;
-		}
-		if (!*line)
-		{
-			free(line);
+		if (input == 1)
 			continue;
-		}
-		add_history(line);
-		cmd = ft_malloc(&collector, sizeof(t_cmd));
-		if (!cmd)
-		{
-			free(line);
-			continue;
-		}
-		cmd->collector = &collector;
-		init_struct(cmd);
-		if(handle_quotes_error(line))
-		{
-			free(line);
-			continue;
-		}
-		splited = smart_split(cmd, line);
+		cmd = parse_input(line, &collector);
 		free(line);
-		if (!splited)
-			continue;
-		token_list = tokenize(cmd, splited);
-		cmd = start_of_parsing(cmd, token_list);
 		if (cmd)
 			g_exit = process_command(cmd, &g_env, &collector);
 		else
