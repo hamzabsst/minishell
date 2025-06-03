@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/30 21:16:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 10:53:23 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_cmd
 	char			*heredoc;
 	char			*delimiter;
 	t_mem			*collector;
+	int				*quote_flags;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -49,7 +50,7 @@ typedef struct s_token
 }	t_token;
 
 //parsing
-char 	*ft_strndup(t_cmd *cmd, char *str, size_t len, char skip);
+char 	*ft_strndup(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q);
 void	init_struct(t_cmd *cmd);
 char	**smart_split(t_cmd *cmd, char *str);
 void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);

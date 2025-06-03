@@ -81,22 +81,23 @@ t_token *tokenize(t_cmd *cmd, char **tokens)
 	while (tokens[i])
 	{
 		type = "WORD";
-		if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
+		if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0 && !cmd->quote_flags[i])
 			type = "DELIMITER";
-		else if (ft_strcmp(tokens[i], "|") == 0)
+		else if (ft_strcmp(tokens[i], "|") == 0 && !cmd->quote_flags[i])
 			type = "PIPE";
-		else if (ft_strcmp(tokens[i], ">") == 0)
+		else if (ft_strcmp(tokens[i], ">") == 0 && !cmd->quote_flags[i])
 			type = "REDIRECTION_OUT";
-		else if (ft_strcmp(tokens[i], "<") == 0)
+		else if (ft_strcmp(tokens[i], "<") == 0 && !cmd->quote_flags[i])
 			type = "REDIRECTION_IN";
-		else if(ft_strcmp(tokens[i], ">>") == 0)
+		else if(ft_strcmp(tokens[i], ">>") == 0 && !cmd->quote_flags[i])
 			type = "APPEND";
-		else if (ft_strcmp(tokens[i], "<<") == 0)
+		else if (ft_strcmp(tokens[i], "<<") == 0 && !cmd->quote_flags[i])
 			type = "HEREDOC";
 		new = allocate_token(cmd, tokens[i], type);
 		add_token_back(&head, new);
 		i++;
 	}
+	print_tokens(head);
 	return (head);
 }
 
