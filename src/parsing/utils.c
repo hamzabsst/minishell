@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 22:58:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:43:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,17 @@ static int	count_tokens(char *str)
 
 char	**smart_split(t_cmd *cmd, char *str)
 {
-	int j;
 	int i;
-	int k;
+	int j;
 	int start;
-	int in_quote;
 	char single_quote_type;
 	char double_quote_type;
 	char **tokens;
 	int token_count;
-	int token_inside_quote;
 	int is_space;
 
-	token_inside_quote = 0;
 	j = 0;
-	k = 0;
 	i = 0;
-	start = 0;
-	in_quote = 0;
 	single_quote_type = '\0';
 	double_quote_type = '\0';
 	token_count = count_tokens(str);
@@ -100,34 +93,34 @@ char	**smart_split(t_cmd *cmd, char *str)
 		}
 		if (!str[i])
 			break;
-		start = i;
+		start = i; // error ya morahiq value stored in this var is never read
 		if (str[i] == '\"' || str[i] == '\'')
 		{
-			cmd->quote_flags[k] = 1;
-			if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
+			cmd->quote_flags[j] = 1;
+			if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 			{
-				char *temp = ft_strjoin_mem(cmd->collector, tokens[k - 1] ,insidequotes(cmd, str, &i));
+				char *temp = ft_strjoin_mem(cmd->collector, tokens[j - 1] ,insidequotes(cmd, str, &i));
 				//free(tokens[k - 1]);
 				//elch katfree alhmar HHHHHHHHH yak glna garabge collector
-				tokens[k - 1] = temp;
+				tokens[j - 1] = temp;
 			}
 			else
-				tokens[k++] = insidequotes(cmd, str, &i);
+				tokens[j++] = insidequotes(cmd, str, &i);
 		}
 		else if (str[i] == '>' || str[i] == '<')
 		{
-			cmd->quote_flags[k] = 0;
+			cmd->quote_flags[j] = 0;
 			int len = 1;
 			if (str[i + 1] == str[i])
 				len = 2;
-			tokens[k++] = ft_strndup_mem(cmd, &str[i], len, 0, 0);
+			tokens[j++] = ft_strndup_mem(cmd, &str[i], len, 0, 0);
 			i += len;
 		}
 		else if (str[i] == '|')
 		{
-			cmd->quote_flags[k] = 0;
+			cmd->quote_flags[j] = 0;
 			if (str[i + 1] != str[i])
-				tokens[k++] = ft_strndup_mem(cmd, &str[i], 1, 0, 0);
+				tokens[j++] = ft_strndup_mem(cmd, &str[i], 1, 0, 0);
 			i++;
 		}
 		else
@@ -157,20 +150,20 @@ char	**smart_split(t_cmd *cmd, char *str)
 			}
 			if (i > start)
 			{
-				cmd->quote_flags[k] = 0;
-				if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
+				cmd->quote_flags[j] = 0;
+				if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 				{
-					char *temp = ft_strjoin_mem(cmd->collector, tokens[k - 1] , ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type));
+					char *temp = ft_strjoin_mem(cmd->collector, tokens[j - 1] , ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type));
 					//free(tokens[k - 1]);
-					tokens[k - 1] = temp;
+					tokens[j - 1] = temp;
 				}
 				else
-					tokens[k++] = ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type);
+					tokens[j++] = ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type);
 			}
 		}
 	}
-	tokens[k] = NULL;
-	if (k < token_count * 2 + 10) //added this shi to handle an invalid write size of 8
-		cmd->quote_flags[k] = 0;
+	tokens[j] = NULL;
+	if (j < token_count * 2 + 10) //added this shi to handle an invalid write size of 8
+		cmd->quote_flags[j] = 0;
 	return (tokens);
 }

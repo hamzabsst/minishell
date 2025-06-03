@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 21:20:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:38:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	handle_quotes_error(char *line)
 				//printf is part of the standard I/O library,
 				//which introduces buffering and is not allowed in strict shells like minishell
 				//stupid AAHH
-				return(-1); //chkun ki returni -1 HHHHHHH
+				return(-1);
 			}
 		}
 		i++;

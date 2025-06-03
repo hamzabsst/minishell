@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:58:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:42:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	**dup_env(char **env, t_mem *collector)
 		copy[i] = ft_malloc(collector, strlen(env[i]) + 1);
 		if (!copy[i])
 			return (NULL);
-		strcpy(copy[i], env[i]);
+		ft_strlcpy(copy[i], env[i], strlen(env[i]) + 1);
 		i++;
 	}
 	copy[len] = NULL;

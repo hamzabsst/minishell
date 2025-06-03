@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 21:30:24 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:41:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static int	quotes_inside_quotes(char *line, int *last, int *start, char quote_ty
 	int	len;
 	int	j;
 
-	len = 0;
 	j = *start;
 	while (line[j])
 	{
@@ -74,7 +73,7 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			{
 				if (line[k] == quote_stop)
 				{
-					len = quotes_inside_quotes(line, &last, &start, quote_type);
+					len = quotes_inside_quotes(line, &last, &start, quote_type); // error ya morahiq value stored in this var is never read
 					break;
 				}
 				k++;

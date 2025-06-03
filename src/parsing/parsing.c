@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 21:30:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 00:28:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ void init_struct(t_cmd *cmd)
 	j = 0;
 	if (!cmd->collector)
 		return;
-	cmd->av = ft_malloc(cmd->collector, sizeof(char *) * 1024);// we need to alloc here carrefully
-	//need to review this
+	cmd->av = ft_malloc(cmd->collector, sizeof(char *) * 1024);
+	// !we need to alloc here carrefully
 	while (j < 1024)
 	{
 		cmd->av[j++] = NULL;
