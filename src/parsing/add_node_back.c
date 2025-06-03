@@ -6,30 +6,30 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 09:50:20 by abchaman          #+#    #+#             */
-/*   Updated: 2025/04/22 10:56:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:29:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*ft_lstlastt(t_cmd *lst)
+t_cmd	*is_last_cmd(t_cmd *cmd)
 {
-	if (lst == NULL)
+	if (cmd == NULL)
 		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	while (cmd->next)
+		cmd = cmd->next;
+	return (cmd);
 }
 
-void	ft_lstadd_backk(t_cmd **lst, t_cmd *new)
+void	add_cmd_back(t_cmd **cmd, t_cmd *new)
 {
 	t_cmd	*last;
 
-	if (*lst == NULL)
+	if (*cmd == NULL)
 	{
-		*lst = new;
+		*cmd = new;
 		return ;
 	}
-	last = ft_lstlastt(*lst);
+	last = is_last_cmd(*cmd);
 	last->next = new;
 }

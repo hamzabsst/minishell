@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void print_tokens(t_token *tokens)
+void	print_tokens(t_token *tokens)
 {
 	int i = 0;
 	while (tokens)
@@ -22,7 +22,7 @@ void print_tokens(t_token *tokens)
 		i++;
 	}
 }
-void add_token_back(t_token **head, t_token *new)
+void	add_token_back(t_token **head, t_token *new)
 {
 	t_token *tmp;
 	if (!*head)
@@ -38,26 +38,6 @@ void add_token_back(t_token **head, t_token *new)
 	tmp->next = new;
 }
 
-char	*ft_sstrdup(t_cmd *cmd, const char *s)
-{
-	size_t	i;
-	size_t	size;
-	char	*results;
-
-	size = ft_strlen(s);
-	results = ft_malloc(cmd->collector, (size + 1) * sizeof(char));
-	if (!results)
-		return (NULL);
-	i = 0;
-	while (s[i])
-	{
-		results[i] = s[i];
-		i++;
-	}
-	results[i] = '\0';
-	return (results);
-}
-
 t_token *allocate_token(t_cmd *cmd, char *content, char *type)
 {
 	t_token *new;
@@ -65,12 +45,12 @@ t_token *allocate_token(t_cmd *cmd, char *content, char *type)
 	new = ft_malloc(cmd->collector ,sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = ft_sstrdup(cmd, content);
-	new->type = ft_sstrdup(cmd, type);
+	new->content = ft_strdup_mem2(cmd, content);
+	new->type = ft_strdup_mem2(cmd, type);
 	new->next = NULL;
 	return (new);
 }
-t_token *tokenize(t_cmd *cmd, char **tokens)
+t_token	*tokenize(t_cmd *cmd, char **tokens)
 {
 	t_token	*head;
 	int		i;
@@ -97,7 +77,7 @@ t_token *tokenize(t_cmd *cmd, char **tokens)
 		add_token_back(&head, new);
 		i++;
 	}
-	print_tokens(head);
+	//print_tokens(head);
 	return (head);
 }
 

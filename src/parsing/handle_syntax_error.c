@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   handle_syntax_error.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/30 10:20:15 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:20:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int handle_quotes_error(char *line)
+int	handle_quotes_error(char *line)
 {
-	int		i = 0;
+	int		i;
 	char	quote_type;
+
+	i = 0;
 	while (line[i])
 	{
 		if (line[i] == '\"' || line[i] == '\'')
@@ -26,8 +28,13 @@ int handle_quotes_error(char *line)
 				i++;
 			if(quote_type != line[i])
 			{
-				printf("syntax error in quoting\n");
-				return(-1);
+				ft_perror("syntax error in quoting\n");
+				//always use perror on errors
+				//why ?
+				//printf is part of the standard I/O library,
+				//which introduces buffering and is not allowed in strict shells like minishell
+				//stupid AAHH
+				return(-1); //chkun ki returni -1 HHHHHHH
 			}
 		}
 		i++;

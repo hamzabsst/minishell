@@ -23,7 +23,8 @@ SRCS	=	src/main.c \
 			src/pipe/get_cmds.c \
 			src/pipe/redirection.c \
 			src/utils.c \
-			src/memory/ft_malloc.c
+			src/memory/ft_malloc.c \
+			src/interface.c \
 
 OBJS	= $(SRCS:.c=.o)
 

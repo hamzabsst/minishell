@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 10:53:23 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:04:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,16 @@ typedef struct s_token
 }	t_token;
 
 //parsing
-char 	*ft_strndup(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q);
 void	init_struct(t_cmd *cmd);
 char	**smart_split(t_cmd *cmd, char *str);
-void	ft_lstadd_backk(t_cmd **lst, t_cmd *new);
-void	print_tokens(t_token *tokens);
+void	add_cmd_back(t_cmd **lst, t_cmd *new);
 void	add_token_back(t_token **head, t_token *new);
 t_token	*allocate_token(t_cmd *cmd, char *content, char *type);
 t_token	*tokenize(t_cmd *cmd, char **tokens);
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
 char 	*insidequotes(t_cmd *cmd, char *line, int *i);
 int		handle_quotes_error(char *line);
+void	print_tokens(t_token *tokens);
 
 //env
 int		update_env(char ***env_ptr, char *key, char *value, t_mem *collector);
@@ -74,7 +73,7 @@ int		builtin(char *cmd);
 int		builtin_echo(char **av);
 int		builtin_cd(char **argv, char ***env, t_mem *collector);
 int		builtin_export(char **av, char ***env, t_mem *collector);
-int		builtin_unset(char **av, char ***env);
+int	builtin_unset(char **av, char ***env, t_mem *collector);
 int		builtin_exit(char **av, char ***env, t_mem *collector);
 
 //exceve
@@ -84,8 +83,12 @@ void	cleanup_child(t_mem *collector);
 int		redirection(t_cmd *cmd, t_mem *collector);
 
 //utils
+char	*create_prompt(t_mem *collector);
 int		ft_perror(char *msg);
 char	*find_key(const char *arg);
+char	*ft_strjoin_mem(t_mem *collector, char const *s1, char const *s2);
+char	*ft_strdup_mem2(t_cmd *cmd, const char *s);
+char	*ft_strndup_mem(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q);
 
 //signal
 void	handle_sigint(int sig);

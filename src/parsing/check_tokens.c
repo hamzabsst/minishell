@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 16:06:02 by abchaman          #+#    #+#             */
-/*   Updated: 2025/05/31 10:25:34 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:09:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@
 // {
 
 // }
-int check_heredoc(char *line)
+int	check_heredoc(char *line)
 {
-	int	i = 0;
-	char quote_type;
+	int		i;
+	char	quote_type;
+
+	i = 0;
 	while (line[i])
 	{
 		if(line[i] == '\"' || line[i] == '\'')

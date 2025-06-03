@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 10:44:09 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:52:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q)
+char	*ft_strndup_mem(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q)
 {
 	size_t	i;
 	char	*results;
-	int k;
+	int		k;
 
 	k = 0;
 	results = ft_malloc(cmd->collector, len + 1);
@@ -32,7 +32,7 @@ char *ft_strndup(t_cmd *cmd, char *str, size_t len, char skip_single_q, char ski
 	results[k] = '\0';
 	return (results);
 }
-static int count_tokens(char *str)
+static int	count_tokens(char *str)
 {
 	int j = 0;
 	int count = 0;
@@ -102,7 +102,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 	double_quote_type = '\0';
 	token_count = count_tokens(str);
 
-	tokens = ft_malloc(cmd->collector , sizeof(char *) * (token_count + 1));
+	tokens = ft_malloc(cmd->collector , sizeof(char *) * (token_count * 2 + 10)); //allocated more size
 	if (!tokens)
 		return (NULL);
 	cmd->quote_flags = ft_malloc(cmd->collector, sizeof(int) * (token_count + 1));
@@ -126,8 +126,9 @@ char	**smart_split(t_cmd *cmd, char *str)
 			cmd->quote_flags[k] = 1;
 			if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
 			{
-				char *temp = ft_strjoin(tokens[k - 1] ,insidequotes(cmd, str, &i));
-				free(tokens[k - 1]);
+				char *temp = ft_strjoin_mem(cmd->collector, tokens[k - 1] ,insidequotes(cmd, str, &i));
+				//free(tokens[k - 1]);
+				//elch katfree alhmar HHHHHHHHH yak glna garabge collector
 				tokens[k - 1] = temp;
 			}
 			else
@@ -139,14 +140,14 @@ char	**smart_split(t_cmd *cmd, char *str)
 			int len = 1;
 			if (str[i + 1] == str[i])
 				len = 2;
-			tokens[k++] = ft_strndup(cmd, &str[i], len, 0, 0);
+			tokens[k++] = ft_strndup_mem(cmd, &str[i], len, 0, 0);
 			i += len;
 		}
 		else if (str[i] == '|')
 		{
 			cmd->quote_flags[k] = 0;
 			if (str[i + 1] != str[i])
-				tokens[k++] = ft_strndup(cmd, &str[i], 1, 0, 0);
+				tokens[k++] = ft_strndup_mem(cmd, &str[i], 1, 0, 0);
 			i++;
 		}
 		else
@@ -179,16 +180,17 @@ char	**smart_split(t_cmd *cmd, char *str)
 				cmd->quote_flags[k] = 0;
 				if (k > 0 && cmd->quote_flags[k - 1] == 1 && is_space == 0)
 				{
-					char *temp = ft_strjoin(tokens[k - 1] , ft_strndup(cmd, &str[start], i - start, single_quote_type, double_quote_type));
-					free(tokens[k - 1]);
+					char *temp = ft_strjoin_mem(cmd->collector, tokens[k - 1] , ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type));
+					//free(tokens[k - 1]);
 					tokens[k - 1] = temp;
 				}
 				else
-					tokens[k++] = ft_strndup(cmd, &str[start], i - start, single_quote_type, double_quote_type);
+					tokens[k++] = ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type);
 			}
 		}
 	}
 	tokens[k] = NULL;
-	cmd->quote_flags[k] = 0;
+	if (k < token_count * 2 + 10) //added this shi to handle an invalid write size of 8
+		cmd->quote_flags[k] = 0;
 	return (tokens);
 }
