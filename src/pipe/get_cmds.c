@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmds.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 11:10:54 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:08:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	**get_path(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 
-static char	*find_in_paths(char *cmd, char **paths)
+static char	*find_in_paths(char *cmd, char **paths, t_mem *collector)
 {
 	char	*full;
 	int		i;
@@ -38,15 +38,14 @@ static char	*find_in_paths(char *cmd, char **paths)
 	i = 0;
 	while (paths && paths[i])
 	{
-		full = malloc(ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
+		full = ft_malloc(collector, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full)
 			return (NULL);
 		ft_strcpy(full, paths[i]);
 		ft_strcat(full, "/");
 		ft_strcat(full, cmd);
 		if (access(full, X_OK) == 0)
-			return (full);
-		free(full);
+			return (our_strdup(collector, full));
 		i++;
 	}
 	return (NULL);
@@ -62,14 +61,14 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	if (ft_strchr(cmd->av[0], '/'))
 	{
 		if (access(cmd->av[0], X_OK) == 0)
-			return (ft_strdup(cmd->av[0]));
+			return (our_strdup(cmd->collector, cmd->av[0]));
 		perror(cmd->av[0]);
 		exit(126);
 	}
 	paths = get_path(env);
 	if (!paths)
 		return (NULL);
-	resolved = find_in_paths(cmd->av[0], paths);
+	resolved = find_in_paths(cmd->av[0], paths, cmd->collector);
 	ft_free(paths);
 	return (resolved);
 }

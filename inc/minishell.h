@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 23:54:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,9 @@ int		redirection(t_cmd *cmd, t_mem *collector);
 char	*create_prompt(t_mem *collector);
 int		ft_perror(char *msg);
 char	*find_key(const char *arg);
-char	*ft_strjoin_mem(t_mem *collector, char const *s1, char const *s2);
-char	*ft_strdup_mem2(t_cmd *cmd, const char *s);
-char	*ft_strdup_mem2(t_cmd *cmd, const char *s);
-char	*ft_strndup_mem(t_cmd *cmd, char *str, size_t len, char skip_single_q, char skip_double_q);
+char	*our_strjoin(t_mem *collector, char const *s1, char const *s2);
+char	*our_strdup(t_mem *collector ,const char *s);
+char	*our_strndup(t_mem *collector, char *str, size_t len, char skip_single_q, char skip_double_q);
 
 //signal
 void	handle_sigint(int sig);

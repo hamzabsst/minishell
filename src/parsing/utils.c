@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 12:22:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 			cmd->quote_flags[j] = 1;
 			if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 			{
-				char *temp = ft_strjoin_mem(cmd->collector, tokens[j - 1] ,insidequotes(cmd, str, &i));
+				char *temp = our_strjoin(cmd->collector, tokens[j - 1] ,insidequotes(cmd, str, &i));
 				//free(tokens[k - 1]);
 				//elch katfree alhmar HHHHHHHHH yak glna garabge collector
 				tokens[j - 1] = temp;
@@ -114,14 +114,14 @@ char	**smart_split(t_cmd *cmd, char *str)
 			int len = 1;
 			if (str[i + 1] == str[i])
 				len = 2;
-			tokens[j++] = ft_strndup_mem(cmd, &str[i], len, 0, 0);
+			tokens[j++] = our_strndup(cmd->collector, &str[i], len, 0, 0);
 			i += len;
 		}
 		else if (str[i] == '|')
 		{
 			cmd->quote_flags[j] = 0;
 			if (str[i + 1] != str[i])
-				tokens[j++] = ft_strndup_mem(cmd, &str[i], 1, 0, 0);
+				tokens[j++] = our_strndup(cmd->collector, &str[i], 1, 0, 0);
 			i++;
 		}
 		else
@@ -154,12 +154,12 @@ char	**smart_split(t_cmd *cmd, char *str)
 				cmd->quote_flags[j] = 0;
 				if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 				{
-					char *temp = ft_strjoin_mem(cmd->collector, tokens[j - 1] , ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type));
+					char *temp = our_strjoin(cmd->collector, tokens[j - 1] , our_strndup(cmd->collector, &str[start], i - start, single_quote_type, double_quote_type));
 					//free(tokens[k - 1]);
 					tokens[j - 1] = temp;
 				}
 				else
-					tokens[j++] = ft_strndup_mem(cmd, &str[start], i - start, single_quote_type, double_quote_type);
+					tokens[j++] = our_strndup(cmd->collector, &str[start], i - start, single_quote_type, double_quote_type);
 			}
 		}
 	}

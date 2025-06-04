@@ -45,8 +45,8 @@ t_token	*allocate_token(t_cmd *cmd, char *content, char *type)
 	new = ft_malloc(cmd->collector ,sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = ft_strdup_mem2(cmd, content);
-	new->type = ft_strdup_mem2(cmd, type);
+	new->content = our_strdup(cmd->collector, content);
+	new->type = our_strdup(cmd->collector, type);
 	new->next = NULL;
 	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 12:15:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,21 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start;
 			if (extra != NULL)
 			{
-				first = ft_strndup_mem(cmd, &line[*i], len, quote_type, 0);
-				extra = ft_strjoin_mem(cmd->collector, extra, first);
+				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->collector, extra, first);
 			}
 			else if (second != NULL)
 			{
-				first = ft_strndup_mem(cmd, &line[*i], len, quote_type, 0);
-				extra = ft_strjoin_mem(cmd->collector, second, first);
+				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->collector, second, first);
 			}
 			else if(first != NULL)
 			{
-				second = ft_strndup_mem(cmd, &line[*i], len, quote_type, 0);
-				extra = ft_strjoin_mem(cmd->collector, first, second);
+				second = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->collector, first, second);
 			}
 			else
-				first = ft_strndup_mem(cmd, &line[*i], len, quote_type, 0);
+				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
 			*i = last + 1;
 			break;
 		}
@@ -107,21 +107,21 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start + 1;
 			if (extra != NULL)
 			{
-				second = ft_strndup_mem(cmd, &line[start], len, 0, 0);
-				extra = ft_strjoin_mem(cmd->collector, extra, second);
+				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->collector, extra, second);
 			}
 			else if (first != NULL)
 			{
-				second = ft_strndup_mem(cmd, &line[start], len, 0, 0);
-				extra = ft_strjoin_mem(cmd->collector, first, second);
+				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->collector, first, second);
 			}
 			else if (second != NULL)
 			{
-				first = ft_strndup_mem(cmd, &line[start], len, 0, 0);
-				extra = ft_strjoin_mem(cmd->collector, second, first);
+				first = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->collector, second, first);
 			}
 			else
-				second = ft_strndup_mem(cmd, &line[start], len, 0, 0);
+				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
 		}
 		else if (line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 			break;
