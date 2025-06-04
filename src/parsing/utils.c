@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 00:43:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:22:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static int	count_tokens(char *str)
 	// printf("%d\n", count);
 	return (count);
 }
-
+//!➜  ~/minishell echo ""''sdldkl''""lldlds dlsldldl""
+//!==213010== Invalid write of size 4
 char	**smart_split(t_cmd *cmd, char *str)
 {
 	int i;

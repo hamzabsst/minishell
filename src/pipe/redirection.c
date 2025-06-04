@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/30 21:25:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:28:45 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ static int	input_redir(char **infiles)
 		last_index++;
 	last_index--;
 	fd = open(infiles[last_index], O_RDONLY);
+	if (fd == -1)
+	{
+		perror(infiles[last_index]);
+		return (1);
+	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		perror("dup2 infiles");
@@ -72,12 +77,10 @@ static int	input_redir(char **infiles)
 static int	output_redir(t_cmd *cmd)
 {
 	int	fd;
-	int	i;
 	int	last_index;
 	int	flags;
 
 	last_index = 0;
-	i = 0;
 	while (cmd->outfiles[last_index])
 		last_index++;
 	last_index--;

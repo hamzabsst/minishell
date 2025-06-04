@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 00:37:08 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:09:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ static int	builtin_pwd(void)
 {
 	char	*cwd;
 
-	cwd = getcwd(NULL, 0);
+	cwd = malloc(1024);
+	if (cwd != NULL)
+		getcwd(cwd, 1024);
 	if (!cwd)
 		return (perror("pwd"), 1);
 	printf("%s\n", cwd);

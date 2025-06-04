@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 11:11:22 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:24:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
 			(perror("pipe"), exit(1));
 	}
 	else
+	{
+		pipe_fd[0] = STDIN_FILENO;
 		pipe_fd[1] = STDOUT_FILENO;
+	}
 }
 
 static void	wait_for_all(int *status, pid_t last_pid)
@@ -49,7 +52,6 @@ static void	wait_for_all(int *status, pid_t last_pid)
 	int		tmp;
 
 	*status = 0;
-	pid = 0;
 	while ((pid = wait(&tmp)) > 0)
 	{
 		if (pid == last_pid)
@@ -62,7 +64,7 @@ int	ft_exec(t_cmd *cmd, char **env, t_mem *collector)
 	int		pipe_fd[2];
 	int		fd_in;
 	pid_t	pid;
-	pid_t	last_pid;
+	pid_t	last_pid = 0;
 	int		status;
 
 	fd_in = STDIN_FILENO;

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 21:35:45 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:31:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ char	*get_short_pwd(t_mem *collector)
 	char	*last_slash;
 	size_t	home_len;
 
-	cwd = getcwd(NULL, 0);
+	cwd = malloc(1024);
+	if (cwd != NULL)
+		getcwd(cwd, 1024);
 	home = getenv("HOME");
 	short_pwd = ft_malloc(collector, 256);
 	if (!short_pwd)

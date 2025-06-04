@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 00:28:10 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:16:45 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			{
 				current->heredoc = tokens->content;
 				current->delimiter = tokens->content;
-    		}
+			}
 			if (tokens)
 				current->heredoc = tokens->content;
 		}

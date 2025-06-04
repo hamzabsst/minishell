@@ -56,6 +56,7 @@ t_token	*tokenize(t_cmd *cmd, char **tokens)
 	int		i;
 	char	*type;
 	t_token *new;
+
 	i = 0;
 	head = NULL;
 	while (tokens[i])
