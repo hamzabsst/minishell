@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:18:54 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@ static int	count_tokens(char *str)
 		if (str[i] == '\"' || str[i] == '\'')
 		{
 			quote_type = str[i++];
+			j = i;
 			while (str[j])
 			{
 				if (str[j] == quote_type)
+				{
 					position = j;
+					break;
+				}
 				j++;
 			}
 			while (str[i] && i != position)
@@ -54,7 +58,7 @@ static int	count_tokens(char *str)
 				i++;
 	}
 	// printf("%s\n", str);
-	// printf("%d\n", count);
+	printf("%d\n", count);
 	return (count);
 }
 //!➜  ~/minishell echo ""''sdldkl''""lldlds dlsldldl""
@@ -87,22 +91,20 @@ char	**smart_split(t_cmd *cmd, char *str)
 	while (str[i])
 	{
 		is_space = 0;
-		while (str[i] == ' ') //echo df, between echo and dd has a space, so the flag will be 0;
+		while (str[i] == ' ') //echo df, between echo and dd has a space, so the flag will be 1;
 		{
 			i++;
 			is_space = 1;
 		}
 		if (!str[i])
 			break;
-		start = i; // error ya morahiq value stored in this var is never read
+		// start = i; // error ya morahiq value stored in this var is never read
 		if (str[i] == '\"' || str[i] == '\'')
 		{
 			cmd->quote_flags[j] = 1;
 			if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 			{
 				char *temp = our_strjoin(cmd->collector, tokens[j - 1] ,insidequotes(cmd, str, &i));
-				//free(tokens[k - 1]);
-				//elch katfree alhmar HHHHHHHHH yak glna garabge collector
 				tokens[j - 1] = temp;
 			}
 			else
@@ -145,7 +147,8 @@ char	**smart_split(t_cmd *cmd, char *str)
 					if (str[i] == double_quote_type)
 						i++;
 				}
-
+				else if (str[i] == '>' || str[i] == '<')
+					break;
 				else
 					i++;
 			}
@@ -155,7 +158,6 @@ char	**smart_split(t_cmd *cmd, char *str)
 				if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 				{
 					char *temp = our_strjoin(cmd->collector, tokens[j - 1] , our_strndup(cmd->collector, &str[start], i - start, single_quote_type, double_quote_type));
-					//free(tokens[k - 1]);
 					tokens[j - 1] = temp;
 				}
 				else

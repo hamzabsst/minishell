@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 12:16:45 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:34:58 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,48 @@ void init_struct(t_cmd *cmd)
 	cmd->delimiter = NULL;
 }
 
+void print_cmd(t_cmd *cmd)
+{
+	while (cmd)
+	{
+		if (cmd->av)
+		{
+			int i = 0;
+			while (cmd->av[i])
+			{
+				printf("av[%d] ---> %s\n", i, cmd->av[i]);
+				i++;
+			}
+		}
+		if (cmd->append_flags)
+			printf("append ---> %d\n", *(cmd->append_flags));
+		if (cmd->delimiter)
+			printf("delimiter ---> %s\n", cmd->delimiter);
+		if (cmd->heredoc)
+			printf("heredoc ---> %s\n", cmd->heredoc);
+		if (cmd->quote_flags)
+			printf("flag quote ---> %d\n", *(cmd->quote_flags));
+		if (cmd->infiles)
+		{
+			int i = 0;
+			while (cmd->infiles[i])
+			{
+				printf("infiles[%d] ---> %s\n", i, cmd->infiles[i]);
+				i++;
+			}
+		}
+		if (cmd->outfiles)
+		{
+			int i = 0;
+			while (cmd->outfiles[i])
+			{
+				printf("outfiles[%d] ---> %s\n", i, cmd->outfiles[i]);
+				i++;
+			}
+		}
+		cmd = cmd->next;
+	}
+}
 void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
 	int		i;
@@ -149,5 +191,6 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 		if (tokens)
 			tokens = tokens->next;
 	}
+	// print_cmd(head);
 	return (head);
 }
