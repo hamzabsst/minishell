@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:45:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:28:24 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_numeric(const char *str)
+static int	is_num(const char *str)
 {
 	int	i;
 
@@ -40,7 +40,7 @@ int	builtin_exit(char **argv, char ***env, t_mem *collector)
 		ft_free_ptr(collector, *env);
 		exit(0);
 	}
-	if (!is_numeric(argv[1]))
+	if (!is_num(argv[1]))
 	{
 		ft_perror("exit: ");
 		ft_perror(argv[1]);

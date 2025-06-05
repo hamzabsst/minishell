@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:12:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:27:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,19 @@ static int	unset_env(t_mem *collector, char ***env_ptr, char *var)
 	char	**new_env;
 	int		i;
 	int		j;
-	int		var_len;
 
 	env = *env_ptr;
-	var_len = ft_strlen(var);
 	i = 0;
 	while (env[i])
 		i++;
 	new_env = ft_malloc(collector, sizeof(char *) * (i + 1));
 	if (!new_env)
-		return (1);
+		return (ft_perror("unset: malloc failed\n"));
 	i = 0;
 	j = 0;
 	while (env[i])
 	{
-		if (!rm_var(env[i], var, var_len))
+		if (!rm_var(env[i], var, ft_strlen(var)))
 			new_env[j++] = env[i];
 		i++;
 	}
@@ -59,7 +57,8 @@ int	builtin_unset(char **av, char ***env, t_mem *collector)
 	{
 		if (av[i][0] == '-')
 			return (ft_perror("unset: options are not allowed\n"));
-		unset_env(collector, env, av[i]);
+		if (unset_env(collector, env, av[i]) == 1)
+			return(1);
 		i++;
 	}
 	return (0);
