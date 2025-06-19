@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/19 17:52:20 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:02:18 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,6 @@ static void	handle_flag(char **av, int *i, int *newline)
 	}
 }
 
-static void	print_arg_filtered(const char *arg)
-{
-	while (*arg)
-	{
-		if (*arg != '"' && *arg != '\'')
-			printf("%c", *arg);
-		arg++;
-	}
-}
-
 int	builtin_echo(char **av)
 {
 	int		i;
@@ -57,7 +47,7 @@ int	builtin_echo(char **av)
 	handle_flag(av, &i, &newline);
 	while (av[i])
 	{
-		print_arg_filtered(av[i]);
+		printf("%s", av[i]);
 		if (av[i + 1])
 			printf(" ");
 		i++;
