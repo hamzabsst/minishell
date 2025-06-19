@@ -6,22 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 11:56:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/18 11:03:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Important Notes:
-
-/*
-found a case:
-echo ""hamza""< > >>""pwd""
-it create a file called >>
-however bash
-echo ""hamza""< > >>""pwd""
-bash: syntax error near unexpected token `>'
-*/
 
 void	handle_sigint(int sig)
 {
