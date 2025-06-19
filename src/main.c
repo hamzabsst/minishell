@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/05 14:31:15 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:18:42 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ static t_cmd	*parse_input(char *line, t_mem *collector)
 	char	**splited;
 	t_token	*token_list;
 	t_cmd	*cmd;
+	// t_expand *expand;
 
 	cmd = ft_malloc(collector, sizeof(t_cmd));
 	if (!cmd)
@@ -118,7 +119,8 @@ static t_cmd	*parse_input(char *line, t_mem *collector)
 	init_struct(cmd);
 	if (handle_quotes_error(line))
 		return (NULL);
-	splited = smart_split(cmd, line);
+	// expand = copy_from_env(cmd, env);
+	splited = mysplit(cmd, line);
 	if (!splited)
 		return (NULL);
 	token_list = tokenize(cmd, splited);

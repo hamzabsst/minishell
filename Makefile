@@ -12,7 +12,7 @@ SRCS	=	src/main.c \
 			src/parsing/add_node_back.c \
 			src/parsing/parsing.c \
 			src/parsing/token.c \
-			src/parsing/utils.c \
+			src/parsing/lexer.c \
 			src/builtin/cd.c \
 			src/builtin/echo.c \
 			src/builtin/builtin.c \

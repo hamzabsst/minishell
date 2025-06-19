@@ -78,8 +78,6 @@ t_token	*tokenize(t_cmd *cmd, char **tokens)
 		add_token_back(&head, new);
 		i++;
 	}
-	// print_tokens(head);
+	print_tokens(head);
 	return (head);
 }
-
-

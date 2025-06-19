@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:22:19 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_perror(char *msg)
 	return (1);
 }
 
-char	*our_strndup(t_mem *collector, char *str, size_t len, char skip_single_q, char skip_double_q)
+char	*our_strndup(t_mem *collector, char *str, size_t len)
 {
 	size_t	i;
 	char	*results;
@@ -103,11 +103,7 @@ char	*our_strndup(t_mem *collector, char *str, size_t len, char skip_single_q, c
 		return (NULL);
 	i = 0;
 	while (i < len)
-	{
-		if(str[i] != skip_single_q && str[i] != skip_double_q)
-			results[k++] = str[i];
-		i++;
-	}
+		results[k++] = str[i++];
 	results[k] = '\0';
 	return (results);
 }

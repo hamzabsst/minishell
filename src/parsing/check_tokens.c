@@ -3,33 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   check_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 16:06:02 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/03 21:09:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:47:45 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int check_append(char *line)
-// {
-
-// }
-// int check_red_in(char *line, int *i)
-// {
-// 	int	start;
-
-// 	start = *i;
-// 	while (line[*i])
-// 	{
-
-// 	}
-// }
-// int check_red_out(char *line)
-// {
-
-// }
 int	check_heredoc(char *line)
 {
 	int		i;

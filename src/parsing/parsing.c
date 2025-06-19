@@ -6,7 +6,7 @@
 /*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/05 14:34:58 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:07:17 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,49 +32,50 @@ void init_struct(t_cmd *cmd)
 	cmd->next = NULL;
 	cmd->delimiter = NULL;
 }
+//printing the cmd struct
 
-void print_cmd(t_cmd *cmd)
-{
-	while (cmd)
-	{
-		if (cmd->av)
-		{
-			int i = 0;
-			while (cmd->av[i])
-			{
-				printf("av[%d] ---> %s\n", i, cmd->av[i]);
-				i++;
-			}
-		}
-		if (cmd->append_flags)
-			printf("append ---> %d\n", *(cmd->append_flags));
-		if (cmd->delimiter)
-			printf("delimiter ---> %s\n", cmd->delimiter);
-		if (cmd->heredoc)
-			printf("heredoc ---> %s\n", cmd->heredoc);
-		if (cmd->quote_flags)
-			printf("flag quote ---> %d\n", *(cmd->quote_flags));
-		if (cmd->infiles)
-		{
-			int i = 0;
-			while (cmd->infiles[i])
-			{
-				printf("infiles[%d] ---> %s\n", i, cmd->infiles[i]);
-				i++;
-			}
-		}
-		if (cmd->outfiles)
-		{
-			int i = 0;
-			while (cmd->outfiles[i])
-			{
-				printf("outfiles[%d] ---> %s\n", i, cmd->outfiles[i]);
-				i++;
-			}
-		}
-		cmd = cmd->next;
-	}
-}
+// void print_cmd(t_cmd *cmd)
+// {
+// 	while (cmd)
+// 	{
+// 		if (cmd->av)
+// 		{
+// 			int i = 0;
+// 			while (cmd->av[i])
+// 			{
+// 				printf("av[%d] ---> %s\n", i, cmd->av[i]);
+// 				i++;
+// 			}
+// 		}
+// 		if (cmd->append_flags)
+// 			printf("append ---> %d\n", *(cmd->append_flags));
+// 		if (cmd->delimiter)
+// 			printf("delimiter ---> %s\n", cmd->delimiter);
+// 		if (cmd->heredoc)
+// 			printf("heredoc ---> %s\n", cmd->heredoc);
+// 		if (cmd->quote_flags)
+// 			printf("flag quote ---> %d\n", *(cmd->quote_flags));
+// 		if (cmd->infiles)
+// 		{
+// 			int i = 0;
+// 			while (cmd->infiles[i])
+// 			{
+// 				printf("infiles[%d] ---> %s\n", i, cmd->infiles[i]);
+// 				i++;
+// 			}
+// 		}
+// 		if (cmd->outfiles)
+// 		{
+// 			int i = 0;
+// 			while (cmd->outfiles[i])
+// 			{
+// 				printf("outfiles[%d] ---> %s\n", i, cmd->outfiles[i]);
+// 				i++;
+// 			}
+// 		}
+// 		cmd = cmd->next;
+// 	}
+// }
 void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
 	int		i;

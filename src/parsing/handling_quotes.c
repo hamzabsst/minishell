@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handling_quotes.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:32:43 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	quotes_inside_quotes(char *line, int *last, int *start, char quote_ty
 	int	len;
 	int	j;
 
-	j = *start;
+	j = *start + 1;
 	while (line[j])
 	{
 		while (line[j] != quote_type)
@@ -54,10 +54,10 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 				quote_stop = '\"';
 			else
 				quote_stop = '\'';
-			*i += 1;
 			start = *i;
-			k = *i;
-			j = *i;
+			*i += 1;
+			k = *i + 1;
+			j = *i + 1;
 			while (line[j])
 			{
 				if(line[j] == quote_type)
@@ -71,29 +71,29 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			{
 				if (line[k] == quote_stop)
 				{
-					len = quotes_inside_quotes(line, &last, &start, quote_type); // error ya morahiq value stored in this var is never read
+					quotes_inside_quotes(line, &last, &start, quote_type);
 					break;
 				}
 				k++;
 			}
-			len = last - start;
+			len = last - start + 1;
 			if (extra != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				first = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, extra, first);
 			}
 			else if (second != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				first = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, second, first);
 			}
 			else if(first != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				second = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, first, second);
 			}
 			else
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				first = our_strndup(cmd->collector , &line[start], len);
 			*i = last + 1;
 			break;
 		}
@@ -107,21 +107,21 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start + 1;
 			if (extra != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				second = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, extra, second);
 			}
 			else if (first != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				second = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, first, second);
 			}
 			else if (second != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				first = our_strndup(cmd->collector , &line[start], len);
 				extra = our_strjoin(cmd->collector, second, first);
 			}
 			else
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				second = our_strndup(cmd->collector , &line[start], len);
 		}
 		else if (line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 			break;
