@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/20 11:03:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:44:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static int	output_redir(t_cmd *cmd)
 	close(fd);
 	return (0);
 }
-int	input_redir_file(char *filename)
+static int	input_redir_file(char *filename)
 {
 	int	fd;
 
