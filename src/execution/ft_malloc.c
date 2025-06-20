@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:51:50 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/03 22:17:17 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 09:58:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_mem.h"
+#include "minishell.h"
 
 void	init_mem(t_mem *collector)
 {

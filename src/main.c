@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/05 14:31:15 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:44:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Important Notes:
-
-/*
-found a case:
-echo ""hamza""< > >>""pwd""
-it create a file called >>
-however bash
-echo ""hamza""< > >>""pwd""
-bash: syntax error near unexpected token `>'
-*/
 
 void	handle_sigint(int sig)
 {
@@ -72,7 +61,12 @@ static int	process_command(t_cmd *cmd, char ***g_env, t_mem *collector)
 	stdout_copy = -1;
 	if (backup_io(&stdin_copy, &stdout_copy) == -1)
 		return (ft_perror("Failed to backup stdio\n"));
-	if (redirection(cmd, collector) != 0)
+	if (redirection(cmd) != 0)
+	{
+		restore_io(stdin_copy, stdout_copy);
+		return (1);
+	}
+	if (redirection(cmd) != 0)
 		return (restore_io(stdin_copy, stdout_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
 	{
@@ -86,7 +80,6 @@ static int	process_command(t_cmd *cmd, char ***g_env, t_mem *collector)
 		g_sig = 0;
 		restore_io(stdin_copy, stdout_copy);
 	}
-	restore_io(stdin_copy, stdout_copy);
 	return (exit_status);
 }
 
@@ -148,6 +141,7 @@ int	main(int ac, char **av, char **env)
 
 	g_env = init_shell(ac, env, &collector);
 	g_exit = 0;
+	g_sig = 0;
 	while (1)
 	{
 		input = get_input(&line, &collector);

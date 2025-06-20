@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/05 14:34:58 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:45:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void	add_infile(t_cmd *cmd, char *filename)
 t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 {
 	int		i;
+	int		heredoc_counter;
 	t_cmd	*head;
 	t_cmd	*current;
 	t_cmd	*new_cmd;
@@ -144,6 +145,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 	init_struct(head);
 	current = head;
 	i = 0;
+	heredoc_counter = 0;
 	while (tokens)
 	{
 		if (ft_strcmp(tokens->type, "PIPE") == 0)
@@ -182,11 +184,12 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			tokens = tokens->next;
 			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
 			{
-				current->heredoc = tokens->content;
 				current->delimiter = tokens->content;
+				current->heredoc = heredoc(current, cmd->collector, &heredoc_counter);
+				if (!current->heredoc)
+					return (ft_perror("Error: Failed to process heredoc\n"), NULL);
+				current->delimiter = NULL;
 			}
-			if (tokens)
-				current->heredoc = tokens->content;
 		}
 		if (tokens)
 			tokens = tokens->next;
