@@ -6,91 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/19 10:15:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:03:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	heredoc(t_cmd *cmd, t_mem *collector)
-{
-	int		tmp_fd;
-	char	*line;
-	char	*joined;
-	char	*tmp;
-
-	tmp = "/tmp/.minishell";
-	unlink(tmp);
-	tmp_fd = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if (tmp_fd < 0)
-		return (ft_perror("cannot open tmp file"), cleanup_child(collector), 1);
-	joined = ft_strjoin(cmd->delimiter, "\n");
-	if (!joined)
-		return (close(tmp_fd), unlink(tmp), cleanup_child(collector),1);
-	while (1)
-	{
-		write(1, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
-		if (!line || !ft_strcmp(line, cmd->delimiter) || !ft_strcmp(line, joined))
-		{
-			free(line);
-			break ;
-		}
-		(ft_putstr_fd(line, tmp_fd), free(line));
-	}
-	get_next_line(-1);
-	(free(joined), close(tmp_fd));
-	tmp_fd = open(tmp, O_RDONLY);
-	if (tmp_fd < 0)
-		return (ft_perror("cannot open tmp file"), cleanup_child(collector), 1);
-	if (dup2(tmp_fd, STDIN_FILENO) == -1)
-		return (perror("dup2 heredoc"), close(tmp_fd), unlink(tmp), cleanup_child(collector), 1);
-	close(tmp_fd);
-	unlink(tmp);
-	return (0);
-}
-
-static int	input_redir(char **infiles)
-{
-	int	fd;
-	int	last;
-
-	last = 0;
-	while (infiles[last])
-		last++;
-	last--;
-	fd = open(infiles[last], O_RDONLY);
-	if (fd == -1)
-		return (perror(infiles[last]), 1);
-	if (dup2(fd, STDIN_FILENO) == -1)
-		return (perror("dup2 infiles"), close(fd), 1);
-	close(fd);
-	return (0);
-}
-
-static int	output_redir(t_cmd *cmd)
-{
-	int	fd;
-	int	last;
-	int	flags;
-
-	last = 0;
-	while (cmd->outfiles[last])
-		last++;
-	last--;
-	flags = cmd->append_flags[last];
-	if (flags == 1)
-		flags = O_WRONLY | O_CREAT | O_APPEND;
-	else
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(cmd->outfiles[last], flags, 0644);
-	if (fd == -1)
-		return (perror(cmd->outfiles[last]), 1);
-	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (perror("dup2 outfiles"), close(fd), 1);
-	close(fd);
-	return (0);
-}
 
 static int	valid_input(char **infiles)
 {
@@ -135,7 +55,63 @@ static int	valid_output(t_cmd *cmd)
 	return (0);
 }
 
-int	redirection(t_cmd *cmd, t_mem *collector)
+static int	input_redir(char **infiles)
+{
+	int	fd;
+	int	last;
+
+	last = 0;
+	while (infiles[last])
+		last++;
+	last--;
+	fd = open(infiles[last], O_RDONLY);
+	if (fd == -1)
+		return (perror(infiles[last]), 1);
+	if (dup2(fd, STDIN_FILENO) == -1)
+		return (perror("dup2 infiles"), close(fd), 1);
+	close(fd);
+	return (0);
+}
+
+static int	output_redir(t_cmd *cmd)
+{
+	int	fd;
+	int	last;
+	int	flags;
+
+	last = 0;
+	while (cmd->outfiles[last])
+		last++;
+	last--;
+	flags = cmd->append_flags[last];
+	if (flags == 1)
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	fd = open(cmd->outfiles[last], flags, 0644);
+	if (fd == -1)
+		return (perror(cmd->outfiles[last]), 1);
+	if (dup2(fd, STDOUT_FILENO) == -1)
+		return (perror("dup2 outfiles"), close(fd), 1);
+	close(fd);
+	return (0);
+}
+int	input_redir_file(char *filename)
+{
+	int	fd;
+
+	if (!filename)
+		return (1);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (ft_perror("minishell: input redirection failed"));
+	if (dup2(fd, STDIN_FILENO) < 0)
+		return (close(fd), ft_perror("minishell: dup2 failed"));
+	close(fd);
+	return (0);
+}
+
+int	redirection(t_cmd *cmd)
 {
 	if (cmd->infiles)
 	{
@@ -154,7 +130,7 @@ int	redirection(t_cmd *cmd, t_mem *collector)
 	}
 	if (cmd->heredoc)
 	{
-		if (heredoc(cmd, collector))
+		if (input_redir_file(cmd->heredoc))
 			return (1);
 	}
 	else if (cmd->infiles)

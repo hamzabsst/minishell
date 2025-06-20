@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_mem.h                                           :+:      :+:    :+:   */
+/*   memory.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:50:24 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/25 11:00:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 10:00:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MEMORY_MANAGER_H
-# define MEMORY_MANAGER_H
+#ifndef MEMORY_H
+# define MEMORY_H
 
-#include <stdlib.h>
-#include <unistd.h>
+# include "../mylib/myLib.h"
 
 typedef struct s_mem_node
 {

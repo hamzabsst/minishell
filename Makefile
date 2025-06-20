@@ -6,25 +6,8 @@ CFLAGS	= -Wall -Wextra -Werror -Iinc -g
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/main.c \
-			src/parsing/handling_quotes.c \
-			src/parsing/handle_syntax_error.c \
-			src/parsing/add_node_back.c \
-			src/parsing/parsing.c \
-			src/parsing/token.c \
-			src/parsing/utils.c \
-			src/builtin/cd.c \
-			src/builtin/echo.c \
-			src/builtin/builtin.c \
-			src/builtin/export.c \
-			src/builtin/unset.c \
-			src/builtin/exit.c \
-			src/pipe/pipe.c \
-			src/pipe/get_cmds.c \
-			src/pipe/redirection.c \
-			src/utils.c \
-			src/memory/ft_malloc.c \
-			src/interface.c \
+SRCS := $(shell find src -name '*.c')
+#!need to modify this later
 
 OBJS	= $(SRCS:.c=.o)
 
