@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ char	**smart_split(t_cmd *cmd, char *str)
 	double_quote_type = '\0';
 	token_count = count_tokens(str);
 
-	tokens = ft_malloc(cmd->collector , sizeof(char *) * (token_count * 2 + 10)); //allocated more size
+	tokens = ft_malloc(cmd->gc , sizeof(char *) * (token_count * 2 + 10)); //allocated more size
 	if (!tokens)
 		return (NULL);
-	cmd->quote_flags = ft_malloc(cmd->collector, sizeof(int) * (token_count + 1));
+	cmd->quote_flags = ft_malloc(cmd->gc, sizeof(int) * (token_count + 1));
 	if (!cmd->quote_flags)
 		return (NULL);
 	while (str[i] == ' ')
@@ -100,9 +100,9 @@ char	**smart_split(t_cmd *cmd, char *str)
 			cmd->quote_flags[j] = 1;
 			if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 			{
-				char *temp = our_strjoin(cmd->collector, tokens[j - 1] ,insidequotes(cmd, str, &i));
+				char *temp = our_strjoin(cmd->gc, tokens[j - 1] ,insidequotes(cmd, str, &i));
 				//free(tokens[k - 1]);
-				//elch katfree alhmar HHHHHHHHH yak glna garabge collector
+				//elch katfree alhmar HHHHHHHHH yak glna garabge gc
 				tokens[j - 1] = temp;
 			}
 			else
@@ -114,14 +114,14 @@ char	**smart_split(t_cmd *cmd, char *str)
 			int len = 1;
 			if (str[i + 1] == str[i])
 				len = 2;
-			tokens[j++] = our_strndup(cmd->collector, &str[i], len, 0, 0);
+			tokens[j++] = our_strndup(cmd->gc, &str[i], len, 0, 0);
 			i += len;
 		}
 		else if (str[i] == '|')
 		{
 			cmd->quote_flags[j] = 0;
 			if (str[i + 1] != str[i])
-				tokens[j++] = our_strndup(cmd->collector, &str[i], 1, 0, 0);
+				tokens[j++] = our_strndup(cmd->gc, &str[i], 1, 0, 0);
 			i++;
 		}
 		else
@@ -154,12 +154,12 @@ char	**smart_split(t_cmd *cmd, char *str)
 				cmd->quote_flags[j] = 0;
 				if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
 				{
-					char *temp = our_strjoin(cmd->collector, tokens[j - 1] , our_strndup(cmd->collector, &str[start], i - start, single_quote_type, double_quote_type));
+					char *temp = our_strjoin(cmd->gc, tokens[j - 1] , our_strndup(cmd->gc, &str[start], i - start, single_quote_type, double_quote_type));
 					//free(tokens[k - 1]);
 					tokens[j - 1] = temp;
 				}
 				else
-					tokens[j++] = our_strndup(cmd->collector, &str[start], i - start, single_quote_type, double_quote_type);
+					tokens[j++] = our_strndup(cmd->gc, &str[start], i - start, single_quote_type, double_quote_type);
 			}
 		}
 	}

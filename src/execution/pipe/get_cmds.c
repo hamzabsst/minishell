@@ -6,16 +6,16 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 16:08:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 11:56:08 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void cleanup_child(t_mem *collector)
+void cleanup_child(t_mem *gc)
 {
-	if (collector)
-		ft_free_all(collector);
+	if (gc)
+		ft_free_all(gc);
 }
 
 static char	**get_path(char **env)
@@ -30,7 +30,7 @@ static char	**get_path(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 
-static char	*find_in_paths(char *cmd, char **paths, t_mem *collector)
+static char	*find_in_paths(char *cmd, char **paths, t_mem *gc)
 {
 	char	*full;
 	int		i;
@@ -38,14 +38,14 @@ static char	*find_in_paths(char *cmd, char **paths, t_mem *collector)
 	i = 0;
 	while (paths && paths[i])
 	{
-		full = ft_malloc(collector, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
+		full = ft_malloc(gc, ft_strlen(paths[i]) + ft_strlen(cmd) + 2);
 		if (!full)
 			return (NULL);
 		ft_strcpy(full, paths[i]);
 		ft_strcat(full, "/");
 		ft_strcat(full, cmd);
 		if (access(full, X_OK) == 0)
-			return (our_strdup(collector, full));
+			return (our_strdup(gc, full));
 		i++;
 	}
 	return (NULL);
@@ -61,32 +61,34 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	if (ft_strchr(cmd->av[0], '/'))
 	{
 		if (access(cmd->av[0], X_OK) == 0)
-			return (our_strdup(cmd->collector, cmd->av[0]));
+			return (our_strdup(cmd->gc, cmd->av[0]));
 		perror(cmd->av[0]);
 		exit(126);
 	}
 	paths = get_path(env);
 	if (!paths)
 		return (NULL);
-	resolved = find_in_paths(cmd->av[0], paths, cmd->collector);
+	resolved = find_in_paths(cmd->av[0], paths, cmd->gc);
 	ft_free(paths);
 	return (resolved);
 }
 
-void	exec_cmd(t_cmd *cmd, char **env, t_mem *collector)
+void	exec_cmd(t_cmd *cmd)
 {
 	char	*path;
+	char	**env;
 
+	env = env_to_array(cmd);
 	if (!cmd->av || !cmd->av[0])
-		(cleanup_child(collector), exit(0));
+		(cleanup_child(cmd->gc), exit(0));
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->av[0], 2);
 		ft_perror(": command not found\n");
-		(cleanup_child(collector), exit(127));
+		(cleanup_child(cmd->gc), exit(127));
 	}
-	//cleanup_child(collector);
+	//cleanup_child(gc);
 	execve(path, cmd->av, env);
 	perror("execve");
 	free(path);

@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 12:31:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_short_pwd(t_mem *collector)
+char	*get_short_pwd(t_mem *gc)
 {
 	char	*short_pwd;
 	char	*cwd;
@@ -24,7 +24,7 @@ char	*get_short_pwd(t_mem *collector)
 	if (cwd != NULL)
 		getcwd(cwd, 1024);
 	home = getenv("HOME");
-	short_pwd = ft_malloc(collector, 256);
+	short_pwd = ft_malloc(gc, 256);
 	if (!short_pwd)
 		return (NULL);
 	if (!cwd)
@@ -53,15 +53,15 @@ char	*get_short_pwd(t_mem *collector)
 	return (short_pwd);
 }
 
-char	*create_prompt(t_mem *collector)
+char	*create_prompt(t_mem *gc)
 {
 	char	*prompt;
 	char	*pwd;
 
-	pwd = get_short_pwd(collector);
+	pwd = get_short_pwd(gc);
 	if (!pwd)
 		return (NULL);
-	prompt = ft_malloc(collector, 512);
+	prompt = ft_malloc(gc, 512);
 	if (!prompt)
 		return (NULL);
 	prompt[0] = '\0';

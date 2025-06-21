@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/04 16:15:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,21 +79,21 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start;
 			if (extra != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
-				extra = our_strjoin(cmd->collector, extra, first);
+				first = our_strndup(cmd->gc , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->gc, extra, first);
 			}
 			else if (second != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
-				extra = our_strjoin(cmd->collector, second, first);
+				first = our_strndup(cmd->gc , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->gc, second, first);
 			}
 			else if(first != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
-				extra = our_strjoin(cmd->collector, first, second);
+				second = our_strndup(cmd->gc , &line[*i], len, quote_type, 0);
+				extra = our_strjoin(cmd->gc, first, second);
 			}
 			else
-				first = our_strndup(cmd->collector , &line[*i], len, quote_type, 0);
+				first = our_strndup(cmd->gc , &line[*i], len, quote_type, 0);
 			*i = last + 1;
 			break;
 		}
@@ -107,21 +107,21 @@ char	*insidequotes(t_cmd *cmd, char *line, int *i)
 			len = last - start + 1;
 			if (extra != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
-				extra = our_strjoin(cmd->collector, extra, second);
+				second = our_strndup(cmd->gc , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->gc, extra, second);
 			}
 			else if (first != NULL)
 			{
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
-				extra = our_strjoin(cmd->collector, first, second);
+				second = our_strndup(cmd->gc , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->gc, first, second);
 			}
 			else if (second != NULL)
 			{
-				first = our_strndup(cmd->collector , &line[start], len, 0, 0);
-				extra = our_strjoin(cmd->collector, second, first);
+				first = our_strndup(cmd->gc , &line[start], len, 0, 0);
+				extra = our_strjoin(cmd->gc, second, first);
 			}
 			else
-				second = our_strndup(cmd->collector , &line[start], len, 0, 0);
+				second = our_strndup(cmd->gc , &line[start], len, 0, 0);
 		}
 		else if (line[*i] == ' ' || line[*i] == '>' || line[*i] == '<' || line[*i] == '|')
 			break;

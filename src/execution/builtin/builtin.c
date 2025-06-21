@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 16:12:27 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 11:37:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,18 @@ static int	builtin_pwd(void)
 	return (0);
 }
 
-static int	builtin_env(char **av, char **env)
+static int	builtin_env(t_cmd *cmd)
 {
-	int	i;
-
-	if (av[1])
+	if (cmd->av[1])
 		return (ft_perror("env: No arguments or options allowed\n"));
-	if (!env)
+	if (!cmd->env)
 		return (ft_perror("command not found: env\n"));
-	i = 0;
-	while (env[i])
+	while (cmd->env->next)
 	{
-		if (ft_strchr(env[i], '='))
-			printf("%s\n", env[i]);
-		i++;
+		printf("%s", cmd->env->var);
+		printf("=");
+		printf("%s\n", cmd->env->content);
+		cmd->env = cmd->env->next;
 	}
 	return (0);
 }
@@ -57,21 +55,21 @@ int	builtin(char *cmd)
 		|| !ft_strcmp(cmd, "exit"));
 }
 
-int	exec_builtin(t_cmd *cmd, char ***env, t_mem *collector)
+int	exec_builtin(t_cmd *cmd)
 {
 	if (!ft_strcmp(cmd->av[0], "echo"))
-		return (builtin_echo(cmd->av));
+		return (builtin_echo(cmd));
 	else if (!ft_strcmp(cmd->av[0], "pwd"))
 		return (builtin_pwd());
 	else if (!ft_strcmp(cmd->av[0], "cd"))
-		return (builtin_cd(cmd->av, env, collector));
+		return (builtin_cd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "env"))
-		return (builtin_env(cmd->av, *env));
+		return (builtin_env(cmd));
 	else if (!ft_strcmp(cmd->av[0], "unset"))
-		return (builtin_unset(cmd->av, env, collector));
+		return (builtin_unset(cmd));
 	else if (!ft_strcmp(cmd->av[0], "exit"))
-		return (builtin_exit(cmd->av, env, collector));
+		return (builtin_exit(cmd));
 	else if (!ft_strcmp(cmd->av[0], "export"))
-		return (builtin_export(cmd->av, env, collector));
+		return (builtin_export(cmd));
 	return (1);
 }

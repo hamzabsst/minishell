@@ -42,11 +42,11 @@ t_token	*allocate_token(t_cmd *cmd, char *content, char *type)
 {
 	t_token *new;
 
-	new = ft_malloc(cmd->collector ,sizeof(t_token));
+	new = ft_malloc(cmd->gc ,sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = our_strdup(cmd->collector, content);
-	new->type = our_strdup(cmd->collector, type);
+	new->content = our_strdup(cmd->gc, content);
+	new->type = our_strdup(cmd->gc, type);
 	new->next = NULL;
 	return (new);
 }

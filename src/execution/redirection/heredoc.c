@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/20 11:33:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_quoted_delimiter(const char *s)
 	return ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"'));
 }
 
-char	*remove_quotes(t_mem *collector, const char *s)
+char	*remove_quotes(t_mem *gc, const char *s)
 {
 	size_t	len;
 
@@ -32,8 +32,8 @@ char	*remove_quotes(t_mem *collector, const char *s)
 		return (NULL);
 	len = ft_strlen(s);
 	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"')))
-		return (our_strndup(collector, (char *)s + 1, len - 2, 0, 0));
-	return (our_strdup(collector, s));
+		return (our_strndup(gc, (char *)s + 1, len - 2, 0, 0));
+	return (our_strdup(gc, s));
 }
 
 int	get_pid_from_proc(void)
@@ -127,8 +127,8 @@ static int	compare_delimiter(const char *line, const char *delimiter)
 		return (ft_strncmp(line, delimiter, delim_len) == 0);
 	return (0);
 }
-
-char	*heredoc(t_cmd *cmd, t_mem *collector, int *index)
+//? dont forget to hide the file and unlink it after you done
+char	*heredoc(t_cmd *cmd, t_mem *gc, int *index)
 {
 	char		*clean_delim;
 	char		filepath[64];
@@ -138,7 +138,7 @@ char	*heredoc(t_cmd *cmd, t_mem *collector, int *index)
 
 	if (!cmd || !cmd->delimiter)
 		return (NULL);
-	clean_delim = remove_quotes(collector, cmd->delimiter);
+	clean_delim = remove_quotes(gc, cmd->delimiter);
 	if (!clean_delim)
 		return (NULL);
 	generate_filename(filepath, sizeof(filepath), (*index)++);
@@ -165,6 +165,6 @@ char	*heredoc(t_cmd *cmd, t_mem *collector, int *index)
 	}
 	g_sig = 0;
 	close(fd);
-	filepath_copy = our_strdup(collector, filepath);
+	filepath_copy = our_strdup(gc, filepath);
 	return (filepath_copy);
 }

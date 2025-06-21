@@ -6,29 +6,29 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/20 10:51:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 11:48:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	exec_child(t_cmd *cmd, char **env, int in, int out, t_mem *collector)
+static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;
 
 	if (dup2(in, STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
-		(perror("dup2"), cleanup_child(collector), exit(1));
+		(perror("dup2"), cleanup_child(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)
 		close(in);
 	if (out != STDOUT_FILENO)
 		close(out);
 	if (builtin(cmd->av[0]) && !cmd->next)
 	{
-		exit_code = exec_builtin(cmd, &env, collector);
-		cleanup_child(collector);
+		exit_code = exec_builtin(cmd);
+		cleanup_child(cmd->gc);
 		exit(exit_code);
 	}
-	exec_cmd(cmd, env, collector);
+	exec_cmd(cmd);
 }
 
 static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
@@ -58,7 +58,7 @@ static void	wait_for_all(int *status, pid_t last_pid)
 	}
 }
 
-int	ft_exec(t_cmd *cmd, char **env, t_mem *collector)
+int	ft_exec(t_cmd *cmd)
 {
 	int		pipe_fd[2];
 	int		fd_in;
@@ -81,7 +81,7 @@ int	ft_exec(t_cmd *cmd, char **env, t_mem *collector)
 			return (1);
 		}
 		if (pid == 0)
-			exec_child(cmd, env, fd_in, pipe_fd[1], collector);
+			exec_child(cmd, fd_in, pipe_fd[1]);
 		if (fd_in != STDIN_FILENO)
 			close(fd_in);
 		if (cmd->next)
