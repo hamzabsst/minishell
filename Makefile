@@ -6,6 +6,9 @@ CFLAGS	= -Wall -Wextra -Werror -Iinc -g
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
+# preload_test:
+# 	LD_PRELOAD=./fail.so ./$(NAME)
+
 SRCS := $(shell find src -name '*.c')
 #!need to modify this later
 

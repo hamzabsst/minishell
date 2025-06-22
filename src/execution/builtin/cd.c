@@ -6,11 +6,26 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:54:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 18:49:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char *ft_getenv(t_expand *env, const char *key)
+{
+	t_expand	*current;
+	if (!env || !key)
+		return (NULL);
+	current = env;
+	while (current)
+	{
+		if (current->var && ft_strcmp(current->var, key) == 0)
+			return (current->content);
+		current = current->next;
+	}
+	return (NULL);
+}
 
 static int	handle_path(const char *arg)
 {
@@ -46,10 +61,10 @@ int update_env(t_cmd *cmd, char *key, char *value)
 		}
 		current = current->next;
 	}
-	new_var = allocate_expand(key, value, cmd->gc);
+	new_var = allocate_var(key, value, cmd->gc);
 	if (!new_var)
 		return (1);
-	add_expand_back(&cmd->env, new_var);
+	add_var_back(&cmd->env, new_var);
 	return (0);
 }
 

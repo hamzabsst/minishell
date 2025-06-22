@@ -6,11 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:55:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 18:48:27 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	update_env_append(t_cmd *cmd, char *key, char *value)
+{
+	char		*old_value;
+	char		*new_value;
+	t_expand	*current;
+
+	if (!cmd->env || !key || !value || !cmd->gc)
+		return (1);
+	current = cmd->env;
+	while (current)
+	{
+		if (current->var && ft_strcmp(current->var, key) == 0)
+		{
+			old_value = current->content;
+			if (old_value)
+				new_value = ft_strjoin(old_value, value);
+			else
+				new_value = our_strdup(cmd->gc, value);
+			if (!new_value)
+				return (1);
+			current->content = new_value;
+			return (0);
+		}
+		current = current->next;
+	}
+	return (update_env(cmd, key, value));
+}
 
 static int	identifier(const char *s)
 {
@@ -31,7 +59,7 @@ static int	identifier(const char *s)
 	return (1);
 }
 
-char	*find_key(const char *arg, t_mem *gc)
+static char	*find_key(const char *arg, t_mem *gc)
 {
 	int len;
 
@@ -40,47 +68,6 @@ char	*find_key(const char *arg, t_mem *gc)
 		&& !(arg[len] == '+' && arg[len + 1] == '='))
 		len++;
 	return (our_substr(arg, 0, len, gc));
-}
-
-char **env_to_array(t_cmd *cmd)
-{
-	t_expand	*current;
-	char		**array;
-	char		*temp;
-	int			count;
-	int			i;
-	count = 0;
-	current = cmd->env;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	array = ft_malloc(cmd->gc, sizeof(char *) * (count + 1));
-	if (!array)
-		return (NULL);
-	current = cmd->env;
-	i = 0;
-	while (current && i < count)
-	{
-		if (current->content && ft_strlen(current->content) > 0)
-		{
-			temp = ft_strjoin(current->var, "=");
-			if (temp)
-			{
-				array[i] = ft_strjoin(temp, current->content);
-				free(temp);
-			}
-		}
-		else
-			array[i] = our_strdup(cmd->gc, current->var);
-		if (!array[i])
-			return (NULL);
-		current = current->next;
-		i++;
-	}
-	array[i] = NULL;
-	return (array);
 }
 
 static void	sort_env(char **env)
@@ -125,9 +112,9 @@ static int	var_exists(t_expand *env, const char *key)
 
 static int	print_export(t_cmd *cmd)
 {
-	char		**env_array;
-	int			i;
-	char		*equal;
+	char	**env_array;
+	char	*equal;
+	int		i;
 
 	env_array = env_to_array(cmd);
 	if (!env_array)

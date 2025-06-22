@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:04:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_quoted_delimiter(const char *s)
+/* static int	is_quoted_delimiter(const char *s)
 {
 	size_t	len;
 
@@ -22,9 +22,9 @@ int	is_quoted_delimiter(const char *s)
 	if (len < 2)
 		return (0);
 	return ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"'));
-}
+} */
 
-char	*remove_quotes(t_mem *gc, const char *s)
+static char	*remove_quotes(t_mem *gc, const char *s)
 {
 	size_t	len;
 
@@ -36,7 +36,7 @@ char	*remove_quotes(t_mem *gc, const char *s)
 	return (our_strdup(gc, s));
 }
 
-int	get_pid_from_proc(void)
+static int	get_pid_from_proc(void)
 {
 	int		fd;
 	char	buffer[256];
@@ -62,7 +62,7 @@ int	get_pid_from_proc(void)
 	return (pid);
 }
 
-void	generate_filename(char *dest, size_t size, int index)
+static void	generate_filename(char *dest, size_t size, int index)
 {
 	const char	*prefix = "/tmp/minishell_heredoc_";
 	size_t		prefix_len;

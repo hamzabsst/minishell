@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:48:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 11:29:52 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (dup2(in, STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
 		(perror("dup2"), cleanup_child(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)
@@ -54,7 +56,20 @@ static void	wait_for_all(int *status, pid_t last_pid)
 	while ((pid = wait(&tmp)) > 0)
 	{
 		if (pid == last_pid)
-			*status = tmp;
+		{
+			if (WIFSIGNALED(tmp))
+			{
+				int sig = WTERMSIG(tmp);
+				if (sig == SIGINT)
+					*status = 130;
+				else if (sig == SIGQUIT)
+					*status = 131;
+				else
+					*status = 128 + sig;
+			}
+			else
+				*status = WEXITSTATUS(tmp);
+		}
 	}
 }
 
@@ -71,7 +86,7 @@ int	ft_exec(t_cmd *cmd)
 	{
 		handle_pipe(cmd, pipe_fd);
 		pid = fork();
-		if(pid == -1)
+		if (pid == -1)
 		{
 			perror("fork");
 			if (fd_in != STDIN_FILENO)
@@ -97,5 +112,5 @@ int	ft_exec(t_cmd *cmd)
 		cmd = cmd->next;
 	}
 	wait_for_all(&status, last_pid);
-	return (WEXITSTATUS(status));
+	return (status);
 }
