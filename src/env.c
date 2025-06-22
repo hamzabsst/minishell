@@ -6,15 +6,15 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 11:30:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:17:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_var_back(t_expand **head, t_expand *new)
+void	add_var_back(t_env **head, t_env *new)
 {
-	t_expand	*tmp;
+	t_env	*tmp;
 
 	if (!head || !new)
 		return ;
@@ -31,13 +31,13 @@ void	add_var_back(t_expand **head, t_expand *new)
 	tmp->next = new;
 }
 
-t_expand	*allocate_var(char *var, char *content, t_mem *gc)
+t_env	*allocate_var(char *var, char *content, t_mem *gc)
 {
-	t_expand	*new;
+	t_env	*new;
 
 	if (!var || !gc)
 		return (NULL);
-	new = ft_malloc(gc, sizeof(t_expand));
+	new = ft_malloc(gc, sizeof(t_env));
 	if (!new)
 		return (NULL);
 	new->var = our_strdup(gc, var);
@@ -78,10 +78,10 @@ static int	parse_env(const char *env, char **var, char **value, t_mem *gc)
 	return (1);
 }
 
-t_expand	*dup_env(char **env, t_mem *gc)
+t_env	*dup_env(char **env, t_mem *gc)
 {
-	t_expand	*head;
-	t_expand	*new;
+	t_env	*head;
+	t_env	*new;
 	char		*var;
 	char		*value;
 	int			i;
@@ -122,10 +122,10 @@ t_expand	*dup_env(char **env, t_mem *gc)
 	return (our_substr(str, start, end - start, gc));
 }
 
-char	*get_from_env(t_expand *env, char *str, t_mem *gc)
+char	*get_from_env(t_env *env, char *str, t_mem *gc)
 {
 	char		*var_name;
-	t_expand	*current;
+	t_env	*current;
 
 	if (!str || !env || !gc)
 		return (our_strdup(gc, ""));
@@ -149,11 +149,11 @@ char	*get_from_env(t_expand *env, char *str, t_mem *gc)
 
 char **env_to_array(t_cmd *cmd)
 {
-	t_expand	*current;
-	char		**array;
-	char		*temp;
-	int			count;
-	int			i;
+	t_env	*current;
+	char	**array;
+	char	*temp;
+	int		count;
+	int		i;
 
 	count = 0;
 	current = cmd->env;

@@ -6,23 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 19:04:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 15:18:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* static int	is_quoted_delimiter(const char *s)
-{
-	size_t	len;
-
-	if (!s)
-		return (0);
-	len = ft_strlen(s);
-	if (len < 2)
-		return (0);
-	return ((s[0] == '\'' && s[len - 1] == '\'') || (s[0] == '"' && s[len - 1] == '"'));
-} */
 
 static char	*remove_quotes(t_mem *gc, const char *s)
 {
@@ -145,7 +133,6 @@ char	*heredoc(t_cmd *cmd, t_mem *gc, int *index)
 	fd = create_heredoc_file(filepath);
 	if (fd < 0)
 		return (NULL);
-	g_sig = 1;
 	while (1)
 	{
 		write(STDOUT_FILENO, "> ", 2);
@@ -163,7 +150,6 @@ char	*heredoc(t_cmd *cmd, t_mem *gc, int *index)
 		write(fd, line, ft_strlen(line));
 		free(line);
 	}
-	g_sig = 0;
 	close(fd);
 	filepath_copy = our_strdup(gc, filepath);
 	return (filepath_copy);

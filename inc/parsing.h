@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:53:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:15:40 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@
 # include <readline/history.h>
 # include "memory.h"
 
-typedef struct s_expand
+typedef struct s_env
 {
 	char			*var;
 	char			*content;
-	struct s_expand	*next;
-}	t_expand;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_cmd
 {
@@ -38,7 +38,7 @@ typedef struct s_cmd
 	char			*heredoc;
 	char			*delimiter;
 	int				*quote_flags;
-	t_expand		*env;
+	t_env			*env;
 	t_mem			*gc;
 	struct s_cmd	*next;
 }	t_cmd;

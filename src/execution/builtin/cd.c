@@ -6,15 +6,16 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 18:49:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:16:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_getenv(t_expand *env, const char *key)
+static char *ft_getenv(t_env *env, const char *key)
 {
-	t_expand	*current;
+	t_env	*current;
+
 	if (!env || !key)
 		return (NULL);
 	current = env;
@@ -41,8 +42,8 @@ static int	handle_path(const char *arg)
 
 int update_env(t_cmd *cmd, char *key, char *value)
 {
-	t_expand	*current;
-	t_expand	*new_var;
+	t_env	*current;
+	t_env	*new_var;
 
 	if (!cmd->env || !key || !cmd->gc)
 		return (1);

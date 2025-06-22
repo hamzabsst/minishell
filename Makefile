@@ -26,6 +26,10 @@ $(MYLIB):
 $(NAME): $(OBJS) $(MYLIB)
 	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
 
+#!for gcc
+# $(NAME): $(OBJS) $(MYLIB)
+# 	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory -no-pie
+
 clean:
 	@rm -f $(OBJS)
 	@$(MAKE) -s clean -C $(MYLIB_DIR)

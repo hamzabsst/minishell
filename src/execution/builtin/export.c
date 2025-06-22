@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 18:48:27 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:16:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int	update_env_append(t_cmd *cmd, char *key, char *value)
 {
-	char		*old_value;
-	char		*new_value;
-	t_expand	*current;
+	t_env	*current;
+	char	*old;
+	char	*new;
 
 	if (!cmd->env || !key || !value || !cmd->gc)
 		return (1);
@@ -25,14 +25,14 @@ static int	update_env_append(t_cmd *cmd, char *key, char *value)
 	{
 		if (current->var && ft_strcmp(current->var, key) == 0)
 		{
-			old_value = current->content;
-			if (old_value)
-				new_value = ft_strjoin(old_value, value);
+			old = current->content;
+			if (old)
+				new = ft_strjoin(old, value);
 			else
-				new_value = our_strdup(cmd->gc, value);
-			if (!new_value)
+				new = our_strdup(cmd->gc, value);
+			if (!new)
 				return (1);
-			current->content = new_value;
+			current->content = new;
 			return (0);
 		}
 		current = current->next;
@@ -94,9 +94,9 @@ static void	sort_env(char **env)
 	}
 }
 
-static int	var_exists(t_expand *env, const char *key)
+static int	var_exists(t_env *env, const char *key)
 {
-	t_expand *current;
+	t_env	*current;
 
 	if (!env || !key)
 		return (0);

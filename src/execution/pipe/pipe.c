@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 11:29:52 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:54:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,14 @@ static void	wait_for_all(int *status, pid_t last_pid)
 
 int	ft_exec(t_cmd *cmd)
 {
+	pid_t	pid;
+	pid_t	last_pid;
 	int		pipe_fd[2];
 	int		fd_in;
-	pid_t	pid;
-	pid_t	last_pid = 0;
 	int		status;
 
 	fd_in = STDIN_FILENO;
+	last_pid = 0;
 	while (cmd)
 	{
 		handle_pipe(cmd, pipe_fd);
@@ -100,15 +101,9 @@ int	ft_exec(t_cmd *cmd)
 		if (fd_in != STDIN_FILENO)
 			close(fd_in);
 		if (cmd->next)
-		{
-			close(pipe_fd[1]);
-			fd_in = pipe_fd[0];
-		}
+			(close(pipe_fd[1]), fd_in = pipe_fd[0]);
 		else
-		{
-			fd_in = STDIN_FILENO;
-			last_pid = pid;
-		}
+			(fd_in = STDIN_FILENO ,last_pid = pid);
 		cmd = cmd->next;
 	}
 	wait_for_all(&status, last_pid);

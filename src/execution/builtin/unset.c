@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:55:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 14:16:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	builtin_unset(t_cmd *cmd)
 {
-	int			i;
-	t_expand	*current;
-	t_expand	*prev;
+	t_env	*current;
+	t_env	*prev;
+	int		i;
 
+	i = 1;
 	if (!cmd->av[1])
 		return (0);
-	i = 1;
 	while (cmd->av[i])
 	{
 		if (cmd->av[i][0] == '-')

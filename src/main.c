@@ -6,46 +6,42 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:56:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/22 15:19:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_sigint(int sig)
+static void	handle_sigint(int signal)
 {
-	if(g_sig == 1)
+	if (signal == SIGINT)
 	{
+		g_sig = 1;
 		write(1, "\n", 1);
-		return ;
-	}
-	if (sig == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
 		rl_replace_line("", 0);
+		rl_on_new_line();
 		rl_redisplay();
 	}
 }
 
-static void	restore_io(int stdin_copy, int stdout_copy)
+static void	restore_io(int in_copy, int out_copy)
 {
-	if (stdin_copy != -1)
-		(dup2(stdin_copy, STDIN_FILENO), close(stdin_copy));
-	if (stdout_copy != -1)
-		(dup2(stdout_copy, STDOUT_FILENO), close(stdout_copy));
+	if (in_copy != -1)
+		(dup2(in_copy, STDIN_FILENO), close(in_copy));
+	if (out_copy != -1)
+		(dup2(out_copy, STDOUT_FILENO), close(out_copy));
 }
 
-static int	backup_io(int *stdin_copy, int *stdout_copy)
+static int	backup_io(int *in_copy, int *out_copy)
 {
-	*stdin_copy = dup(STDIN_FILENO);
-	*stdout_copy = dup(STDOUT_FILENO);
-	if (*stdin_copy == -1 || *stdout_copy == -1)
+	*in_copy = dup(STDIN_FILENO);
+	*out_copy = dup(STDOUT_FILENO);
+	if (*in_copy == -1 || *out_copy == -1)
 	{
-		if (*stdin_copy != -1)
-			close(*stdin_copy);
-		if (*stdout_copy != -1)
-			close(*stdout_copy);
+		if (*in_copy != -1)
+			close(*in_copy);
+		if (*out_copy != -1)
+			close(*out_copy);
 		return (-1);
 	}
 	return (0);
@@ -53,52 +49,50 @@ static int	backup_io(int *stdin_copy, int *stdout_copy)
 
 static int	process_command(t_cmd *cmd)
 {
-	int	stdin_copy;
-	int	stdout_copy;
+	int	in_copy;
+	int	out_copy;
 	int	exit_status;
 
-	stdin_copy = -1;
-	stdout_copy = -1;
-	if (backup_io(&stdin_copy, &stdout_copy) == -1)
+	in_copy = -1;
+	out_copy = -1;
+	if (backup_io(&in_copy, &out_copy) == -1)
 		return (ft_perror("Failed to backup stdio\n"));
 	if (redirection(cmd) != 0)
-	{
-		restore_io(stdin_copy, stdout_copy);
-		return (1);
-	}
-	if (redirection(cmd) != 0)
-		return (restore_io(stdin_copy, stdout_copy), 1);
+		return (restore_io(in_copy, out_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
-	{
-		exit_status = exec_builtin(cmd);
-		restore_io(stdin_copy, stdout_copy);
-	}
+		(exit_status = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
 	else
 	{
 		g_sig = 1;
 		exit_status = ft_exec(cmd);
-		g_sig = 0;
-		restore_io(stdin_copy, stdout_copy);
+		if (g_sig == 2)
+		{
+			g_sig = 0;
+			exit_status = 130;
+		}
+		else
+			g_sig = 0;
+		restore_io(in_copy, out_copy);
 	}
 	return (exit_status);
 }
 
-static t_expand	*init_shell(int ac, char **env, t_mem *gc)
+static t_env	*init_shell(char **env, t_mem *gc)
 {
-	t_expand	*g_env;
+	t_env	*g_env;
 
-	if (ac != 1)
-		exit(ft_perror("Invalid number of arguments\n"));
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
 	init_mem(gc);
 	g_env = dup_env(env, gc);
+	g_sig = 0;
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	if (!g_env)
 		exit(ft_perror("Failed to duplicate environment\n"));
+	printf("\033[2J\033[H\n");
 	return (g_env);
 }
 
-static t_cmd	*parse_input(char *line, t_expand *g_env, t_mem *gc)
+static t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
 {
 	char	**splited;
 	t_token	*token_list;
@@ -132,24 +126,28 @@ static int get_input(char **line, t_mem *gc)
 
 int	main(int ac, char **av, char **env)
 {
-	char		*line;
-	int			g_exit;
-	t_expand	*g_env;
-	t_mem		gc;
-	t_cmd		*cmd;
-	int			input;
-	(void)av;
+	t_env	*g_env;
+	t_mem	gc;
+	t_cmd	*cmd;
+	char	*line;
+	int		g_exit;
+	int		input;
 
-	g_env = init_shell(ac, env, &gc);
+	if (ac != 1)
+		return ((void)av, ft_perror("Invalid number of arguments\n"));
+	g_env = init_shell(env, &gc);
 	g_exit = 0;
-	g_sig = 0;
 	while (1)
 	{
+		g_sig = 0;
+		signal(SIGINT, handle_sigint);
+		signal(SIGQUIT, SIG_IGN);
 		input = get_input(&line, &gc);
 		if (input == 0)
 			break;
 		if (input == 1)
 			continue;
+		signal(SIGINT, SIG_IGN);
 		cmd = parse_input(line, g_env, &gc);
 		free(line);
 		if (cmd)
