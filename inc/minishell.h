@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:59:58 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/23 11:09:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "execution.h"
 # include "memory.h"
 
-static int g_sig;
-//interface
+static int g_var;
+
 char	*create_prompt(t_mem *gc);
 
 

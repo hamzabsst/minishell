@@ -6,91 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 15:19:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/23 11:10:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	handle_sigint(int signal)
-{
-	if (signal == SIGINT)
-	{
-		g_sig = 1;
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-static void	restore_io(int in_copy, int out_copy)
-{
-	if (in_copy != -1)
-		(dup2(in_copy, STDIN_FILENO), close(in_copy));
-	if (out_copy != -1)
-		(dup2(out_copy, STDOUT_FILENO), close(out_copy));
-}
-
-static int	backup_io(int *in_copy, int *out_copy)
-{
-	*in_copy = dup(STDIN_FILENO);
-	*out_copy = dup(STDOUT_FILENO);
-	if (*in_copy == -1 || *out_copy == -1)
-	{
-		if (*in_copy != -1)
-			close(*in_copy);
-		if (*out_copy != -1)
-			close(*out_copy);
-		return (-1);
-	}
-	return (0);
-}
-
-static int	process_command(t_cmd *cmd)
-{
-	int	in_copy;
-	int	out_copy;
-	int	exit_status;
-
-	in_copy = -1;
-	out_copy = -1;
-	if (backup_io(&in_copy, &out_copy) == -1)
-		return (ft_perror("Failed to backup stdio\n"));
-	if (redirection(cmd) != 0)
-		return (restore_io(in_copy, out_copy), 1);
-	if (builtin(cmd->av[0]) && !cmd->next)
-		(exit_status = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
-	else
-	{
-		g_sig = 1;
-		exit_status = ft_exec(cmd);
-		if (g_sig == 2)
-		{
-			g_sig = 0;
-			exit_status = 130;
-		}
-		else
-			g_sig = 0;
-		restore_io(in_copy, out_copy);
-	}
-	return (exit_status);
-}
-
-static t_env	*init_shell(char **env, t_mem *gc)
-{
-	t_env	*g_env;
-
-	init_mem(gc);
-	g_env = dup_env(env, gc);
-	g_sig = 0;
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	if (!g_env)
-		exit(ft_perror("Failed to duplicate environment\n"));
-	printf("\033[2J\033[H\n");
-	return (g_env);
-}
 
 static t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
 {
@@ -124,6 +44,86 @@ static int get_input(char **line, t_mem *gc)
 	return (2);
 }
 
+static void	restore_io(int in_copy, int out_copy)
+{
+	if (in_copy != -1)
+		(dup2(in_copy, STDIN_FILENO), close(in_copy));
+	if (out_copy != -1)
+		(dup2(out_copy, STDOUT_FILENO), close(out_copy));
+}
+
+static int	backup_io(int *in_copy, int *out_copy)
+{
+	*in_copy = dup(STDIN_FILENO);
+	*out_copy = dup(STDOUT_FILENO);
+	if (*in_copy == -1 || *out_copy == -1)
+	{
+		if (*in_copy != -1)
+			close(*in_copy);
+		if (*out_copy != -1)
+			close(*out_copy);
+		return (-1);
+	}
+	return (0);
+}
+
+static void	handle_sigint(int signal)
+{
+	if (signal == SIGINT)
+	{
+		g_var = 1;
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+static t_env	*init_shell(char **env, t_mem *gc)
+{
+	t_env	*g_env;
+
+	init_mem(gc);
+	g_env = dup_env(env, gc);
+	g_var = 0;
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	if (!g_env)
+		exit(ft_perror("Failed to duplicate environment\n"));
+	printf("\033[2J\033[H\n");
+	return (g_env);
+}
+
+static int	process_command(t_cmd *cmd)
+{
+	int	in_copy;
+	int	out_copy;
+	int	exit_status;
+
+	in_copy = -1;
+	out_copy = -1;
+	if (backup_io(&in_copy, &out_copy) == -1)
+		return (ft_perror("Failed to backup stdio\n"));
+	if (redirection(cmd) != 0)
+		return (restore_io(in_copy, out_copy), 1);
+	if (builtin(cmd->av[0]) && !cmd->next)
+		(exit_status = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
+	else
+	{
+		g_var = 1;
+		exit_status = ft_exec(cmd);
+		if (g_var == 2)
+		{
+			g_var = 0;
+			exit_status = 130;
+		}
+		else
+			g_var = 0;
+		restore_io(in_copy, out_copy);
+	}
+	return (exit_status);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_env	*g_env;
@@ -139,7 +139,7 @@ int	main(int ac, char **av, char **env)
 	g_exit = 0;
 	while (1)
 	{
-		g_sig = 0;
+		g_var = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		input = get_input(&line, &gc);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/23 10:43:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,14 @@ static int	count_tokens(char *str)
 		if (str[i] == '\"' || str[i] == '\'')
 		{
 			quote_type = str[i++];
+			j = i;
 			while (str[j])
 			{
 				if (str[j] == quote_type)
+				{
 					position = j;
+					break;
+				}
 				j++;
 			}
 			while (str[i] && i != position)
@@ -54,9 +58,10 @@ static int	count_tokens(char *str)
 				i++;
 	}
 	// printf("%s\n", str);
-	// printf("%d\n", count);
+	//printf("%d\n", count);
 	return (count);
 }
+
 //!➜  ~/minishell echo ""''sdldkl''""lldlds dlsldldl""
 //!==213010== Invalid write of size 4
 char	**smart_split(t_cmd *cmd, char *str)
@@ -87,27 +92,45 @@ char	**smart_split(t_cmd *cmd, char *str)
 	while (str[i])
 	{
 		is_space = 0;
-		while (str[i] == ' ') //echo df, between echo and dd has a space, so the flag will be 0;
+		while (str[i] == ' ') //echo df, between echo and dd has a space, so the flag will be 1;
 		{
 			i++;
 			is_space = 1;
 		}
 		if (!str[i])
 			break;
-		start = i; // error ya morahiq value stored in this var is never read
-		if (str[i] == '\"' || str[i] == '\'')
+		if (str[i] == '\'')
 		{
 			cmd->quote_flags[j] = 1;
-			if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
+			if (j > 0 && (cmd->quote_flags[j - 1] == 1 || cmd->quote_flags[j - 1] == 2) && is_space == 0)
 			{
 				char *temp = our_strjoin(cmd->gc, tokens[j - 1] ,insidequotes(cmd, str, &i));
-				//free(tokens[k - 1]);
-				//elch katfree alhmar HHHHHHHHH yak glna garabge gc
 				tokens[j - 1] = temp;
 			}
 			else
 				tokens[j++] = insidequotes(cmd, str, &i);
 		}
+		else if (str[i] == '\"')
+		{
+			cmd->quote_flags[j] = 2;
+			if (j > 0 && (cmd->quote_flags[j - 1] == 1 || cmd->quote_flags[j - 1] == 2) && is_space == 0)
+			{
+				char *temp = our_strjoin(cmd->gc, tokens[j - 1] ,insidequotes(cmd, str, &i));
+				tokens[j - 1] = temp;
+			}
+			else
+				tokens[j++] = insidequotes(cmd, str, &i);
+		}
+		// else if (str[i] == '$')
+		// {
+		// 	if (j > 0 && (cmd->quote_flags[j - 1] == 1 || cmd->quote_flags[j - 1] == 2))
+		// 	{
+		// 		char *temp = our_strjoin(cmd->gc, tokens[j - 1], get_from_env(cmd, env ,&str[i]));
+		// 		tokens[j - 1] = temp;
+		// 	}
+		// 	else
+		// 		tokens[j++] = get_from_env(cmd, env ,&str[i]);
+		// }
 		else if (str[i] == '>' || str[i] == '<')
 		{
 			cmd->quote_flags[j] = 0;
@@ -136,6 +159,7 @@ char	**smart_split(t_cmd *cmd, char *str)
 						i++;
 					if (str[i] == single_quote_type)
 						i++;
+					break;
 				}
 				else if (str[i] == '\"')
 				{
@@ -144,27 +168,33 @@ char	**smart_split(t_cmd *cmd, char *str)
 						i++;
 					if (str[i] == double_quote_type)
 						i++;
+					break;
 				}
-
+				else if (str[i] == '>' || str[i] == '<')
+					break;
 				else
 					i++;
 			}
 			if (i > start)
 			{
-				cmd->quote_flags[j] = 0;
-				if (j > 0 && cmd->quote_flags[j - 1] == 1 && is_space == 0)
+				if(double_quote_type != '\0')
+					cmd->quote_flags[j] = 2;
+				else if(single_quote_type != '\0')
+					cmd->quote_flags[j] = 1;
+				else
+					cmd->quote_flags[j] = 0;
+				if (j > 0 && (cmd->quote_flags[j - 1] == 1 || cmd->quote_flags[j - 1] == 2) && is_space == 0)
 				{
-					char *temp = our_strjoin(cmd->gc, tokens[j - 1] , our_strndup(cmd->gc, &str[start], i - start, single_quote_type, double_quote_type));
-					//free(tokens[k - 1]);
+					char *temp = our_strjoin(cmd->gc, tokens[j - 1] , our_strndup(cmd->gc, &str[start], i - start, 0 ,0));
 					tokens[j - 1] = temp;
 				}
 				else
-					tokens[j++] = our_strndup(cmd->gc, &str[start], i - start, single_quote_type, double_quote_type);
+					tokens[j++] = our_strndup(cmd->gc, &str[start], i - start, 0 , 0);
 			}
 		}
 	}
 	tokens[j] = NULL;
-	if (j < token_count * 2 + 10) //added this shi to handle an invalid write size of 8
+	if (j < token_count * 2 + 10)
 		cmd->quote_flags[j] = 0;
 	return (tokens);
 }

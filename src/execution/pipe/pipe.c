@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:54:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/23 09:55:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static void	wait_for_all(int *status, pid_t last_pid)
 {
 	pid_t	pid;
 	int		tmp;
+	int		sig;
 
 	*status = 0;
 	while ((pid = wait(&tmp)) > 0)
@@ -59,11 +60,11 @@ static void	wait_for_all(int *status, pid_t last_pid)
 		{
 			if (WIFSIGNALED(tmp))
 			{
-				int sig = WTERMSIG(tmp);
+				sig = WTERMSIG(tmp);
 				if (sig == SIGINT)
-					*status = 130;
+					*status = 130, write(1, "\n", 1);
 				else if (sig == SIGQUIT)
-					*status = 131;
+					(*status = 131, write(1, "Quit (core dumped)\n", 19));
 				else
 					*status = 128 + sig;
 			}

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:54:52 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/23 09:51:51 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	builtin_exit(t_cmd *cmd)
 		ft_perror(cmd->av[1]);
 		ft_perror(": numeric argument required\n");
 		ft_free_ptr(cmd->gc, cmd->env);
-		exit(255);
+		exit(2);
 	}
 	if (cmd->av[2])
 		return (ft_perror("exit: too many arguments\n"));
