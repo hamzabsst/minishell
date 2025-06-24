@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/23 11:10:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:43:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ static t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
 	return (start_of_parsing(cmd, token_list));
 }
 
-static int get_input(char **line, t_mem *gc)
+static int get_input(char **line, int exit_code, t_mem *gc)
 {
-	*line = readline(create_prompt(gc));
+	*line = readline(create_prompt(gc, exit_code));
 	if (!*line)
 		return (write(1, "exit\n", 5), 0);
 	if (!**line)
@@ -44,7 +44,7 @@ static int get_input(char **line, t_mem *gc)
 	return (2);
 }
 
-static void	restore_io(int in_copy, int out_copy)
+void	restore_io(int in_copy, int out_copy)
 {
 	if (in_copy != -1)
 		(dup2(in_copy, STDIN_FILENO), close(in_copy));
@@ -90,7 +90,6 @@ static t_env	*init_shell(char **env, t_mem *gc)
 	signal(SIGQUIT, SIG_IGN);
 	if (!g_env)
 		exit(ft_perror("Failed to duplicate environment\n"));
-	printf("\033[2J\033[H\n");
 	return (g_env);
 }
 
@@ -98,7 +97,7 @@ static int	process_command(t_cmd *cmd)
 {
 	int	in_copy;
 	int	out_copy;
-	int	exit_status;
+	int	exit_code;
 
 	in_copy = -1;
 	out_copy = -1;
@@ -107,21 +106,21 @@ static int	process_command(t_cmd *cmd)
 	if (redirection(cmd) != 0)
 		return (restore_io(in_copy, out_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
-		(exit_status = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
+		(exit_code = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
 	else
 	{
 		g_var = 1;
-		exit_status = ft_exec(cmd);
+		exit_code = ft_exec(cmd);
 		if (g_var == 2)
 		{
 			g_var = 0;
-			exit_status = 130;
+			exit_code = 130;
 		}
 		else
 			g_var = 0;
 		restore_io(in_copy, out_copy);
 	}
-	return (exit_status);
+	return (exit_code);
 }
 
 int	main(int ac, char **av, char **env)
@@ -130,19 +129,19 @@ int	main(int ac, char **av, char **env)
 	t_mem	gc;
 	t_cmd	*cmd;
 	char	*line;
-	int		g_exit;
+	int		exit_code;
 	int		input;
 
 	if (ac != 1)
 		return ((void)av, ft_perror("Invalid number of arguments\n"));
 	g_env = init_shell(env, &gc);
-	g_exit = 0;
+	exit_code = 0;
 	while (1)
 	{
 		g_var = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		input = get_input(&line, &gc);
+		input = get_input(&line, exit_code, &gc);
 		if (input == 0)
 			break;
 		if (input == 1)
@@ -151,10 +150,10 @@ int	main(int ac, char **av, char **env)
 		cmd = parse_input(line, g_env, &gc);
 		free(line);
 		if (cmd)
-			g_exit = process_command(cmd);
-		else
-			g_exit = ft_perror("Parse error.\n");
+			exit_code = process_command(cmd);
+		else if (g_var == 1 || g_var == 2)
+			(exit_code = 130, g_var = 0);
 	}
 	ft_free_all(&gc);
-	exit(g_exit);
+	exit(exit_code);
 }

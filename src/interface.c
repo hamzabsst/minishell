@@ -6,54 +6,67 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:20:58 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:54:41 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int ft_perror(char *msg)
+{
+	if (!msg)
+		return (1);
+	ft_putstr_fd(RESET, STDERR_FILENO);
+	ft_putstr_fd(RED, STDERR_FILENO);
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd(RESET, STDERR_FILENO);
+	return (1);
+}
 static char *get_short_pwd(t_mem *gc)
 {
 	char	*short_pwd;
 	char	*cwd;
-	char	*home;
-	char	*last_slash;
-	size_t	home_len;
 
 	cwd = malloc(1024);
 	if (cwd != NULL)
 		getcwd(cwd, 1024);
-	home = getenv("HOME");
 	short_pwd = ft_malloc(gc, 256);
 	if (!short_pwd)
 		return (NULL);
 	if (!cwd)
+		return (ft_strlcpy(short_pwd, "~", 256), short_pwd);
+	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"), strlen(cwd)) == cwd)
 	{
-		ft_strlcpy(short_pwd, "->  ~", 256);
-		return (short_pwd);
-	}
-	if (home && strstr(cwd, home) == cwd)
-	{
-		home_len = strlen(home);
-		ft_strlcpy(short_pwd, "->  ~", 256);
-		ft_strlcat(short_pwd, cwd + home_len, 256);
+		ft_strlcpy(short_pwd, "~", 256);
+		ft_strlcat(short_pwd, cwd + strlen(getenv("HOME")), 256);
 	}
 	else
-	{
-		ft_strlcpy(short_pwd, "->  ", 256);
-		ft_strlcat(short_pwd, cwd, 256);
-	}
+		ft_strlcpy(short_pwd, cwd, 256);
 	free(cwd);
 	if (strlen(short_pwd) > 28)
 	{
-		last_slash = strrchr(short_pwd, '/');
-		if (last_slash && last_slash != short_pwd)
+		if (ft_strrchr(short_pwd, '/') && ft_strrchr(short_pwd, '/') != short_pwd)
 		{
-			ft_strlcpy(short_pwd, "->  ...", 256);
-			ft_strlcat(short_pwd, last_slash, 256);
+			ft_strlcpy(short_pwd, "...", 256);
+			ft_strlcat(short_pwd, ft_strrchr(short_pwd, '/'), 256);
 		}
 	}
 	return (short_pwd);
+}
+
+static char *get_username(t_mem *gc)
+{
+	char *username;
+	char *user_env;
+
+	user_env = getenv("USER");
+	if (!user_env)
+		user_env = "user";
+	username = ft_malloc(gc, strlen(user_env) + 1);
+	if (!username)
+		return (NULL);
+	ft_strlcpy(username, user_env, strlen(user_env) + 1);
+	return (username);
 }
 
 static void add_color(char *prompt, const char *color, size_t size)
@@ -66,21 +79,31 @@ static void add_color(char *prompt, const char *color, size_t size)
 	ft_strlcat(prompt, temp, size);
 }
 
-char	*create_prompt(t_mem *gc)
+char	*create_prompt(t_mem *gc, int exit_code)
 {
 	char	*prompt;
 	char	*pwd;
 
 	pwd = get_short_pwd(gc);
-	if (!pwd)
+	if (!pwd || !get_username(gc))
 		return (NULL);
-	prompt = ft_malloc(gc, 512);
+	prompt = ft_malloc(gc, 1024);
 	if (!prompt)
 		return (NULL);
 	prompt[0] = '\0';
-	add_color(prompt, "\033[1;34m", 512);
-	ft_strlcat(prompt, pwd, 512);
-	ft_strlcat(prompt, " ", 512);
-	add_color(prompt, "\033[0m", 512);
+	add_color(prompt, BOLD_CYAN, 1024);
+	ft_strlcat(prompt, get_username(gc), 1024);
+	add_color(prompt, RESET, 1024);
+	ft_strlcat(prompt, "@", 1024);
+	add_color(prompt, BOLD_BLUE, 1024);
+	ft_strlcat(prompt, pwd, 1024);
+	add_color(prompt, RESET, 1024);
+	ft_strlcat(prompt, "\n", 1024);
+	if (exit_code == 0)
+		add_color(prompt, BOLD_GREEN, 1024);
+	else
+		add_color(prompt, BOLD_RED, 1024);
+	ft_strlcat(prompt, "➜ ", 1024);
+	add_color(prompt, RESET, 1024);
 	return (prompt);
 }

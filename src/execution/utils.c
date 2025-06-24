@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 18:53:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:21:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,5 @@ char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc)
 	}
 	substr[i] = '\0';
 	return (substr);
-}
-
-int	ft_perror(char *msg)
-{
-	if (!msg)
-		return (1);
-	ft_putstr_fd(msg, 2);
-	return (1);
 }
 

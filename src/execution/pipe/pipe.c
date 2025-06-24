@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/23 09:55:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:42:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (dup2(in, STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
-		(perror("dup2"), cleanup_child(cmd->gc), exit(1));
+		(ft_perror("dup2: command failed\n"), cleanup_child(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)
 		close(in);
 	if (out != STDOUT_FILENO)
@@ -38,7 +38,7 @@ static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
 	if (cmd->next)
 	{
 		if (pipe(pipe_fd) == -1)
-			(perror("pipe"), exit(1));
+			(ft_perror("pipe: command failed\n"), exit(1));
 	}
 	else
 	{

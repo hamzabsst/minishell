@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:57:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:02:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,13 @@ void	cleanup_child(t_mem *gc);
 
 //heredoc
 char	*heredoc(t_cmd *cmd, t_mem *gc, int *index);
+void	generate_filename(char *dest, size_t size, int index);
+int		tmp_to_heredoc(char *filename);
+void	handle_heredoc_sigint(int sig);
+void	clean_heredoc(int fd, const char *path, int in, void (*handler)(int));
 
-//signals
-void	handle_heredoc(int signal);
+void	restore_io(int in_copy, int out_copy);
+
 //utils
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 int		ft_perror(char *msg);

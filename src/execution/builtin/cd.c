@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:16:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:33:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	builtin_cd(t_cmd *cmd)
 	if (oldpwd != NULL)
 		getcwd(oldpwd, 1024);
 	if (!oldpwd)
-		return (perror("cd: getcwd"), 1);
+		return (ft_perror("cd: getcwd failed\n"));
 	if (handle_path(cmd->av[1]) == -1)
 		return (free(oldpwd), 1);
 	if (!cmd->av[1] || !*cmd->av[1])
@@ -88,7 +88,10 @@ int	builtin_cd(t_cmd *cmd)
 	else
 		path = cmd->av[1];
 	if (chdir(path) == -1)
-		return (ft_perror("cd: "), perror(path), free(oldpwd), 1);
+	{
+		ft_perror(path);
+		return (free(oldpwd), ft_perror(": No such file or directory\n"));
+	}
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
 		return (free(oldpwd), 1);
 	free(oldpwd);
@@ -96,7 +99,7 @@ int	builtin_cd(t_cmd *cmd)
 	if (newpwd != NULL)
 		getcwd(newpwd, 1024);
 	if (!newpwd)
-		return (perror("cd: getcwd"), 1);
+		return (ft_perror("cd: getcwd failed\n"));
 	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

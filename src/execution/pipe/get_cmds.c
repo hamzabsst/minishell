@@ -6,11 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:56:08 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:41:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+//!!! handle sudo exit code , permission denied not command not found
 
 void cleanup_child(t_mem *gc)
 {
@@ -62,7 +63,8 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	{
 		if (access(cmd->av[0], X_OK) == 0)
 			return (our_strdup(cmd->gc, cmd->av[0]));
-		perror(cmd->av[0]);
+		ft_perror(cmd->av[0]);
+		ft_perror(": Permission denied\n");
 		exit(126);
 	}
 	paths = get_path(env);
@@ -84,7 +86,7 @@ void	exec_cmd(t_cmd *cmd)
 	path = get_cmd_path(cmd, env);
 	if (!path)
 	{
-		ft_putstr_fd(cmd->av[0], 2);
+		ft_perror(cmd->av[0]);
 		ft_perror(": command not found\n");
 		(cleanup_child(cmd->gc), exit(127));
 	}
