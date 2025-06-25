@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   myLib.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:54:37 by hbousset          #+#    #+#             */
-/*   Updated: 2025/04/22 10:46:37 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:41:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MYLIB_H
 # define MYLIB_H
@@ -21,12 +20,10 @@
 # include <stdarg.h>
 # include <fcntl.h>
 
-// Macros
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1
 # endif
 
-// Structure
 typedef struct s_list
 {
 	void			*content;
@@ -65,7 +62,7 @@ char	**ft_split(char const *s, char c);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
 void	ft_putchar_fd(char c, int fd);
-void	ft_putstr_fd(char *s, int fd);
+void	ft_putstr_fd(const char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 t_list	*ft_lstnew(void *content);
@@ -96,7 +93,6 @@ char	*ft_strjoin_gnl(char *s1, char *s2);
 long	ft_atol(const char	*str);
 char	*ft_strcpy(char *s1, char *s2);
 int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, char *src);
-char	*ft_strcat(char *dest, char *src);
+char	*ft_strcat(char *dest, const char *src);
 void	*ft_free(char **str);
 #endif

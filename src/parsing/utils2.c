@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:39:36 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/20 14:15:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:39:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*our_strndup(t_mem *gc, char *str, size_t len, char skip_single_q, char skip_double_q)
+char	*our_strndup(t_mem *gc, const char *str, size_t len, char skip_single_q, char skip_double_q)
 {
 	size_t	i;
 	char	*results;

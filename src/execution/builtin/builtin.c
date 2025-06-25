@@ -6,21 +6,31 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:33:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:06:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	builtin_pwd(void)
+char	*get_cwd(void)
 {
 	char	*cwd;
 
 	cwd = malloc(1024);
-	if (cwd != NULL)
-		getcwd(cwd, 1024);
 	if (!cwd)
-		return (ft_perror("pwd: getcwd failed\n"), 1);
+		return (NULL);
+	if (getcwd(cwd, 1024) == NULL)
+		return (free(cwd), NULL);
+	return (cwd);
+}
+
+static int builtin_pwd(void)
+{
+	char	*cwd;
+
+	cwd = get_cwd();
+	if (!cwd)
+		return (ft_perror("pwd: getcwd failed\n"));
 	printf("%s\n", cwd);
 	free(cwd);
 	return (0);
@@ -28,31 +38,32 @@ static int	builtin_pwd(void)
 
 static int	builtin_env(t_cmd *cmd)
 {
+	t_env	*current;
+
 	if (cmd->av[1])
 		return (ft_perror("env: No arguments or options allowed\n"));
 	if (!cmd->env)
 		return (ft_perror("command not found: env\n"));
-	while (cmd->env->next)
+	current = cmd->env;
+	while (current)
 	{
-		printf("%s", cmd->env->var);
-		printf("=");
-		printf("%s\n", cmd->env->content);
-		cmd->env = cmd->env->next;
+		printf("%s=%s\n", current->var, current->content);
+		current = current->next;
 	}
 	return (0);
 }
 
-int	builtin(char *cmd)
+int	builtin(char *av)
 {
-	if (!cmd)
+	if (!av)
 		return (0);
-	return (!ft_strcmp(cmd, "echo")
-		|| !ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "pwd")
-		|| !ft_strcmp(cmd, "export")
-		|| !ft_strcmp(cmd, "unset")
-		|| !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "exit"));
+	return (!ft_strcmp(av, "echo")
+		|| !ft_strcmp(av, "cd")
+		|| !ft_strcmp(av, "pwd")
+		|| !ft_strcmp(av, "export")
+		|| !ft_strcmp(av, "unset")
+		|| !ft_strcmp(av, "env")
+		|| !ft_strcmp(av, "exit"));
 }
 
 int	exec_builtin(t_cmd *cmd)

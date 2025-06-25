@@ -6,11 +6,32 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/23 11:10:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:35:12 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
+{
+	char	**splited;
+	t_token	*token_list;
+	t_cmd	*cmd;
+
+	cmd = ft_malloc(gc, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->gc = gc;
+	cmd->env = g_env;
+	init_struct(cmd);
+	if (handle_quotes_error(line))
+		return (NULL);
+	splited = smart_split(cmd, line);
+	if (!splited)
+		return (NULL);
+	token_list = tokenize(cmd, splited);
+	return (start_of_parsing(cmd, token_list));
+}
 
 void init_struct(t_cmd *cmd)
 {
@@ -35,7 +56,7 @@ void init_struct(t_cmd *cmd)
 	cmd->delimiter = NULL;
 }
 
-void	add_outfile(t_cmd *cmd, char *filename, int append)
+static void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
 	int		i;
 	int		j;
@@ -64,7 +85,7 @@ void	add_outfile(t_cmd *cmd, char *filename, int append)
 	cmd->append_flags = new_flags;
 }
 
-void	add_infile(t_cmd *cmd, char *filename)
+static void	add_infile(t_cmd *cmd, char *filename)
 {
 	int		i;
 	int		j;

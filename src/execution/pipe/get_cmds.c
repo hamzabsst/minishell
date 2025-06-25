@@ -6,11 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:41:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:30:51 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "errno.h"
 //!!! handle sudo exit code , permission denied not command not found
 
 void cleanup_child(t_mem *gc)
@@ -90,9 +91,11 @@ void	exec_cmd(t_cmd *cmd)
 		ft_perror(": command not found\n");
 		(cleanup_child(cmd->gc), exit(127));
 	}
-	//cleanup_child(gc);
-	execve(path, cmd->av, env);
-	perror("execve");
-	free(path);
-	exit(1);
+	// execve(path, cmd->av, env);
+	ft_perror("execve: ");
+	ft_perror(strerror(errno));
+	ft_perror("\n");
+	// free(path);
+	cleanup_child(cmd->gc);
+	exit(EXIT_FAILURE);
 }

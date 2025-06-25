@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:17:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:47:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	add_var_back(t_env **head, t_env *new)
 	tmp->next = new;
 }
 
-t_env	*allocate_var(char *var, char *content, t_mem *gc)
+t_env	*allocate_var(const char *var, const char *content, t_mem *gc)
 {
 	t_env	*new;
 
@@ -71,10 +71,7 @@ static int	parse_env(const char *env, char **var, char **value, t_mem *gc)
 		return (0);
 	*value = our_substr(env, var_len + 1, value_len, gc);
 	if (!*value)
-	{
-		*var = NULL;
 		return (0);
-	}
 	return (1);
 }
 
@@ -104,48 +101,6 @@ t_env	*dup_env(char **env, t_mem *gc)
 	}
 	return (head);
 }
-
-//?? i dont use this yet
-/* static char	*extract_var_name(const char *str, t_mem *gc)
-{
-	int	start;
-	int	end;
-
-	if (!str || str[0] != '$' || !gc)
-		return (NULL);
-	start = 1;
-	end = start;
-	while (str[end] && (ft_isalnum(str[end]) || str[end] == '_'))
-		end++;
-	if (end == start)
-		return (NULL);
-	return (our_substr(str, start, end - start, gc));
-}
-
-char	*get_from_env(t_env *env, char *str, t_mem *gc)
-{
-	char		*var_name;
-	t_env	*current;
-
-	if (!str || !env || !gc)
-		return (our_strdup(gc, ""));
-	var_name = extract_var_name(str, gc);
-	if (!var_name)
-		return (our_strdup(gc, ""));
-	current = env;
-	while (current)
-	{
-		if (current->var && ft_strcmp(var_name, current->var) == 0)
-		{
-			if (current->content)
-				return (our_strdup(gc, current->content));
-			else
-				return (our_strdup(gc, ""));
-		}
-		current = current->next;
-	}
-	return (our_strdup(gc, ""));
-} */
 
 char **env_to_array(t_cmd *cmd)
 {

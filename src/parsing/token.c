@@ -38,7 +38,7 @@ void	add_token_back(t_token **head, t_token *new)
 	tmp->next = new;
 }
 
-t_token	*allocate_token(t_cmd *cmd, char *content, char *type)
+t_token	*allocate_token(t_cmd *cmd, char *content, const char *type)
 {
 	t_token *new;
 
@@ -54,7 +54,7 @@ t_token	*tokenize(t_cmd *cmd, char **tokens)
 {
 	t_token	*head;
 	int		i;
-	char	*type;
+	const char	*type;
 	t_token *new;
 
 	i = 0;

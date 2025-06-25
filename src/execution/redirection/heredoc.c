@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:42:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:40:41 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*remove_quotes(t_mem *gc, const char *s)
 	len = ft_strlen(s);
 	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
 			|| (s[0] == '"' && s[len - 1] == '"')))
-		return (our_strndup(gc, (char *)s + 1, len - 2, 0, 0));
+		return (our_strndup(gc, s + 1, len - 2, 0, 0));
 	return (our_strdup(gc, s));
 }
 
