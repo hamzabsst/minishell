@@ -1,30 +1,22 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc -g
+# CFLAGS	= -Wall -Wextra -Werror -Iinc -g
 
+CFLAGS	= -Wall -Wextra -Werror -Iinc -g \
+		  -Wunused -Wunused-variable -Wunused-function -Wunused-parameter \
+		  -Wshadow -Wformat=2 -Wstrict-prototypes -Wmissing-declarations \
+		  -Wmissing-prototypes -Wunreachable-code -Wcast-align -Wcast-qual \
+		  -Wwrite-strings -Wpointer-arith -Winit-self -Wdouble-promotion \
+		  -Wfloat-equal -Wundef -Wbad-function-cast -Wold-style-definition
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS	=	src/main.c \
-			src/parsing/handling_quotes.c \
-			src/parsing/handle_syntax_error.c \
-			src/parsing/add_node_back.c \
-			src/parsing/parsing.c \
-			src/parsing/token.c \
-			src/parsing/lexer.c \
-			src/builtin/cd.c \
-			src/builtin/echo.c \
-			src/builtin/builtin.c \
-			src/builtin/export.c \
-			src/builtin/unset.c \
-			src/builtin/exit.c \
-			src/pipe/pipe.c \
-			src/pipe/get_cmds.c \
-			src/pipe/redirection.c \
-			src/utils.c \
-			src/memory/ft_malloc.c \
-			src/interface.c \
+# preload_test:
+# 	LD_PRELOAD=./fail.so ./$(NAME)
+
+SRCS := $(shell find src -name '*.c')
+#!need to modify this later
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -37,8 +29,12 @@ $(MYLIB):
 %.o: %.c inc/minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# $(NAME): $(OBJS) $(MYLIB)
+# 	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
+
+#!for gcc
 $(NAME): $(OBJS) $(MYLIB)
-	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
+	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory -no-pie
 
 clean:
 	@rm -f $(OBJS)

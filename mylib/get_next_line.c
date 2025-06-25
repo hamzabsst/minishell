@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 21:51:20 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 11:44:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 09:46:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,17 @@ char	*get_next_line(int fd)
 	static char	*reserve;
 	char		*line;
 
+	if (fd == -1)
+	{
+		if (reserve)
+		{
+			free(reserve);
+			reserve = NULL;
+		}
+		return (NULL);
+	}
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (free(reserve), NULL);
+		return (NULL);
 	reserve = ft_read(fd, reserve);
 	if (!reserve)
 		return (NULL);

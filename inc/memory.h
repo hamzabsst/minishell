@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   memory.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 12:54:12 by hbousset         ###   ########.fr       */
+/*   Created: 2025/05/25 10:50:24 by hbousset          #+#    #+#             */
+/*   Updated: 2025/06/25 15:53:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MEMORY_H
+# define MEMORY_H
 
-#define RESET		"\033[0m"
-#define RED			"\033[0;31m"
-#define BOLD_BLUE	"\033[1;34m"
-#define BOLD_CYAN	"\033[1;36m"
-#define BOLD_GREEN	"\033[1;32m"
-#define BOLD_RED	"\033[1;31m"
+# include "../mylib/myLib.h"
 
-# include "parsing.h"
-# include "execution.h"
-# include "memory.h"
+typedef struct s_mem_node
+{
+	void				*ptr;
+	struct s_mem_node	*next;
+}	t_mem_node;
 
-static int g_var;
+typedef struct s_mem
+{
+	t_mem_node	*head;
+}	t_mem;
+
+void	*ft_malloc(t_mem *manager, size_t size);
+void	ft_free_all(t_mem *manager);
+void	ft_free_ptr(t_mem *manager, void *ptr);
+int		ft_add_ptr(t_mem *manager, void *ptr);
+
 
 #endif
