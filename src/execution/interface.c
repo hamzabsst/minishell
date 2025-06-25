@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 12:09:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 14:01:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	*create_prompt(t_mem *gc, int exit_code)
 		add_color(prompt, BOLD_GREEN, 1024);
 	else
 		add_color(prompt, BOLD_RED, 1024);
-	ft_strlcat(prompt, "➜ ", 1024);
+	ft_strlcat(prompt, "\001➜\002 \x7f", 1024);
 	add_color(prompt, RESET, 1024);
 	return (prompt);
 }
