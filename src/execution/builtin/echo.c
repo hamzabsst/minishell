@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/21 11:37:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:22:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ int	builtin_echo(t_cmd *cmd)
 	handle_flag(cmd->av, &i, &newline);
 	while (cmd->av[i])
 	{
-		printf("%s", cmd->av[i]);
+		ft_putstr_fd(cmd->av[i], 1);
 		if (cmd->av[i + 1])
-			printf(" ");
+			ft_putstr_fd(" ", 1);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 	return (0);
 }

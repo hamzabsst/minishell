@@ -6,13 +6,36 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 11:35:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:07:17 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
+//!!echo "test"'12"31'abcd
+
+static void init_struct(t_cmd *cmd, t_env *g_env, t_mem *gc)
+{
+	int	j;
+
+	j = 0;
+	cmd->gc = gc;
+	cmd->av = ft_malloc(cmd->gc, sizeof(char *) * 1024);
+	// !we need to alloc here carrefully
+	while (j < 1024)
+	{
+		cmd->av[j++] = NULL;
+	}
+	cmd->infiles = NULL;
+	cmd->outfiles = NULL;
+	cmd->append_flags = NULL;
+	cmd->heredoc = NULL;
+	cmd->delimiter = NULL;
+	cmd->env = g_env;
+	cmd->next = NULL;
+}
+
+t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc)
 {
 	char	**splited;
 	t_token	*token_list;
@@ -21,39 +44,19 @@ t_cmd	*parse_input(char *line, t_env *g_env, t_mem *gc)
 	cmd = ft_malloc(gc, sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
-	cmd->gc = gc;
-	cmd->env = g_env;
-	init_struct(cmd);
-	if (handle_quotes_error(line))
-		return (NULL);
-	splited = smart_split(cmd, line);
+	init_struct(cmd, g_env, gc);
+	splited = mysplit(line, gc);
 	if (!splited)
 		return (NULL);
 	token_list = tokenize(cmd, splited);
-	return (start_of_parsing(cmd, token_list));
-}
-
-void init_struct(t_cmd *cmd)
-{
-	int	j;
-
-	j = 0;
-	if (!cmd->gc)
-		return ;
-	if (!cmd->env)
-		return ;
-	cmd->av = ft_malloc(cmd->gc, sizeof(char *) * 1024);
-	// !we need to alloc here carrefully
-	while (j < 1024)
+	if (check_syntax_error(token_list) == 1)
 	{
-		cmd->av[j++] = NULL;
+		*input = 1;
+		return (NULL);
 	}
-	cmd->outfiles = NULL;
-	cmd->infiles = NULL;
-	cmd->append_flags = NULL;
-	cmd->heredoc = NULL;
-	cmd->next = NULL;
-	cmd->delimiter = NULL;
+	get_exit(&token_list, exit_code, gc);
+	check_quotes(&token_list, gc);
+	return (start_of_parsing(cmd, token_list));
 }
 
 static void	add_outfile(t_cmd *cmd, char *filename, int append)
@@ -122,9 +125,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 	head = ft_malloc(cmd->gc, sizeof(t_cmd));
 	if (!head)
 		return NULL;
-	head->gc = cmd->gc;
-	head->env = cmd->env;
-	init_struct(head);
+	init_struct(head, cmd->env, cmd->gc);
 	current = head;
 	i = 0;
 	heredoc_counter = 0;
@@ -135,9 +136,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			new_cmd = ft_malloc(cmd->gc, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
-			new_cmd->gc = cmd->gc;
-			new_cmd->env = cmd->env;
-			init_struct(new_cmd);
+			init_struct(new_cmd, cmd->env, cmd->gc);
 			current->next = new_cmd;
 			current = new_cmd;
 			i = 0;

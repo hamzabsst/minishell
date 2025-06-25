@@ -6,14 +6,18 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 12:30:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:29:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "errno.h"
 //!!! handle sudo exit code , permission denied not command not found
-
+//!! ➜ export 12 | export 0sadsa | cd dsad sadas | export 1qwe
+//!! export: `1qwe': not a valid identifier
+//!! export: command not found
+//!! export: command not found
+//!! cd: command not found
 void cleanup_child(t_mem *gc)
 {
 	if (gc)
@@ -91,7 +95,8 @@ void	exec_cmd(t_cmd *cmd)
 		ft_perror(": command not found\n");
 		(cleanup_child(cmd->gc), exit(127));
 	}
-	// execve(path, cmd->av, env);
+	printf("%s\n", path);
+	execve(path, cmd->av, env);
 	ft_perror("execve: ");
 	ft_perror(strerror(errno));
 	ft_perror("\n");

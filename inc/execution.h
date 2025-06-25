@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:47:39 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:14:39 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,6 @@ void	handle_heredoc_sigint(int sig);
 void	clean_heredoc(int fd, const char *path, int in, void (*handler)(int));
 
 //utils
-char	*get_cwd(void);
-char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 void	restore_io(int in_copy, int out_copy);
 char	*create_prompt(t_mem *gc, int exit_code);
 int		ft_perror(const char *msg);

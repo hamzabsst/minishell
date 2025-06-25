@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 14:01:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:15:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*get_short_pwd(t_mem *gc)
 	char	*short_pwd;
 	char	*cwd;
 
-	cwd = get_cwd();
+	cwd = getcwd(NULL, 0);
 	short_pwd = ft_malloc(gc, 256);
 	if (!cwd || !short_pwd)
 		return (free(cwd), ft_strlcpy(short_pwd, "~", 256), short_pwd);

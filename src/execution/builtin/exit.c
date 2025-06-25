@@ -6,12 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/23 09:51:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:38:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+//-9,223,372,036,854,775,808
 static int	is_num(const char *str)
 {
 	int	i;
@@ -27,6 +27,7 @@ static int	is_num(const char *str)
 			return (0);
 		i++;
 	}
+	//
 	return (1);
 }
 

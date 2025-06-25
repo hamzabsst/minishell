@@ -6,17 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:51:50 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 11:04:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:12:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	init_mem(t_mem *gc)
-{
-	if (gc)
-		gc->head = NULL;
-}
 
 void *ft_malloc(t_mem *gc, size_t size)
 {

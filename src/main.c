@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 12:00:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:15:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char *create_pwd_env(t_mem *gc)
 	char	*cwd;
 	char	*pwd_env;
 
-	cwd = get_cwd();
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		pwd_env = ft_malloc(gc, 6);
@@ -64,7 +64,8 @@ static t_env	*init_shell(char **env, t_mem *gc)
 	char		*pwd_env;
 	char	*mini_env[5];
 
-	init_mem(gc);
+	if (gc)
+		gc->head = NULL;
 	if (!env || !env[0])
 	{
 		pwd_env = create_pwd_env(gc);
@@ -113,7 +114,9 @@ int	main(int ac, char **av, char **env)
 		if (input == 1)
 			continue;
 		signal(SIGINT, SIG_IGN);
-		cmd = parse_input(line, g_env, &gc);
+		cmd = parse_input(line, g_env, exit_code, &input, &gc);
+		if (input == 1)
+			continue;
 		free(line);
 		if (cmd)
 			exit_code = process_command(cmd);

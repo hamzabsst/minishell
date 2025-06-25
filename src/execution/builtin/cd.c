@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:38:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:17:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,18 @@ int	builtin_cd(t_cmd *cmd)
 	int		ret;
 	char	*path;
 
-	oldpwd = get_cwd();
-	if (!oldpwd)
-		return (ft_perror("cd: getcwd failed\n"));
 	if (handle_path(cmd->av[1]) == -1)
-		return (free(oldpwd), 1);
+		return (1);
 	if (!cmd->av[1] || !*cmd->av[1])
 		path = ft_getenv(cmd->env, "HOME");
 	else
 		path = cmd->av[1];
+	oldpwd = ft_getenv(cmd->env, "PWD");
 	if (chdir(path) == -1)
-		return (ft_perror(path), free(oldpwd), ft_perror(": No such file or directory\n"));
+		return (ft_perror(path), ft_perror(": No such file or directory\n"));
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
-		return (free(oldpwd), 1);
-	free(oldpwd);
-	newpwd = get_cwd();
+		return (1);
+	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 		return (ft_perror("cd: getcwd failed\n"));
 	ret = update_env(cmd, "PWD", newpwd);
