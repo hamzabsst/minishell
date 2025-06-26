@@ -6,28 +6,25 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 12:02:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:29:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	valid_input(char **infiles)
+static int	valid_input(t_cmd *cmd)
 {
 	int	fd;
 	int	i;
 
-	if (!infiles)
+	if (!cmd->infiles)
 		return (0);
 	i = 0;
-	while (infiles[i])
+	while (cmd->infiles[i])
 	{
-		fd = open(infiles[i], O_RDONLY);
+		fd = open(cmd->infiles[i], O_RDONLY);
 		if (fd == -1)
-		{
-			ft_perror(infiles[i]);
-			return (ft_perror(": error opening infile\n"));
-		}
+			return (ft_perror(cmd->infiles[i], strerror(errno), "\n", cmd->gc));
 		close(fd);
 		i++;
 	}
@@ -50,30 +47,27 @@ static int	valid_output(t_cmd *cmd)
 			flags = O_WRONLY | O_CREAT | O_TRUNC;
 		fd = open(cmd->outfiles[i], flags, 0644);
 		if (fd == -1)
-		{
-			ft_perror(cmd->outfiles[i]);
-			return (ft_perror(": error opening outfile\n"));
-		}
+			return (ft_perror(cmd->outfiles[i], strerror(errno), "\n", cmd->gc));
 		close(fd);
 		i++;
 	}
 	return (0);
 }
 
-static int	input_redir(char **infiles)
+static int	input_redir(t_cmd *cmd)
 {
 	int	fd;
 	int	last;
 
 	last = 0;
-	while (infiles[last])
+	while (cmd->infiles[last])
 		last++;
 	last--;
-	fd = open(infiles[last], O_RDONLY);
+	fd = open(cmd->infiles[last], O_RDONLY);
 	if (fd == -1)
-		return (perror(infiles[last]), 1);
+		return (perror(cmd->infiles[last]), 1);
 	if (dup2(fd, STDIN_FILENO) == -1)
-		return (close(fd), ft_perror("dup2 infiles error\n"));
+		return (close(fd), ft_perror("minishell", strerror(errno), NULL, cmd->gc));
 	close(fd);
 	return (0);
 }
@@ -97,14 +91,14 @@ static int	output_redir(t_cmd *cmd)
 	if (fd == -1)
 		return (perror(cmd->outfiles[last]), 1);
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (close(fd), ft_perror("dup2 outfiles error\n"));
+		return (close(fd), ft_perror("minishell", strerror(errno), NULL, cmd->gc));
 	close(fd);
 	return (0);
 }
 
 int	redirection(t_cmd *cmd)
 {
-	if (cmd->infiles && valid_input(cmd->infiles))
+	if (cmd->infiles && valid_input(cmd))
 		return (1);
 	if (cmd->outfiles && valid_output(cmd))
 		return (1);
@@ -112,12 +106,12 @@ int	redirection(t_cmd *cmd)
 		return (1);
 	if (cmd->heredoc)
 	{
-		if (tmp_to_heredoc(cmd->heredoc))
+		if (tmp_to_heredoc(cmd))
 			return (1);
 	}
 	else if (cmd->infiles)
 	{
-		if (input_redir(cmd->infiles))
+		if (input_redir(cmd))
 			return (1);
 	}
 	return (0);

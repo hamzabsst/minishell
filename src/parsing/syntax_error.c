@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 15:25:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:24:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	check_heredoc(t_token *tokens)
+static int	check_heredoc(t_token *tokens, t_mem *gc)
 {
 	t_token	*curr;
 
@@ -22,44 +22,41 @@ static int	check_heredoc(t_token *tokens)
 		if (curr->next && ft_strcmp(curr->next->type, "WORD") != 0
 			&& ft_strcmp(curr->next->type, "DELIMITER") != 0)
 		{
-			ft_perror("syntax error near unexpected token ");
-			ft_perror(curr->next->content);
-			return (ft_perror("\n"));
+			ft_perror("syntax error near unexpected token ", curr->next->content, "\n", gc);
+			return(1);
 		}
 		else if(curr->next && ft_strcmp(curr->next->type, "HEREDOC") == 0)
 		{
-			ft_perror("syntax error near unexpected token ");
-			ft_perror(curr->next->content);
-			return (ft_perror("\n"));
+			ft_perror("syntax error near unexpected token ", curr->next->content, "\n", gc);
+			return (1);
 		}
 		else if (curr->next == NULL)
-			return (ft_perror("syntax error near unexpected token `newline'\n"));
+			return (our_perror("syntax error near unexpected token `newline'\n"));
 	}
 	return (0);
 }
 
-static int	check_append(t_token *tokens)
+static int	check_append(t_token *tokens, t_mem *gc)
 {
 	t_token	*curr;
 
 	curr = tokens;
 	if (ft_strcmp(curr->content, ">>>") == 0)
-		return (ft_perror("syntax error near unexpected token `>'\n"));
+		return (our_perror("syntax error near unexpected token `>'\n"));
 	if (ft_strcmp(curr->content, ">>") == 0)
 	{
 		if (curr->next == NULL)
-			return (ft_perror("syntax error near unexpected token `newline'\n"));
+			return (our_perror("syntax error near unexpected token `newline'\n"));
 		else if (ft_strcmp(curr->next->type, "WORD") != 0)
 		{
-			ft_perror("syntax error near unexpected token ");
-			ft_perror(curr->next->content);
-			return (ft_perror("\n"));
+			ft_perror("syntax error near unexpected token ", curr->next->content, "\n", gc);
+			return (1);
 		}
 	}
 	return (0);
 }
 
-static int	check_red_out(t_token *tokens, t_token *prev)
+static int	check_red_out(t_token *tokens, t_token *prev, t_mem *gc)
 {
 	t_token	*curr;
 
@@ -73,17 +70,16 @@ static int	check_red_out(t_token *tokens, t_token *prev)
 		}
 		else if (curr->next && ft_strcmp(curr->next->type, "WORD") != 0)
 		{
-			ft_perror("syntax error near unexpected token ");
-			ft_perror(curr->next->content);
-			return (ft_perror("\n"));
+			ft_perror("syntax error near unexpected token ", curr->next->content, "\n", gc);
+			return (1);
 		}
 		else if (curr->next == NULL)
-			return (ft_perror("syntax error near unexpected token `newline'\n"));
+			return (our_perror("syntax error near unexpected token `newline'\n"));
 	}
 	return (0);
 }
 
-static int	check_red_in(t_token *tokens, t_token *prev)
+static int	check_red_in(t_token *tokens, t_token *prev, t_mem *gc)
 {
 	t_token *curr;
 
@@ -97,12 +93,11 @@ static int	check_red_in(t_token *tokens, t_token *prev)
 		}
 		if (curr->next && ft_strcmp(curr->next->type, "WORD") != 0)
 		{
-			ft_perror("syntax error near unexpected token ");
-			ft_perror(curr->next->content);
-			return (ft_perror("\n"));
+			ft_perror("syntax error near unexpected token ", curr->next->content, "\n", gc);
+			return (1);
 		}
 		else if (curr->next == NULL)
-			return (ft_perror("syntax error near unexpected token `newline'\n"));
+			return (our_perror("syntax error near unexpected token `newline'\n"));
 	}
 	return (0);
 }
@@ -115,9 +110,9 @@ static int check_pipe(t_token *tokens, t_token *prev)
 	if (ft_strcmp(curr->content, "|") == 0)
 	{
 		if (!prev || !curr->next)
-			return (ft_perror("syntax error near unexpected token `|`\n"));
+			return (our_perror("syntax error near unexpected token `|`\n"));
 		else if (ft_strcmp(curr->next->content, "|") == 0)
-			return (ft_perror("syntax error near unexpected token `|`\n"));
+			return (our_perror("syntax error near unexpected token `|`\n"));
 	}
 	return (0);
 }
@@ -146,25 +141,25 @@ static int	check_quotes_syntax(t_token *tokens)
 		}
 	}
 	if (flag == 1)
-		return(ft_perror("error in quoting\n"));
+		return(our_perror("error in quoting\n"));
 	else
 		return (0);
 }
 
-int check_syntax_error(t_token *tokens)
+int check_syntax_error(t_token *tokens, t_mem *gc)
 {
 	t_token	*prev;
 
 	prev = NULL;
 	while (tokens)
 	{
-		if (check_heredoc(tokens) == 1)
+		if (check_heredoc(tokens, gc) == 1)
 			return (1);
-		else if (check_append(tokens) == 1)
+		else if (check_append(tokens, gc) == 1)
 			return (1);
-		else if (check_red_out(tokens, prev) == 1)
+		else if (check_red_out(tokens, prev, gc) == 1)
 			return (1);
-		else if (check_red_in(tokens, prev) == 1)
+		else if (check_red_in(tokens, prev, gc) == 1)
 			return (1);
 		else if (check_pipe(tokens, prev) == 1)
 			return (1);

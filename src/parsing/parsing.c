@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 17:07:17 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:31:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void init_struct(t_cmd *cmd, t_env *g_env, t_mem *gc)
 	{
 		cmd->av[j++] = NULL;
 	}
+	cmd->forked = 0;
 	cmd->infiles = NULL;
 	cmd->outfiles = NULL;
 	cmd->append_flags = NULL;
@@ -49,7 +50,7 @@ t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *g
 	if (!splited)
 		return (NULL);
 	token_list = tokenize(cmd, splited);
-	if (check_syntax_error(token_list) == 1)
+	if (check_syntax_error(token_list, gc) == 1)
 	{
 		*input = 1;
 		return (NULL);
@@ -100,7 +101,7 @@ static void	add_infile(t_cmd *cmd, char *filename)
 	infiles = ft_malloc(cmd->gc, sizeof(char *) * (i + 2));
 	if (!infiles)
 	{
-		ft_perror("Memory allocation failed\n");
+		our_perror("Memory allocation failed\n");
 		return;
 	}
 	j = 0;
@@ -167,9 +168,9 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
 			{
 				current->delimiter = tokens->content;
-				current->heredoc = heredoc(current, cmd->gc, &heredoc_counter);
+				current->heredoc = heredoc(current, &heredoc_counter);
 				if (!current->heredoc)
-					return (ft_perror("Error: Failed to process heredoc\n"), NULL);
+					return (our_perror("Error : Failed to process heredoc\n"), NULL);
 				current->delimiter = NULL;
 			}
 		}

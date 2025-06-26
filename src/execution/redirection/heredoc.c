@@ -6,23 +6,23 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:40:41 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:51:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*remove_quotes(t_mem *gc, const char *s)
+static char	*remove_quotes(t_cmd *cmd)
 {
 	size_t	len;
 
-	if (!s)
+	if (!cmd->delimiter)
 		return (NULL);
-	len = ft_strlen(s);
-	if (len >= 2 && ((s[0] == '\'' && s[len - 1] == '\'')
-			|| (s[0] == '"' && s[len - 1] == '"')))
-		return (our_strndup(gc, s + 1, len - 2, 0, 0));
-	return (our_strdup(gc, s));
+	len = ft_strlen(cmd->delimiter);
+	if (len >= 2 && ((cmd->delimiter[0] == '\'' && cmd->delimiter[len - 1] == '\'')
+			|| (cmd->delimiter[0] == '"' && cmd->delimiter[len - 1] == '"')))
+		return (our_strndup(cmd->gc, cmd->delimiter + 1, len - 2, 0, 0));
+	return (our_strdup(cmd->gc, cmd->delimiter));
 }
 
 static int	compare_delimiter(const char *line, const char *delimiter)
@@ -41,20 +41,20 @@ static int	compare_delimiter(const char *line, const char *delimiter)
 	return (0);
 }
 
-static int	setup_heredoc(t_cmd *cmd, t_mem *gc, char *filepath, int *fd)
+static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 {
 	char	*clean_delim;
 	int		stdin_backup;
 
 	if (!cmd || !cmd->delimiter)
 		return (-1);
-	clean_delim = remove_quotes(gc, cmd->delimiter);
+	clean_delim = remove_quotes(cmd);
 	if (!clean_delim)
 		return (-1);
 	unlink(filepath);
 	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (*fd < 0)
-		return (ft_perror("heredoc: failed to create temp file\n"), -1);
+		return (our_perror("heredoc: failed to create temp file"), -1);
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
 		return (clean_heredoc(*fd, filepath, -1, NULL), -1);
@@ -77,7 +77,7 @@ static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
 				clean_heredoc(fd, path, in_backup, handler), -1);
 		if (!line)
 		{
-			ft_perror("\nwarning: here-document delimited by end-of-file\n");
+			our_perror("\nwarning: here-document delimited by end-of-file\n");
 			break ;
 		}
 		if (compare_delimiter(line, clean_delim))
@@ -90,7 +90,7 @@ static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
 	return (restore_io(in_backup, -1), signal(SIGINT, handler), 0);
 }
 
-char	*heredoc(t_cmd *cmd, t_mem *gc, int *index)
+char	*heredoc(t_cmd *cmd, int *index)
 {
 	char	*clean_delim;
 	char	filepath[128];
@@ -98,12 +98,12 @@ char	*heredoc(t_cmd *cmd, t_mem *gc, int *index)
 	int		stdin_backup;
 
 	generate_filename(filepath, sizeof(filepath), (*index)++);
-	stdin_backup = setup_heredoc(cmd, gc, filepath, &fd);
+	stdin_backup = setup_heredoc(cmd, filepath, &fd);
 	if (stdin_backup == -1)
 		return (NULL);
-	clean_delim = remove_quotes(gc, cmd->delimiter);
+	clean_delim = remove_quotes(cmd);
 	if (read_heredoc(fd, clean_delim, stdin_backup, filepath) == -1)
 		return (NULL);
 	close(fd);
-	return (our_strdup(gc, filepath));
+	return (our_strdup(cmd->gc, filepath));
 }

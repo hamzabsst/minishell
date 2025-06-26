@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:15:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:52:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static t_env	*init_shell(char **env, t_mem *gc)
 	else
 		g_env = dup_env(env, gc);
 	if (!g_env)
-		return(ft_perror("Failed to duplicate environment\n"), NULL);
+		return(our_perror("Failed to duplicate environment\n"), NULL);
 	g_var = 0;
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
@@ -98,7 +98,7 @@ int	main(int ac, char **av, char **env)
 	int		input;
 
 	if (ac != 1)
-		return ((void)av, ft_perror("Invalid number of arguments\n"));
+		return ((void)av, our_perror("Invalid number of arguments\n"));
 	g_env = init_shell(env, &gc);
 	if (!g_env)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:54:37 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:41:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:14:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,10 @@ char	*ft_strchr_gnl(const char *s, int c);
 char	*ft_strjoin_gnl(char *s1, char *s2);
 
 // additional functions
-long	ft_atol(const char	*str);
-char	*ft_strcpy(char *s1, char *s2);
-int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, const char *src);
-void	*ft_free(char **str);
+long		ft_atol(const char	*str);
+long long	ft_atoll(const char *str);
+char		*ft_strcpy(char *s1, char *s2);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strcat(char *dest, const char *src);
+void		*ft_free(char **str);
 #endif

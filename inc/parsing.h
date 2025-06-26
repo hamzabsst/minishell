@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 15:40:01 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:30:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_cmd
 	int				*append_flags;
 	char			*heredoc;
 	char			*delimiter;
+	bool			forked;
 	t_env			*env;
 	t_mem			*gc;
 	struct s_cmd	*next;
@@ -50,7 +51,7 @@ typedef struct s_token
 }	t_token;
 
 t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc);
-int		check_syntax_error(t_token *tokens);
+int		check_syntax_error(t_token *tokens, t_mem *gc);
 char	**mysplit(char *str, t_mem *gc);
 void	get_exit(t_token **tokens, int exit_code, t_mem *gc);
 t_token	*tokenize(t_cmd *cmd, char **tokens);

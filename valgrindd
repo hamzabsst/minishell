@@ -33,4 +33,4 @@ cat > /tmp/readline.supp << EOF
 EOF
 
 # Run valgrind with the suppression file
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=/tmp/readline.supp "$@"
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --suppressions=/tmp/readline.supp "$@"

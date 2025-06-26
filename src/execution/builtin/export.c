@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:35:33 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:36:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,33 +110,6 @@ static int	var_exists(t_env *env, const char *key)
 	return (0);
 }
 
-static int	print_export(t_cmd *cmd)
-{
-	char	**env_array;
-	char	*equal;
-	int		i;
-
-	env_array = env_to_array(cmd);
-	if (!env_array)
-		return (1);
-	sort_env(env_array);
-	i = 0;
-	while (env_array[i])
-	{
-		equal = ft_strchr(env_array[i], '=');
-		if (equal)
-		{
-			*equal = '\0';
-			printf("declare -x %s=\"%s\"\n", env_array[i], equal + 1);
-			*equal = '=';
-		}
-		else
-			printf("declare -x %s\n", env_array[i]);
-		i++;
-	}
-	return (0);
-}
-
 static void	process_av(t_cmd *cmd, char *arg)
 {
 	char	*key;
@@ -157,6 +130,33 @@ static void	process_av(t_cmd *cmd, char *arg)
 		update_env(cmd, key, "");
 }
 
+static int	print_export(t_cmd *cmd)
+{
+	char	**env_array;
+	char	*equal;
+	int		i;
+
+	env_array = env_to_array(cmd);
+	if (!env_array)
+		return (1);
+	sort_env(env_array);
+	i = 0;
+	while (env_array[i])
+	{
+		equal = ft_strchr(env_array[i], '=');
+		if (equal)
+		{
+			*equal = '\0';
+			ft_printf("declare -x %s=\"%s\"\n", env_array[i], equal + 1);
+			*equal = '=';
+		}
+		else
+			ft_printf("declare -x %s\n", env_array[i]);
+		i++;
+	}
+	return (0);
+}
+
 int	builtin_export(t_cmd *cmd)
 {
 	int	i;
@@ -167,11 +167,7 @@ int	builtin_export(t_cmd *cmd)
 	while (cmd->av[i])
 	{
 		if (!identifier(cmd->av[i]))
-		{
-			ft_perror("export: `");
-			ft_perror(cmd->av[i]);
-			ft_perror("': not a valid identifier\n");
-		}
+			ft_perror("export: `", cmd->av[i], "': not a valid identifier\n", cmd->gc);
 		else
 			process_av(cmd, cmd->av[i]);
 		i++;
