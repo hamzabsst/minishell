@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:42:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:24:18 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,18 @@ int	ft_exec(t_cmd *cmd)
 
 	fd_in = STDIN_FILENO;
 	last_pid = 0;
+	// int i = 0;
+	// while (cmd)
+	// {
+	// 	i = 0;
+	// 	while (cmd->av[i])
+	// 	{
+	// 		printf("node [%d] : %s\n",i, cmd->av[i]);
+	// 		i++;
+	// 	}
+	// 	cmd = cmd->next;
+	// }
+	// exit(0);
 	while (cmd)
 	{
 		handle_pipe(cmd, pipe_fd);

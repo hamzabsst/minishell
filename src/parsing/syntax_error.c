@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 15:25:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:47:36 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	check_red_out(t_token *tokens, t_token *prev)
 			if (ft_strcmp(prev->type, "DELIMITER") == 0 && curr->next != NULL)
 				return (0);
 		}
-		else if (curr->next && ft_strcmp(curr->next->type, "WORD") != 0)
+		if (curr->next && ft_strcmp(curr->next->type, "WORD") != 0)
 		{
 			ft_perror("syntax error near unexpected token ");
 			ft_perror(curr->next->content);
@@ -136,10 +136,10 @@ static int	check_quotes_syntax(t_token *tokens)
 	{
 		if ((str[i] == '\'' || str[i] == '"') && flag == 0)
 		{
-			quote = str[i++];
+			quote = str[i];
 			flag = 1;
 		}
-		if (flag == 1 && str[i] == quote)
+		else if (flag == 1 && str[i] == quote)
 		{
 			flag = 0;
 			quote = '\0';

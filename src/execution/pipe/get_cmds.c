@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_cmds.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:29:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 10:30:21 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ void	exec_cmd(t_cmd *cmd)
 		ft_perror(": command not found\n");
 		(cleanup_child(cmd->gc), exit(127));
 	}
-	printf("%s\n", path);
 	execve(path, cmd->av, env);
 	ft_perror("execve: ");
 	ft_perror(strerror(errno));
