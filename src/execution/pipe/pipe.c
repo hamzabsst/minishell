@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 18:07:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:10:55 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int ft_exec(t_cmd *cmd)
 			exec_child(cmd, fd_in, pipe_fd[1]);
 		}
 		if (fd_in != STDIN_FILENO)
-			close(fd_in);	
+			close(fd_in);
 		if (cmd->next)
 			(close(pipe_fd[1]), fd_in = pipe_fd[0]);
 		else
