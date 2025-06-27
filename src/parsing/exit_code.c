@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 21:16:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:47:24 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *
 	}
 	if (end)
 		end->next = curr->next;
+	// free(curr->content);
+	// free(curr->type);
+	// free(curr);
 }
 
 static void show_exit_code(t_token **tokens, t_token *curr, int exit_code, t_mem *gc)

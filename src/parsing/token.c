@@ -40,20 +40,20 @@ static void	add_token_back(t_token **head, t_token *new)
 	tmp->next = new;
 }
 
-static t_token	*allocate_token(t_cmd *cmd, char *content, const char *type)
+static t_token	*allocate_token(t_mem *gc, char *content, const char *type)
 {
 	t_token	*new;
 
-	new = ft_malloc(cmd->gc ,sizeof(t_token));
+	new = ft_malloc(gc ,sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = our_strdup(cmd->gc, content);
-	new->type = our_strdup(cmd->gc, type);
+	new->content = our_strdup(gc, content);
+	new->type = our_strdup(gc, type);
 	new->next = NULL;
 	return (new);
 }
 
-t_token	*tokenize(t_cmd *cmd, char **tokens)
+t_token	*tokenize(t_mem *gc, char **tokens)
 {
 	t_token		*head;
 	t_token 	*new;
@@ -77,10 +77,11 @@ t_token	*tokenize(t_cmd *cmd, char **tokens)
 			type = "HEREDOC";
 		else if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
 			type = "DELIMITER";
-		new = allocate_token(cmd, tokens[i], type);
+		new = allocate_token(gc, tokens[i], type);
 		add_token_back(&head, new);
 		i++;
 	}
+	// print_tokens(head);
 	return (head);
 }
 

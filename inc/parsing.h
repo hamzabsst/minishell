@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 16:30:50 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:42:31 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,13 @@ typedef struct s_token
 }	t_token;
 
 t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc);
+t_token	*tokenize(t_mem *gc, char **tokens);
 int		check_syntax_error(t_token *tokens, t_mem *gc);
+void	check_quotes(t_token **tokens, t_mem *gc);
 char	**mysplit(char *str, t_mem *gc);
 void	get_exit(t_token **tokens, int exit_code, t_mem *gc);
-t_token	*tokenize(t_cmd *cmd, char **tokens);
-t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens);
 void	add_token(t_token **start, t_token **end, char *content, const char *type, t_mem *gc);
 void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *end);
-void	check_quotes(t_token **tokens, t_mem *gc);
 
 //utils
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);

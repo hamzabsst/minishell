@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 15:05:39 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:47:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ static int	count_token(char *str)
 				i++;
 			if (str[i] == quote_type)
 				i++;
-			if ((ft_isalnum(str[i]) == 1 || str[i] == '\'' || str[i] == '"') && str[i] != ' ' && str[i])
-				continue;
-			else
-				count++;
+			count++;
 		}
 		else if (str[i] == '>' || str[i] == '<' || str[i] == '|')
 		{
@@ -63,16 +60,13 @@ static int	count_token(char *str)
 			{
 				i++;
 			}
-			if (str[i] == '\'' || str[i] == '"')
-				continue;
-			else
-				count++;
+			count++;
 		}
 	}
 	return (count);
 }
 
-static char	*get_redirection(char *str, int *start, int *last, t_mem *gc)
+static char	*get_redirection(char *str, int *start, int *last, t_mem *gc, int *flag_join)
 {
 	int		i;
 	int		len;
@@ -96,10 +90,11 @@ static char	*get_redirection(char *str, int *start, int *last, t_mem *gc)
 	}
 	*last = len;
 	word = our_substr(str, *start, len, gc);
+	*flag_join = 0;
 	return(word);
 }
 
-static char	*get_pipe(char *str, int *start, int *last, t_mem *gc)
+static char	*get_pipe(char *str, int *start, int *last, t_mem *gc, int *flag_join)
 {
 	int i = 0;
 	char *word;
@@ -112,6 +107,7 @@ static char	*get_pipe(char *str, int *start, int *last, t_mem *gc)
 		return (NULL);
 	*last = len;
 	word = our_substr(str, *start, len, gc);
+	*flag_join = 0;
 	return(word);
 }
 
@@ -142,14 +138,15 @@ static char *get_from_squotes(char *str, int *start, int *last, int *flag_join, 
 	int	pos;
 	int len;
 
-	pos = 0;
+	pos = *start;
 	i = *start + 1;
-	while (str[i] && str[i] != ' ')
+	while (str[i])
 	{
 		if (str[i] == '\'')
 		{
 			pos = i;
 			*last = pos - *start + 1;
+			break;
 		}
 		i++;
 	}
@@ -166,14 +163,15 @@ static char *get_from_dquotes(char *str, int *start, int *last, int *flag_join, 
 	int		pos;
 	int		len;
 
-	pos = 0;
+	pos = *start;
 	i = *start + 1;
-	while (str[i] && str[i] != ' ')
+	while (str[i])
 	{
 		if (str[i] == '"')
 		{
 			pos = i;
 			*last = pos - *start + 1;
+			break;
 		}
 		i++;
 	}
@@ -183,6 +181,15 @@ static char *get_from_dquotes(char *str, int *start, int *last, int *flag_join, 
 	return (word);
 }
 
+static int	len(char *str)
+{
+	int i = 0;
+	while (str[i])
+	{
+		i++;
+	}
+	return (i);
+}
 char	**mysplit(char *str, t_mem *gc)
 {
 	int to_join = 0;
@@ -194,7 +201,7 @@ char	**mysplit(char *str, t_mem *gc)
 	word = ft_malloc(gc, sizeof(char *) * (count_token(str) + 1));
 	if (!word)
 		return (NULL);
-	while (str[i])
+	while (i < len(str) && str[i]) //cdcevrf ''s'fd'f'fs'"""sfa'""
 	{
 		while (str[i] == ' ')
 		{
@@ -218,9 +225,9 @@ char	**mysplit(char *str, t_mem *gc)
 				word[k++] = get_from_squotes(str, &i, &last, &to_join, gc);
 		}
 		else if (str[i] == '>' || str[i] == '<')
-			word[k++] = get_redirection(str, &i, &last, gc);
+			word[k++] = get_redirection(str, &i, &last, gc, &to_join);
 		else if(str[i] == '|')
-			word[k++] = get_pipe(str, &i, &last, gc);
+			word[k++] = get_pipe(str, &i, &last, gc, &to_join);
 		else if (str[i] && str[i] != '"' && str[i] != '\'' && str[i] != '>'
 			&& str[i] != '<' && str[i] != '|')
 		{
