@@ -3,79 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/20 11:45:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 20:11:11 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void init_struct(t_cmd *cmd)
-{
-	int	j;
-
-	j = 0;
-	if (!cmd->collector)
-		return;
-	cmd->av = ft_malloc(cmd->collector, sizeof(char *) * 1024);
-	// !we need to alloc here carrefully
-	while (j < 1024)
-	{
-		cmd->av[j++] = NULL;
-	}
-	cmd->outfiles = NULL;
-	cmd->infiles = NULL;
-	cmd->append_flags = NULL;
-	cmd->heredoc = NULL;
-	cmd->next = NULL;
-	cmd->delimiter = NULL;
-}
-
-void print_cmd(t_cmd *cmd)
-{
-	while (cmd)
-	{
-		if (cmd->av)
-		{
-			int i = 0;
-			while (cmd->av[i])
-			{
-				printf("av[%d] ---> %s\n", i, cmd->av[i]);
-				i++;
-			}
-		}
-		if (cmd->append_flags)
-			printf("append ---> %d\n", *(cmd->append_flags));
-		if (cmd->delimiter)
-			printf("delimiter ---> %s\n", cmd->delimiter);
-		if (cmd->heredoc)
-			printf("heredoc ---> %s\n", cmd->heredoc);
-		if (cmd->quote_flags)
-			printf("flag quote ---> %d\n", *(cmd->quote_flags));
-		if (cmd->infiles)
-		{
-			int i = 0;
-			while (cmd->infiles[i])
-			{
-				printf("infiles[%d] ---> %s\n", i, cmd->infiles[i]);
-				i++;
-			}
-		}
-		if (cmd->outfiles)
-		{
-			int i = 0;
-			while (cmd->outfiles[i])
-			{
-				printf("outfiles[%d] ---> %s\n", i, cmd->outfiles[i]);
-				i++;
-			}
-		}
-		cmd = cmd->next;
-	}
-}
-void	add_outfile(t_cmd *cmd, char *filename, int append)
+static void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
 	int		i;
 	int		j;
@@ -85,10 +22,13 @@ void	add_outfile(t_cmd *cmd, char *filename, int append)
 	i = 0;
 	while (cmd->outfiles && cmd->outfiles[i])
 		i++;
-	new_outfiles = ft_malloc(cmd->collector, sizeof(char *) * (i + 2));
-	new_flags = ft_malloc(cmd->collector, sizeof(int) * (i + 2));
+	new_outfiles = ft_malloc(cmd->gc, sizeof(char *) * (i + 2));
+	new_flags = ft_malloc(cmd->gc, sizeof(int) * (i + 2));
 	if (!new_outfiles || !new_flags)
-		exit(1);
+	{
+		ft_perror("Memory allocation failed\n");
+		return;
+	}
 	j = 0;
 	while (j < i)
 	{
@@ -104,7 +44,7 @@ void	add_outfile(t_cmd *cmd, char *filename, int append)
 	cmd->append_flags = new_flags;
 }
 
-void	add_infile(t_cmd *cmd, char *filename)
+static void	add_infile(t_cmd *cmd, char *filename)
 {
 	int		i;
 	int		j;
@@ -113,7 +53,7 @@ void	add_infile(t_cmd *cmd, char *filename)
 	i = 0;
 	while (cmd->infiles && cmd->infiles[i])
 		i++;
-	infiles = ft_malloc(cmd->collector, sizeof(char *) * (i + 2));
+	infiles = ft_malloc(cmd->gc, sizeof(char *) * (i + 2));
 	if (!infiles)
 	{
 		ft_perror("Memory allocation failed\n");
@@ -130,7 +70,43 @@ void	add_infile(t_cmd *cmd, char *filename)
 	cmd->infiles = infiles;
 }
 
-t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
+static int count_words_until_pipe(t_token *tokens)
+{
+	int count = 0;
+	while (tokens && ft_strcmp(tokens->type, "PIPE") != 0)
+	{
+		if (ft_strcmp(tokens->type, "WORD") == 0)
+			count++;
+		tokens = tokens->next;
+	}
+	return (count);
+}
+
+static void init_struct(t_token *tokens, t_cmd *cmd, t_env *g_env, t_mem *gc)
+{
+	t_token	*temp;
+	int		j;
+	int		count;
+
+	j = 0;
+	temp = tokens;
+	count = count_words_until_pipe(temp);
+	cmd->gc = gc;
+	cmd->env = g_env;
+	cmd->av = ft_malloc(cmd->gc, sizeof(char *) * (count + 1));
+	if (!cmd->av)
+		return;
+	while (j <= count)
+		cmd->av[j++] = NULL;
+	cmd->infiles = NULL;
+	cmd->outfiles = NULL;
+	cmd->append_flags = NULL;
+	cmd->heredoc = NULL;
+	cmd->delimiter = NULL;
+	cmd->next = NULL;
+}
+
+static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
 {
 	int		i;
 	int		heredoc_counter;
@@ -138,11 +114,14 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 	t_cmd	*current;
 	t_cmd	*new_cmd;
 
-	head = ft_malloc(cmd->collector, sizeof(t_cmd));
+	if (!tokens)
+		return (NULL);
+	head = ft_malloc(gc, sizeof(t_cmd));
 	if (!head)
-		return NULL;
-	head->collector = cmd->collector;
-	init_struct(head);
+		return (NULL);
+	init_struct(tokens, head, g_env, gc);
+	if (!head->av)
+		return (NULL);
 	current = head;
 	i = 0;
 	heredoc_counter = 0;
@@ -150,11 +129,12 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 	{
 		if (ft_strcmp(tokens->type, "PIPE") == 0)
 		{
-			new_cmd = ft_malloc(cmd->collector, sizeof(t_cmd));
+			new_cmd = ft_malloc(gc, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
-			new_cmd->collector = cmd->collector;
-			init_struct(new_cmd);
+			init_struct(tokens->next, new_cmd, g_env, gc);
+			if (!new_cmd->av)
+				return (NULL);
 			current->next = new_cmd;
 			current = new_cmd;
 			i = 0;
@@ -185,7 +165,7 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
 			{
 				current->delimiter = tokens->content;
-				current->heredoc = heredoc(current, cmd->collector, &heredoc_counter);
+				current->heredoc = heredoc(current, gc, &heredoc_counter);
 				if (!current->heredoc)
 					return (ft_perror("Error: Failed to process heredoc\n"), NULL);
 				current->delimiter = NULL;
@@ -194,6 +174,24 @@ t_cmd	*start_of_parsing(t_cmd *cmd, t_token *tokens)
 		if (tokens)
 			tokens = tokens->next;
 	}
-	// print_cmd(head);
 	return (head);
+}
+
+t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc)
+{
+	char	**splited;
+	t_token	*token_list;
+
+	splited = mysplit(line, gc);
+	if (!splited)
+		return (NULL);
+	token_list = tokenize(gc, splited);
+	if (check_syntax_error(token_list) == 1)
+	{
+		*input = 1;
+		return (NULL);
+	}
+	get_exit(&token_list, exit_code, gc);
+	check_quotes(&token_list, gc);
+	return (start_of_parsing(token_list, g_env ,gc));
 }

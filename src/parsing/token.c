@@ -12,17 +12,19 @@
 
 #include "minishell.h"
 
-void	print_tokens(t_token *tokens)
-{
-	int i = 0;
-	while (tokens)
-	{
-		ft_printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
-		tokens = tokens->next;
-		i++;
-	}
-}
-void	add_token_back(t_token **head, t_token *new)
+//? debugging
+// static void	print_tokens(t_token *tokens)
+// {
+// 	int i = 0;
+// 	while (tokens)
+// 	{
+// 		ft_printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
+// 		tokens = tokens->next;
+// 		i++;
+// 	}
+// }
+
+static void	add_token_back(t_token **head, t_token *new)
 {
 	t_token *tmp;
 	if (!*head)
@@ -38,48 +40,48 @@ void	add_token_back(t_token **head, t_token *new)
 	tmp->next = new;
 }
 
-t_token	*allocate_token(t_cmd *cmd, char *content, char *type)
+static t_token	*allocate_token(t_mem *gc, char *content, const char *type)
 {
-	t_token *new;
+	t_token	*new;
 
-	new = ft_malloc(cmd->collector ,sizeof(t_token));
+	new = ft_malloc(gc ,sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = our_strdup(cmd->collector, content);
-	new->type = our_strdup(cmd->collector, type);
+	new->content = our_strdup(gc, content);
+	new->type = our_strdup(gc, type);
 	new->next = NULL;
 	return (new);
 }
-t_token	*tokenize(t_cmd *cmd, char **tokens)
+
+t_token	*tokenize(t_mem *gc, char **tokens)
 {
-	t_token	*head;
-	int		i;
-	char	*type;
-	t_token *new;
+	t_token		*head;
+	t_token 	*new;
+	const char	*type;
+	int			i;
 
 	i = 0;
 	head = NULL;
 	while (tokens[i])
 	{
 		type = "WORD";
-		if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0 && !cmd->quote_flags[i])
-			type = "DELIMITER";
-		else if (ft_strcmp(tokens[i], "|") == 0 && !cmd->quote_flags[i])
+		if (ft_strcmp(tokens[i], "|") == 0)
 			type = "PIPE";
-		else if (ft_strcmp(tokens[i], ">") == 0 && !cmd->quote_flags[i])
+		else if (ft_strcmp(tokens[i], ">") == 0)
 			type = "REDIRECTION_OUT";
-		else if (ft_strcmp(tokens[i], "<") == 0 && !cmd->quote_flags[i])
+		else if (ft_strcmp(tokens[i], "<") == 0)
 			type = "REDIRECTION_IN";
-		else if(ft_strcmp(tokens[i], ">>") == 0 && !cmd->quote_flags[i])
+		else if(ft_strcmp(tokens[i], ">>") == 0)
 			type = "APPEND";
-		else if (ft_strcmp(tokens[i], "<<") == 0 && !cmd->quote_flags[i])
+		else if (ft_strcmp(tokens[i], "<<") == 0)
 			type = "HEREDOC";
-		new = allocate_token(cmd, tokens[i], type);
+		else if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
+			type = "DELIMITER";
+		new = allocate_token(gc, tokens[i], type);
 		add_token_back(&head, new);
 		i++;
 	}
 	// print_tokens(head);
 	return (head);
 }
-
 

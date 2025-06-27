@@ -6,72 +6,69 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 16:12:27 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:14:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	builtin_pwd(void)
+static int builtin_pwd(void)
 {
 	char	*cwd;
 
-	cwd = malloc(1024);
-	if (cwd != NULL)
-		getcwd(cwd, 1024);
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (perror("pwd"), 1);
+		return (ft_perror("pwd: getcwd failed\n"));
 	printf("%s\n", cwd);
 	free(cwd);
 	return (0);
 }
 
-static int	builtin_env(char **av, char **env)
+static int	builtin_env(t_cmd *cmd)
 {
-	int	i;
+	t_env	*current;
 
-	if (av[1])
+	if (cmd->av[1])
 		return (ft_perror("env: No arguments or options allowed\n"));
-	if (!env)
+	if (!cmd->env)
 		return (ft_perror("command not found: env\n"));
-	i = 0;
-	while (env[i])
+	current = cmd->env;
+	while (current)
 	{
-		if (ft_strchr(env[i], '='))
-			printf("%s\n", env[i]);
-		i++;
+		printf("%s=%s\n", current->var, current->content);
+		current = current->next;
 	}
 	return (0);
 }
 
-int	builtin(char *cmd)
+int	builtin(char *av)
 {
-	if (!cmd)
+	if (!av)
 		return (0);
-	return (!ft_strcmp(cmd, "echo")
-		|| !ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "pwd")
-		|| !ft_strcmp(cmd, "export")
-		|| !ft_strcmp(cmd, "unset")
-		|| !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "exit"));
+	return (!ft_strcmp(av, "echo")
+		|| !ft_strcmp(av, "cd")
+		|| !ft_strcmp(av, "pwd")
+		|| !ft_strcmp(av, "export")
+		|| !ft_strcmp(av, "unset")
+		|| !ft_strcmp(av, "env")
+		|| !ft_strcmp(av, "exit"));
 }
 
-int	exec_builtin(t_cmd *cmd, char ***env, t_mem *collector)
+int	exec_builtin(t_cmd *cmd)
 {
 	if (!ft_strcmp(cmd->av[0], "echo"))
-		return (builtin_echo(cmd->av));
+		return (builtin_echo(cmd));
 	else if (!ft_strcmp(cmd->av[0], "pwd"))
 		return (builtin_pwd());
 	else if (!ft_strcmp(cmd->av[0], "cd"))
-		return (builtin_cd(cmd->av, env, collector));
+		return (builtin_cd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "env"))
-		return (builtin_env(cmd->av, *env));
+		return (builtin_env(cmd));
 	else if (!ft_strcmp(cmd->av[0], "unset"))
-		return (builtin_unset(cmd->av, env, collector));
+		return (builtin_unset(cmd));
 	else if (!ft_strcmp(cmd->av[0], "exit"))
-		return (builtin_exit(cmd->av, env, collector));
+		return (builtin_exit(cmd));
 	else if (!ft_strcmp(cmd->av[0], "export"))
-		return (builtin_export(cmd->av, env, collector));
+		return (builtin_export(cmd));
 	return (1);
 }

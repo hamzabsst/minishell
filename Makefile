@@ -1,10 +1,19 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc -g
+# CFLAGS	= -Wall -Wextra -Werror -Iinc -g
 
+CFLAGS	= -Wall -Wextra -Werror -Iinc -g \
+		  -Wunused -Wunused-variable -Wunused-function -Wunused-parameter \
+		  -Wshadow -Wformat=2 -Wstrict-prototypes -Wmissing-declarations \
+		  -Wmissing-prototypes -Wunreachable-code -Wcast-align -Wcast-qual \
+		  -Wwrite-strings -Wpointer-arith -Winit-self -Wdouble-promotion \
+		  -Wfloat-equal -Wundef -Wbad-function-cast -Wold-style-definition
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
+
+# preload_test:
+# 	LD_PRELOAD=./fail.so ./$(NAME)
 
 SRCS := $(shell find src -name '*.c')
 #!need to modify this later
@@ -20,8 +29,12 @@ $(MYLIB):
 %.o: %.c inc/minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# $(NAME): $(OBJS) $(MYLIB)
+# 	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
+
+#!for gcc
 $(NAME): $(OBJS) $(MYLIB)
-	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
+	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory -no-pie
 
 clean:
 	@rm -f $(OBJS)

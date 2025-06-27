@@ -6,11 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/05/28 10:45:10 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:35:33 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	update_env_append(t_cmd *cmd, char *key, char *value)
+{
+	t_env	*current;
+	char	*old;
+	char	*new;
+
+	if (!cmd->env || !key || !value || !cmd->gc)
+		return (1);
+	current = cmd->env;
+	while (current)
+	{
+		if (current->var && ft_strcmp(current->var, key) == 0)
+		{
+			old = current->content;
+			if (old)
+				new = ft_strjoin(old, value);
+			else
+				new = our_strdup(cmd->gc, value);
+			if (!new)
+				return (1);
+			current->content = new;
+			return (0);
+		}
+		current = current->next;
+	}
+	return (update_env(cmd, key, value));
+}
 
 static int	identifier(const char *s)
 {
@@ -29,6 +57,17 @@ static int	identifier(const char *s)
 			return (0);
 	}
 	return (1);
+}
+
+static char	*find_key(const char *arg, t_mem *gc)
+{
+	int len;
+
+	len = 0;
+	while (arg[len] && arg[len] != '='
+		&& !(arg[len] == '+' && arg[len + 1] == '='))
+		len++;
+	return (our_substr(arg, 0, len, gc));
 }
 
 static void	sort_env(char **env)
@@ -55,67 +94,86 @@ static void	sort_env(char **env)
 	}
 }
 
-static int	print_export(char **env, t_mem *collector)
+static int	var_exists(t_env *env, const char *key)
 {
-	char	**copy;
-	int		i;
-	char	*equal;
+	t_env	*current;
 
-	i = 0;
-	copy = dup_env(env, collector);
-	sort_env(copy);
-	while (copy[i])
+	if (!env || !key)
+		return (0);
+	current = env;
+	while (current)
 	{
-		equal = ft_strchr(copy[i], '=');
+		if (current->var && ft_strcmp(current->var, key) == 0)
+			return (1);
+		current = current->next;
+	}
+	return (0);
+}
+
+static int	print_export(t_cmd *cmd)
+{
+	char	**env_array;
+	char	*equal;
+	int		i;
+
+	env_array = env_to_array(cmd);
+	if (!env_array)
+		return (1);
+	sort_env(env_array);
+	i = 0;
+	while (env_array[i])
+	{
+		equal = ft_strchr(env_array[i], '=');
 		if (equal)
 		{
 			*equal = '\0';
-			printf("declare -x %s=\"%s\"\n", copy[i], equal + 1);
+			printf("declare -x %s=\"%s\"\n", env_array[i], equal + 1);
 			*equal = '=';
 		}
 		else
-			printf("declare -x %s\n", copy[i]);
+			printf("declare -x %s\n", env_array[i]);
 		i++;
 	}
 	return (0);
 }
 
-static void	process_av(char *arg, char ***env, t_mem *collector)
+static void	process_av(t_cmd *cmd, char *arg)
 {
 	char	*key;
 	char	*equal;
 
-	key = find_key(arg);
+	key = find_key(arg, cmd->gc);
+	if (!key)
+		return;
 	equal = ft_strchr(arg, '=');
 	if (equal)
 	{
-		if (*(equal - 1) == '+')
-			update_env_append(env, key, equal + 1, collector);
+		if (equal > arg && *(equal - 1) == '+')
+			update_env_append(cmd, key, equal + 1);
 		else
-			update_env(env, key, equal + 1, collector);
+			update_env(cmd, key, equal + 1);
 	}
-	else if (!ft_getenv(*env, key))
-		update_env(env, key, "", collector);
-	free(key);
+	else if (!var_exists(cmd->env, key))
+		update_env(cmd, key, "");
 }
 
-int	builtin_export(char **av, char ***env, t_mem *collector)
+int	builtin_export(t_cmd *cmd)
 {
 	int	i;
 
 	i = 1;
-	if (!av[1])
-		return (print_export(*env, collector));
-	while (av[i])
+	if (!cmd->av[1])
+		return (print_export(cmd));
+	while (cmd->av[i])
 	{
-		if (!identifier(av[i]))
+		if (!identifier(cmd->av[i]))
 		{
 			ft_perror("export: `");
-			ft_perror(av[i]);
+			ft_perror(cmd->av[i]);
 			ft_perror("': not a valid identifier\n");
 		}
 		else
-			process_av(av[i], env, collector);
+			process_av(cmd, cmd->av[i]);
 		i++;
 	}
 	return (0);

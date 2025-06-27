@@ -6,47 +6,26 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/04 00:15:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:17:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	copy_env(char ***env, char *new_var, int count, t_mem *collector)
+char	*ft_getenv(t_env *env, const char *key)
 {
-	char	**old;
-	char	**new_env;
-	int		j;
+	t_env	*current;
 
-	old = *env;
-	new_env = ft_malloc(collector, sizeof(char *) * (count + 2));
-	if (!new_env)
-		return (free(new_var), 1);
-	j = 0;
-	while (j < count)
-	{
-		new_env[j] = old[j];
-		++j;
-	}
-	new_env[count] = new_var;
-	new_env[count + 1] = NULL;
-	*env = new_env;
-	return (0);
-}
-
-static char	*make_env_var(char *key, char *value, t_mem *collector)
-{
-	char	*var;
-	size_t	len;
-
-	len = ft_strlen(key) + ft_strlen(value) + 2;
-	var = ft_malloc(collector, len);
-	if (!var)
+	if (!env || !key)
 		return (NULL);
-	ft_strcpy(var, key);
-	ft_strcat(var, "=");
-	ft_strcat(var, value);
-	return (var);
+	current = env;
+	while (current)
+	{
+		if (current->var && ft_strcmp(current->var, key) == 0)
+			return (current->content);
+		current = current->next;
+	}
+	return (NULL);
 }
 
 static int	handle_path(const char *arg)
@@ -61,61 +40,56 @@ static int	handle_path(const char *arg)
 	return (1);
 }
 
-int	update_env(char ***env_ptr, char *key, char *value, t_mem *collector)
+int	update_env(t_cmd *cmd, const char *key, const char *value)
 {
-	char	**env;
-	char	*new_var;
-	size_t	key_len;
-	int		i;
+	t_env	*current;
+	t_env	*new_var;
 
-	if (!env_ptr || !*env_ptr || !key || !value)
+	if (!cmd->env || !key || !cmd->gc)
 		return (1);
-	env = *env_ptr;
-	key_len = ft_strlen(key);
-	new_var = make_env_var(key, value, collector);
-	if (!new_var)
-		return (1);
-	i = 0;
-	while (env[i])
+	current = cmd->env;
+	while (current)
 	{
-		if (!ft_strncmp(env[i], key, key_len) && env[i][key_len] == '=')
+		if (current->var && ft_strcmp(current->var, key) == 0)
 		{
-			env[i] = new_var;
+			if (current->content)
+				current->content = our_strdup(cmd->gc, value);
+			else
+				current->content = our_strdup(cmd->gc, "");
+			if (!current->content)
+				return (1);
 			return (0);
 		}
-		i++;
+		current = current->next;
 	}
-	return (copy_env(env_ptr, new_var, i, collector));
+	new_var = allocate_var(key, value, cmd->gc);
+	if (!new_var)
+		return (1);
+	add_var_back(&cmd->env, new_var);
+	return (0);
 }
 
-int	builtin_cd(char **argv, char ***env, t_mem *collector)
+int	builtin_cd(t_cmd *cmd)
 {
 	char	*oldpwd;
 	char	*newpwd;
 	int		ret;
 	char	*path;
 
-	oldpwd = malloc(1024);
-	if (oldpwd != NULL)
-		getcwd(oldpwd, 1024);
-	if (!oldpwd)
-		return (perror("cd: getcwd"), 1);
-	if (handle_path(argv[1]) == -1)
-		return (free(oldpwd), 1);
-	if (!argv[1] || !*argv[1])
-		path = ft_getenv(*env, "HOME");
+	if (handle_path(cmd->av[1]) == -1)
+		return (1);
+	if (!cmd->av[1] || !*cmd->av[1])
+		path = ft_getenv(cmd->env, "HOME");
 	else
-		path = argv[1];
+		path = cmd->av[1];
+	oldpwd = ft_getenv(cmd->env, "PWD");
 	if (chdir(path) == -1)
-		return (ft_perror("cd: "), perror(path), free(oldpwd), 1);
-	if (update_env(env, "OLDPWD", oldpwd, collector) != 0)
-		return (free(oldpwd), 1);
-	free(oldpwd);
-	newpwd = malloc(1024);
-	if (newpwd != NULL)
-		getcwd(newpwd, 1024);
+		return (ft_perror(path), ft_perror(": No such file or directory\n"));
+	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
+		return (1);
+	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-		return (perror("cd: getcwd"), 1);
-	ret = update_env(env, "PWD", newpwd, collector);
+		return (ft_perror("cd: getcwd failed\n"));
+	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }
