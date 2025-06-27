@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset < hbousset@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 16:43:27 by hbousset          #+#    #+#             */
-/*   Updated: 2024/12/29 10:01:45 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:39:04 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 int	ft_isascii(int c)
 {
 	if ((c >= 0 && c < 128))
-	{
 		return (1);
-	}
 	return (0);
 }

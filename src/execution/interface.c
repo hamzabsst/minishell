@@ -6,20 +6,41 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:15:25 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:51:27 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_perror(const char *msg)
+int	our_perror(const char *msg)
 {
 	if (!msg)
 		return (1);
-	ft_putstr_fd(RESET, STDERR_FILENO);
-	ft_putstr_fd(RED, STDERR_FILENO);
-	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putstr_fd(RESET, STDERR_FILENO);
+	ft_putstr_fd(msg, 2);
+	return (1);
+}
+
+int ft_perror(const char *prefix, const char *token, const char *suffix, t_mem *gc)
+{
+	char	*complete_msg;
+	size_t	total_len;
+
+	if (!prefix)
+		return (1);
+	total_len = ft_strlen(prefix);
+	if (token)
+		total_len += ft_strlen(token);
+	if (suffix)
+		total_len += ft_strlen(suffix);
+	complete_msg = ft_malloc(gc, total_len + 1);
+	if (!complete_msg)
+		return (1);
+	ft_strlcpy(complete_msg, prefix, total_len + 1);
+	if (token)
+		ft_strlcat(complete_msg, token, total_len + 1);
+	if (suffix)
+		ft_strlcat(complete_msg, suffix, total_len + 1);
+	ft_putstr_fd(complete_msg, 2);
 	return (1);
 }
 

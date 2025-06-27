@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:13:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:21:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	backup_io(int *in_copy, int *out_copy)
 	}
 	return (0);
 }
-
+//handle file fd leak
 int	process_command(t_cmd *cmd)
 {
 	int	in_copy;
@@ -44,7 +44,7 @@ int	process_command(t_cmd *cmd)
 	in_copy = -1;
 	out_copy = -1;
 	if (backup_io(&in_copy, &out_copy) == -1)
-		return (ft_perror("Failed to backup stdio\n"));
+		return (our_perror("Failed to backup stdio\n"));
 	if (redirection(cmd) != 0)
 		return (restore_io(in_copy, out_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
