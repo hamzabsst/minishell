@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/27 15:47:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:14:14 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
 	return (head);
 }
 
-t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc)
+t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc)
 {
 	char	**splited;
 	t_token	*token_list;
@@ -187,10 +187,7 @@ t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *g
 		return (NULL);
 	token_list = tokenize(gc, splited);
 	if (check_syntax_error(token_list, gc) == 1)
-	{
-		*input = 1;
 		return (NULL);
-	}
 	get_exit(&token_list, exit_code, gc);
 	check_quotes(&token_list, gc);
 	return (start_of_parsing(token_list, g_env ,gc));

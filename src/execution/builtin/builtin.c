@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:59:25 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:06:39 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int builtin_pwd(void)
+static int	builtin_pwd(void)
 {
 	char	*cwd;
 
@@ -29,7 +29,8 @@ static int	builtin_env(t_cmd *cmd)
 	t_env	*current;
 
 	if (cmd->av[1])
-		return (ft_perror("env: No arguments or options allowed\n", NULL, NULL, cmd->gc));
+		return (ft_perror("env: No arguments or options allowed\n"
+				, NULL, NULL, cmd->gc));
 	if (!cmd->env)
 		return (ft_perror("command not found: env\n", NULL, NULL, cmd->gc));
 	current = cmd->env;

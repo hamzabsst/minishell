@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 21:52:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 23:04:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static void	handle_sigint(int signal)
 
 static int get_input(char **line, int exit_code, t_mem *gc)
 {
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	*line = readline(create_prompt(gc, exit_code));
 	if (!*line)
 		return (write(1, "exit\n", 5), 0);
@@ -106,17 +108,13 @@ int	main(int ac, char **av, char **env)
 	while (1)
 	{
 		g_var = 0;
-		signal(SIGINT, handle_sigint);
-		signal(SIGQUIT, SIG_IGN);
 		input = get_input(&line, exit_code, &gc);
 		if (input == 0)
 			break;
 		if (input == 1)
 			continue;
 		signal(SIGINT, SIG_IGN);
-		cmd = parse_input(line, g_env, exit_code, &input, &gc);
-		if (input == 1)
-			continue;
+		cmd = parse_input(line, g_env, exit_code, &gc);
 		free(line);
 		if (cmd)
 			exit_code = process_command(cmd);

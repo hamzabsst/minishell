@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:47:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:30:39 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ static int	parse_env(const char *env, char **var, char **value, t_mem *gc)
 
 t_env	*dup_env(char **env, t_mem *gc)
 {
-	t_env	*head;
-	t_env	*new;
+	t_env		*head;
+	t_env		*new;
 	char		*var;
 	char		*value;
 	int			i;
@@ -102,21 +102,46 @@ t_env	*dup_env(char **env, t_mem *gc)
 	return (head);
 }
 
-char **env_to_array(t_cmd *cmd)
+static int	count_env_vars(t_env *env)
 {
-	t_env	*current;
-	char	**array;
-	char	*temp;
 	int		count;
-	int		i;
+	t_env	*current;
 
 	count = 0;
-	current = cmd->env;
+	current = env;
 	while (current)
 	{
 		count++;
 		current = current->next;
 	}
+	return (count);
+}
+
+static char	*create_env_string(t_env *env_var, void *gc)
+{
+	char	*temp;
+	char	*result;
+
+	if (env_var->content && ft_strlen(env_var->content) > 0)
+	{
+		temp = our_strjoin(gc, env_var->var, "=");
+		if (!temp)
+			return (NULL);
+		result = our_strjoin(gc, temp, env_var->content);
+		return (result);
+	}
+	else
+		return (our_strdup(gc, env_var->var));
+}
+
+char	**env_to_array(t_cmd *cmd)
+{
+	t_env	*current;
+	char	**array;
+	int		count;
+	int		i;
+
+	count = count_env_vars(cmd->env);
 	array = ft_malloc(cmd->gc, sizeof(char *) * (count + 1));
 	if (!array)
 		return (NULL);
@@ -124,14 +149,7 @@ char **env_to_array(t_cmd *cmd)
 	i = 0;
 	while (current && i < count)
 	{
-		if (current->content && ft_strlen(current->content) > 0)
-		{
-			temp = our_strjoin(cmd->gc, current->var, "=");
-			if (temp)
-				array[i] = our_strjoin(cmd->gc, temp, current->content);
-		}
-		else
-			array[i] = our_strdup(cmd->gc, current->var);
+		array[i] = create_env_string(current, cmd->gc);
 		if (!array[i])
 			return (NULL);
 		current = current->next;

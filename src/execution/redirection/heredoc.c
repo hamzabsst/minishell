@@ -6,23 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 20:51:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 23:32:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*remove_quotes(t_cmd *cmd)
+static char *remove_quotes(t_cmd *cmd)
 {
-	size_t	len;
+	char *result;
+	size_t i, j;
 
-	if (!cmd->delimiter)
+	if (!cmd || !cmd->delimiter)
 		return (NULL);
-	len = ft_strlen(cmd->delimiter);
-	if (len >= 2 && ((cmd->delimiter[0] == '\'' && cmd->delimiter[len - 1] == '\'')
-			|| (cmd->delimiter[0] == '"' && cmd->delimiter[len - 1] == '"')))
-		return (our_strndup(cmd->gc, cmd->delimiter + 1, len - 2, 0, 0));
-	return (our_strdup(cmd->gc, cmd->delimiter));
+	result = ft_malloc(cmd->gc , ft_strlen(cmd->delimiter) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < ft_strlen(cmd->delimiter))
+	{
+		if (cmd->delimiter[i] == '\'' || cmd->delimiter[i] == '"')
+		{
+			char quote_char = cmd->delimiter[i++];
+			while (i < ft_strlen(cmd->delimiter) && cmd->delimiter[i] != quote_char)
+				result[j++] = cmd->delimiter[i++];
+			if (i < ft_strlen(cmd->delimiter))
+				i++;
+		}
+		else
+			result[j++] = cmd->delimiter[i++];
+	}
+	result[j] = '\0';
+	return (our_strdup(cmd->gc, result));
 }
 
 static int	compare_delimiter(const char *line, const char *delimiter)
@@ -102,6 +118,11 @@ char	*heredoc(t_cmd *cmd, int *index)
 	if (stdin_backup == -1)
 		return (NULL);
 	clean_delim = remove_quotes(cmd);
+	if (!clean_delim)
+	{
+		clean_heredoc(fd, filepath, stdin_backup, NULL);
+		return (NULL);
+	}
 	if (read_heredoc(fd, clean_delim, stdin_backup, filepath) == -1)
 		return (NULL);
 	close(fd);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 21:09:58 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:13:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ int		builtin(char *av);
 int		exec_builtin(t_cmd *cmd);
 int		builtin_echo(t_cmd *cmd);
 int		builtin_cd(t_cmd *cmd);
-int		builtin_export(t_cmd *cmd);
 int		builtin_unset(t_cmd *cmd);
 int		builtin_exit(t_cmd *cmd);
+int		builtin_export(t_cmd *cmd);
+void	process_av(t_cmd *cmd, char *arg);
 
 //exceve
+int		ft_exec(t_cmd *cmd, int in_copy, int out_copy);
 int		process_command(t_cmd *cmd);
-int		ft_exec(t_cmd *cmd);
 void	exec_cmd(t_cmd *cmd);
 int		redirection(t_cmd *cmd);
-void	cleanup_child(t_mem *gc);
 
 //heredoc
 char	*heredoc(t_cmd *cmd, int *index);

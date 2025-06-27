@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/25 16:47:24 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 16:10:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,6 @@ void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *
 	}
 	if (end)
 		end->next = curr->next;
-	// free(curr->content);
-	// free(curr->type);
-	// free(curr);
 }
 
 static void show_exit_code(t_token **tokens, t_token *curr, int exit_code, t_mem *gc)
@@ -59,12 +56,12 @@ static void show_exit_code(t_token **tokens, t_token *curr, int exit_code, t_mem
 	new_list = NULL;
 	end = NULL;
 	code = ft_itoa(exit_code);
+	ft_add_ptr(gc, code);
 	if (ft_strcmp(curr->content, "$?") == 0 || ft_strcmp(curr->content, "\"$?\"") == 0)
 		add_token(&new_list, &end, code, "WORD", gc);
 	else
 		add_token(&new_list, &end, ft_strdup(curr->content), curr->type, gc);
 	replace_token(tokens, curr, new_list, end);
-	// free(code);
 }
 
 void get_exit(t_token **tokens, int exit_code, t_mem *gc)

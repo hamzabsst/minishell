@@ -6,29 +6,32 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 15:10:55 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 23:05:08 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	exec_child(t_cmd *cmd, int in, int out)
+static void	exec_child(t_cmd *cmd, int in, int out, int in_copy, int out_copy)
 {
 	int	exit_code;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	close(in_copy);
+	close(out_copy);
 	if (dup2(in, 0) == -1 || dup2(out, 1) == -1)
-		(our_perror("dup2: command failed\n"), cleanup_child(cmd->gc), exit(1));
+		(our_perror("dup2: command failed\n"), ft_free_all(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)
 		close(in);
 	if (out != STDOUT_FILENO)
 		close(out);
+	redirection(cmd);
 	if (builtin(cmd->av[0]))
 	{
 		cmd->forked = 1;
 		exit_code = exec_builtin(cmd);
-		cleanup_child(cmd->gc);
+		ft_free_all(cmd->gc);
 		exit(exit_code);
 	}
 	exec_cmd(cmd);
@@ -42,10 +45,7 @@ static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
 			(our_perror("pipe: command failed\n"), exit(1));
 	}
 	else
-	{
-		pipe_fd[0] = STDIN_FILENO;
-		pipe_fd[1] = STDOUT_FILENO;
-	}
+		(pipe_fd[0] = 0, pipe_fd[1] = 1);
 }
 
 static void	wait_for_all(int *status, pid_t last_pid)
@@ -75,70 +75,51 @@ static void	wait_for_all(int *status, pid_t last_pid)
 	}
 }
 
-static int is_all_builtins(t_cmd *cmd)
+static pid_t	create_process(t_cmd *cmd, int fd_in, int *pipe_fd, int in, int out)
 {
-	t_cmd	*current;
+	pid_t	pid;
 
-	current = cmd;
-	while (current)
+	pid = fork();
+	if (pid == -1)
 	{
-		if (!builtin(current->av[0]))
-			return (0);
-		current = current->next;
+		our_perror("fork failed\n");
+		if (fd_in != 0)
+			close(fd_in);
+		if (cmd->next && pipe_fd[1] != 1)
+			close(pipe_fd[1]);
+		return (-1);
 	}
-	return (1);
+	if (pid == 0)
+	{
+		if (pipe_fd[0] && pipe_fd[0] != 0)
+			close(pipe_fd[0]);
+		exec_child(cmd, fd_in, pipe_fd[1], in, out);
+	}
+	return (pid);
 }
 
-static int exec_builtin_pipeline(t_cmd *cmd)
-{
-	int	exit_code;
-
-	exit_code = 0;
-	while (cmd)
-	{
-		exit_code = exec_builtin(cmd);
-		cmd = cmd->next;
-	}
-	return (exit_code);
-}
-
-int ft_exec(t_cmd *cmd)
+int	ft_exec(t_cmd *cmd, int in, int out)
 {
 	pid_t	pid;
 	pid_t	last_pid;
-	int	 	pipe_fd[2];
-	int	 	fd_in;
-	int	 	status;
+	int		pipe_fd[2];
+	int		fd_in;
+	int		status;
 
-	if (is_all_builtins(cmd))
-		return (exec_builtin_pipeline(cmd));
-	fd_in = STDIN_FILENO;
+	fd_in = 0;
 	last_pid = 0;
 	while (cmd)
 	{
 		handle_pipe(cmd, pipe_fd);
-		pid = fork();
+		pid = create_process(cmd, fd_in, pipe_fd, in, out);
 		if (pid == -1)
-		{
-			our_perror("fork failed\n");
-			if (fd_in != STDIN_FILENO)
-				close(fd_in);
-			if (cmd->next && pipe_fd[1] != STDOUT_FILENO)
-				close(pipe_fd[1]);
 			return (1);
-		}
-		if (pid == 0)
-		{
-			if (pipe_fd[0])
-				close(pipe_fd[0]);
-			exec_child(cmd, fd_in, pipe_fd[1]);
-		}
-		if (fd_in != STDIN_FILENO)
+		if (fd_in != 0)
 			close(fd_in);
 		if (cmd->next)
 			(close(pipe_fd[1]), fd_in = pipe_fd[0]);
 		else
-			(fd_in = STDIN_FILENO, last_pid = pid);
+			(fd_in = 0, last_pid = pid);
 		cmd = cmd->next;
 	}
 	wait_for_all(&status, last_pid);

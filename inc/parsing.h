@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 15:42:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 22:31:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc);
+t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc);
 t_token	*tokenize(t_mem *gc, char **tokens);
 int		check_syntax_error(t_token *tokens, t_mem *gc);
 void	check_quotes(t_token **tokens, t_mem *gc);
@@ -62,7 +62,7 @@ void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *
 //utils
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);
 char	*our_strdup(t_mem *gc ,const char *s);
-char	*our_strndup(t_mem *gc, const char *str, size_t len, char skip_single_q, char skip_double_q);
+char	*our_strndup(t_mem *gc, const char *str, size_t len);
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 
 #endif

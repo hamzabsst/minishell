@@ -6,11 +6,18 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:59:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 23:34:27 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+//!! ctrl c and ctrl d failed
+//!! ➜ cat << stop > hamza
+//!! > hgb
+//!! > kjh
+//!! > stop
+//!! minishell: input redirection failed
 
 void	handle_heredoc_sigint(int sig)
 {

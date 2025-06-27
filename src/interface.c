@@ -6,19 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:51:27 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:24:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	our_perror(const char *msg)
-{
-	if (!msg)
-		return (1);
-	ft_putstr_fd(msg, 2);
-	return (1);
-}
 
 int ft_perror(const char *prefix, const char *token, const char *suffix, t_mem *gc)
 {
