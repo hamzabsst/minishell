@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:59:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static int builtin_pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (ft_perror("pwd: getcwd failed\n"));
-	printf("%s\n", cwd);
+		return (our_perror("pwd: getcwd failed\n"));
+	ft_printf("%s\n", cwd);
 	free(cwd);
 	return (0);
 }
@@ -29,13 +29,13 @@ static int	builtin_env(t_cmd *cmd)
 	t_env	*current;
 
 	if (cmd->av[1])
-		return (ft_perror("env: No arguments or options allowed\n"));
+		return (ft_perror("env: No arguments or options allowed\n", NULL, NULL, cmd->gc));
 	if (!cmd->env)
-		return (ft_perror("command not found: env\n"));
+		return (ft_perror("command not found: env\n", NULL, NULL, cmd->gc));
 	current = cmd->env;
 	while (current)
 	{
-		printf("%s=%s\n", current->var, current->content);
+		ft_printf("%s=%s\n", current->var, current->content);
 		current = current->next;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:17:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:21:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,6 @@ char	*ft_getenv(t_env *env, const char *key)
 		current = current->next;
 	}
 	return (NULL);
-}
-
-static int	handle_path(const char *arg)
-{
-	if (!arg || !*arg)
-		return (0);
-	if (arg[0] == '~' || arg[0] == '-')
-	{
-		ft_perror("cd: only absolute or relative paths are allowed\n");
-		return (-1);
-	}
-	return (1);
 }
 
 int	update_env(t_cmd *cmd, const char *key, const char *value)
@@ -69,6 +57,18 @@ int	update_env(t_cmd *cmd, const char *key, const char *value)
 	return (0);
 }
 
+static int	handle_path(t_cmd *cmd)
+{
+	if (!cmd->av || !*cmd->av)
+		return (0);
+	else if (*cmd->av[0] == '~' || *cmd->av[0] == '-')
+		return (our_perror("cd: only absolute or relative paths are allowed\n"));
+	else if (cmd->av[1])
+		return (our_perror("cd: too many arguments\n"));
+	else
+		return (1);
+}
+
 int	builtin_cd(t_cmd *cmd)
 {
 	char	*oldpwd;
@@ -76,7 +76,7 @@ int	builtin_cd(t_cmd *cmd)
 	int		ret;
 	char	*path;
 
-	if (handle_path(cmd->av[1]) == -1)
+	if (handle_path(cmd) == 1)
 		return (1);
 	if (!cmd->av[1] || !*cmd->av[1])
 		path = ft_getenv(cmd->env, "HOME");
@@ -84,12 +84,12 @@ int	builtin_cd(t_cmd *cmd)
 		path = cmd->av[1];
 	oldpwd = ft_getenv(cmd->env, "PWD");
 	if (chdir(path) == -1)
-		return (ft_perror(path), ft_perror(": No such file or directory\n"));
+		return (ft_perror(path, ": No such file or directory", "\n", cmd->gc));
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
 		return (1);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-		return (ft_perror("cd: getcwd failed\n"));
+		return (our_perror("cd: getcwd failed\n"));
 	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

@@ -6,12 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:38:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:53:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-//-9,223,372,036,854,775,808
+
 static int	is_num(const char *str)
 {
 	int	i;
@@ -27,31 +27,34 @@ static int	is_num(const char *str)
 			return (0);
 		i++;
 	}
-	//
 	return (1);
 }
 
 int	builtin_exit(t_cmd *cmd)
 {
-	int	exit_code;
+	unsigned long long	exit_code_ll;
+	int					exit_code;
 
-	write(1, "exit\n", 5);
+	if(!cmd->forked)
+		ft_putstr_fd("exit\n", 2);
 	if (!cmd->av[1])
-	{
-		ft_free_ptr(cmd->gc, cmd->env);
-		exit(0);
-	}
+		(ft_free_ptr(cmd->gc, cmd->env), exit(0));
 	if (!is_num(cmd->av[1]))
 	{
-		ft_perror("exit: ");
-		ft_perror(cmd->av[1]);
-		ft_perror(": numeric argument required\n");
+		ft_perror("exit: ", cmd->av[1], ": numeric argument required\n", cmd->gc);
+		ft_free_ptr(cmd->gc, cmd->env);
+		exit(2);
+	}
+	exit_code_ll = ft_atoll(cmd->av[1]);
+	if (exit_code_ll == LLONG_MAX + 1ULL)
+	{
+		ft_perror("exit: ", cmd->av[1], ": numeric argument required\n", cmd->gc);
 		ft_free_ptr(cmd->gc, cmd->env);
 		exit(2);
 	}
 	if (cmd->av[2])
-		return (ft_perror("exit: too many arguments\n"));
-	exit_code = ft_atoi(cmd->av[1]);
+		return (our_perror("exit: too many arguments\n"));
+	exit_code = (int)(exit_code_ll & 0xFF);
 	ft_free_ptr(cmd->gc, cmd->env);
 	exit(exit_code);
 }

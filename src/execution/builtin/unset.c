@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/22 14:16:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:49:59 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	builtin_unset(t_cmd *cmd)
 	while (cmd->av[i])
 	{
 		if (cmd->av[i][0] == '-')
-			return (ft_perror("unset: options are not allowed\n"));
+			return (our_perror("unset: options are not allowed\n"));
 		current = cmd->env;
 		prev = NULL;
 		while (current)

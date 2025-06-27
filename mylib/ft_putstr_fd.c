@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 11:49:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:41:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:28:47 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,7 @@
 
 void	ft_putstr_fd(const char *s, int fd)
 {
-	int	i;
-
 	if (fd < 0 || !s)
 		return ;
-	i = 0;
-	while (s[i])
-	{
-		write(fd, &s[i], 1);
-		i++;
-	}
+	write(fd, s, ft_strlen(s));
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/24 11:42:41 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/26 09:59:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,29 @@ void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
 	g_var = 2;
-	write(1, "\n", 1);
+	ft_putstr_fd("\n", 1);
 	close(STDIN_FILENO);
 }
 
-int	tmp_to_heredoc(char *filename)
+int	tmp_to_heredoc(t_cmd *cmd)
 {
 	int	fd;
 
-	if (!filename)
+	if (!cmd->heredoc)
 		return (1);
-	fd = open(filename, O_RDONLY);
+	fd = open(cmd->heredoc, O_RDONLY);
 	if (fd < 0)
 	{
-		unlink(filename);
-		return (ft_perror("minishell: input redirection failed\n"));
+		unlink(cmd->heredoc);
+		return (our_perror("minishell: input redirection failed\n"));
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
-		unlink(filename);
-		return (close(fd), ft_perror("minishell: dup2 failed\n"));
+		unlink(cmd->heredoc);
+		return (close(fd), our_perror("minishell: dup2 failed\n"));
 	}
 	close(fd);
-	unlink(filename);
+	unlink(cmd->heredoc);
 	return (0);
 }
 
