@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/27 22:14:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 18:31:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static void	add_outfile(t_cmd *cmd, char *filename, int append)
 {
+	char	**new_outfiles;
+	bool	*new_flags;
 	int		i;
 	int		j;
-	char	**new_outfiles;
-	int		*new_flags;
 
 	i = 0;
 	while (cmd->outfiles && cmd->outfiles[i])
@@ -102,6 +102,7 @@ static void init_struct(t_token *tokens, t_cmd *cmd, t_env *g_env, t_mem *gc)
 	cmd->outfiles = NULL;
 	cmd->append_flags = NULL;
 	cmd->heredoc = NULL;
+	cmd->heredoc_processed = NULL;
 	cmd->delimiter = NULL;
 	cmd->next = NULL;
 }

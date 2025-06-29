@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 23:04:57 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:57:06 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ static char *create_pwd_env(t_mem *gc)
 			ft_strlcpy(pwd_env, "PWD=/", 6);
 		return (pwd_env);
 	}
-	pwd_env = ft_malloc(gc, strlen(cwd) + 5);
+	pwd_env = ft_malloc(gc, ft_strlen(cwd) + 5);
 	if (pwd_env)
 	{
-		ft_strlcpy(pwd_env, "PWD=", strlen(cwd) + 5);
-		ft_strlcat(pwd_env, cwd, strlen(cwd) + 5);
+		ft_strlcpy(pwd_env, "PWD=", ft_strlen(cwd) + 5);
+		ft_strlcat(pwd_env, cwd, ft_strlen(cwd) + 5);
 	}
 	free(cwd);
 	return (pwd_env);

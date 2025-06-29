@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 22:21:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:52:00 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	input_redir(t_cmd *cmd)
 	last--;
 	fd = open(cmd->infiles[last], O_RDONLY);
 	if (fd == -1)
-		return (perror(cmd->infiles[last]), 1);
+		return (ft_perror(cmd->infiles[last], " : error opening this file", "\n", NULL), 1);
 	if (dup2(fd, STDIN_FILENO) == -1)
 		return (close(fd), ft_perror("minishell", ": Error redirecting to this file", NULL, cmd->gc));
 	close(fd);
@@ -89,7 +89,7 @@ static int	output_redir(t_cmd *cmd)
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
 	fd = open(cmd->outfiles[last], flags, 0644);
 	if (fd == -1)
-		return (perror(cmd->outfiles[last]), 1);
+		return (ft_perror(cmd->outfiles[last], " : error opening this file", "\n", NULL), 1);
 	if (dup2(fd, STDOUT_FILENO) == -1)
 		return (close(fd), ft_perror("minishell", ": Error redirecting to this file", NULL, cmd->gc));
 	close(fd);

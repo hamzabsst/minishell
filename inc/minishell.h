@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 12:54:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:57:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,15 @@
 #define BOLD_GREEN	"\033[1;32m"
 #define BOLD_RED	"\033[1;31m"
 
+# include "../mylib/myLib.h"
 # include "parsing.h"
 # include "execution.h"
 # include "memory.h"
+# include <signal.h>
+# include <stdio.h>
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 static int g_var;
 

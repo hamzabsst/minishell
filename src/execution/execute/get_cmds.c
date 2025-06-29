@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:16:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:46:54 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	exec_cmd(t_cmd *cmd)
 	if (!path)
 		(ft_free_all(cmd->gc), exit(exit_code));
 	execve(path, cmd->av, env);
-	ft_perror("execve: ", strerror(errno), "\n", cmd->gc);
+	perror("execve");
 	ft_free_all(cmd->gc);
 	exit(126);
 }

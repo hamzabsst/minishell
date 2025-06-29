@@ -6,18 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:13:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:48:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-# include "../mylib/myLib.h"
-# include <stdio.h>
-# include <signal.h>
-# include <sys/wait.h>
-# include <errno.h>
 //env
 t_env	*dup_env(char **env, t_mem *gc);
 t_env	*allocate_var(const char *var, const char *content, t_mem *gc);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:24:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:53:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ static char	*get_username(t_mem *gc)
 		user_env = getenv("LOGNAME");
 	if (!user_env)
 		user_env = "user";
-	username = ft_malloc(gc, strlen(user_env) + 1);
+	username = ft_malloc(gc, ft_strlen(user_env) + 1);
 	if (!username)
 		return (NULL);
-	ft_strlcpy(username, user_env, strlen(user_env) + 1);
+	ft_strlcpy(username, user_env, ft_strlen(user_env) + 1);
 	return (username);
 }
 

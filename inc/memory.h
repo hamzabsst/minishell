@@ -6,14 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:50:24 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 15:53:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:55:00 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MEMORY_H
 # define MEMORY_H
-
-# include "../mylib/myLib.h"
 
 typedef struct s_mem_node
 {
