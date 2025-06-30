@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:07:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:24:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	builtin_exit(t_cmd *cmd)
 	if (!cmd->forked)
 		ft_putstr_fd("exit\n", 2);
 	if (!cmd->av[1])
-		(ft_free_all(cmd->gc), exit(0));
+		(ft_free_all(cmd->gc), exit(cmd->exit_code));
 	if (!is_num(cmd->av[1]))
 	{
 		ft_perror("exit: ", cmd->av[1],

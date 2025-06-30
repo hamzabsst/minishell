@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 18:13:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:03:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	process_command(t_cmd *cmd)
 {
 	int	in_copy;
 	int	out_copy;
-	int	exit_code;
 
 	in_copy = -1;
 	out_copy = -1;
@@ -48,16 +47,16 @@ int	process_command(t_cmd *cmd)
 	if (!cmd->next && redirection(cmd) != 0)
 		return (restore_io(in_copy, out_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
-		(exit_code = exec_builtin(cmd) ,restore_io(in_copy, out_copy));
+		(cmd->exit_code = exec_builtin(cmd), restore_io(in_copy, out_copy));
 	else
 	{
-		g_var = 1;
-		exit_code = ft_exec(cmd, in_copy, out_copy);
+		g_var = 0;
+		cmd->exit_code = ft_exec(cmd, in_copy, out_copy);
 		if (g_var == 2)
-			(g_var = 0, exit_code = 130);
+			(g_var = 0, cmd->exit_code = 130);
 		else
 			g_var = 0;
 		restore_io(in_copy, out_copy);
 	}
-	return (exit_code);
+	return (cmd->exit_code);
 }

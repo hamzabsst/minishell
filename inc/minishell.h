@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 16:57:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:45:58 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 #define BOLD_RED	"\033[1;31m"
 
 # include "../mylib/myLib.h"
+# include "memory.h"
 # include "parsing.h"
 # include "execution.h"
-# include "memory.h"
 # include <signal.h>
 # include <stdio.h>
 # include <sys/wait.h>

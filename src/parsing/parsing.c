@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/29 18:31:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:24:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int count_words_until_pipe(t_token *tokens)
 	return (count);
 }
 
-static void init_struct(t_token *tokens, t_cmd *cmd, t_env *g_env, t_mem *gc)
+static void init_struct(t_token *tokens, t_cmd *cmd, int exit_code, t_env *g_env, t_mem *gc)
 {
 	t_token	*temp;
 	int		j;
@@ -100,14 +100,15 @@ static void init_struct(t_token *tokens, t_cmd *cmd, t_env *g_env, t_mem *gc)
 		cmd->av[j++] = NULL;
 	cmd->infiles = NULL;
 	cmd->outfiles = NULL;
-	cmd->append_flags = NULL;
+	cmd->append_flags = 0;
 	cmd->heredoc = NULL;
-	cmd->heredoc_processed = NULL;
+	cmd->heredoc_processed = 0;
 	cmd->delimiter = NULL;
+	cmd->exit_code = exit_code;
 	cmd->next = NULL;
 }
 
-static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
+static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_mem *gc)
 {
 	int		i;
 	int		heredoc_counter;
@@ -120,7 +121,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
 	head = ft_malloc(gc, sizeof(t_cmd));
 	if (!head)
 		return (NULL);
-	init_struct(tokens, head, g_env, gc);
+	init_struct(tokens, head, exit_code, g_env, gc);
 	if (!head->av)
 		return (NULL);
 	current = head;
@@ -133,7 +134,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
 			new_cmd = ft_malloc(gc, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
-			init_struct(tokens->next, new_cmd, g_env, gc);
+			init_struct(tokens->next, new_cmd, exit_code, g_env, gc);
 			if (!new_cmd->av)
 				return (NULL);
 			current->next = new_cmd;
@@ -168,7 +169,11 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, t_mem *gc)
 				current->delimiter = tokens->content;
 				current->heredoc = heredoc(current, &heredoc_counter);
 				if (!current->heredoc)
+				{
+					if (g_var == 2)
+						return (NULL);
 					return (our_perror("Error: Failed to process heredoc\n"), NULL);
+				}
 				current->delimiter = NULL;
 			}
 		}
@@ -191,5 +196,5 @@ t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc)
 		return (NULL);
 	get_exit(&token_list, exit_code, gc);
 	check_quotes(&token_list, gc);
-	return (start_of_parsing(token_list, g_env ,gc));
+	return (start_of_parsing(token_list, g_env , exit_code, gc));
 }

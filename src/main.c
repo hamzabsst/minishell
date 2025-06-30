@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 16:57:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:03:51 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,20 @@ static char *create_pwd_env(t_mem *gc)
 
 static t_env	*init_shell(char **env, t_mem *gc)
 {
-	t_env		*g_env;
-	char		*pwd_env;
+	t_env	*g_env;
 	char	*mini_env[5];
 
 	if (gc)
 		gc->head = NULL;
 	if (!env || !env[0])
 	{
-		pwd_env = create_pwd_env(gc);
-		mini_env[0] = our_strdup(gc, "PWD=/");
+		mini_env[0] = create_pwd_env(gc);
+		if (!mini_env[0])
+			mini_env[0] = our_strdup(gc, "PWD=/");
 		mini_env[1] = our_strdup(gc, "HOME=/tmp");
 		mini_env[2] = our_strdup(gc, "SHELL=./minishell");
 		mini_env[3] = our_strdup(gc, "PATH=/bin:/usr/bin:/usr/local/bin");
 		mini_env[4] = NULL;
-		if (!pwd_env)
-			mini_env[0] = our_strdup(gc, "PWD=/");
 		g_env = dup_env(mini_env, gc);
 	}
 	else
@@ -118,8 +116,16 @@ int	main(int ac, char **av, char **env)
 		free(line);
 		if (cmd)
 			exit_code = process_command(cmd);
-		else if (g_var == 1 || g_var == 2)
-			(exit_code = 130, g_var = 0);
+		else
+		{
+			if (g_var == 2 || g_var == 1)
+			{
+				exit_code = 130;
+				g_var = 0;
+			}
+		}
+		signal(SIGINT, handle_sigint);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	ft_free_all(&gc);
 	exit(exit_code);

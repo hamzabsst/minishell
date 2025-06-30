@@ -6,55 +6,18 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 18:31:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:00:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *remove_quotes(t_cmd *cmd)
+void	handle_heredoc_sigint(int sig)
 {
-	char *result;
-	size_t i, j;
-
-	if (!cmd || !cmd->delimiter)
-		return (NULL);
-	result = ft_malloc(cmd->gc , ft_strlen(cmd->delimiter) + 1);
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (i < ft_strlen(cmd->delimiter))
-	{
-		if (cmd->delimiter[i] == '\'' || cmd->delimiter[i] == '"')
-		{
-			char quote_char = cmd->delimiter[i++];
-			while (i < ft_strlen(cmd->delimiter) && cmd->delimiter[i] != quote_char)
-				result[j++] = cmd->delimiter[i++];
-			if (i < ft_strlen(cmd->delimiter))
-				i++;
-		}
-		else
-			result[j++] = cmd->delimiter[i++];
-	}
-	result[j] = '\0';
-	return (our_strdup(cmd->gc, result));
-}
-
-static int	compare_delimiter(const char *line, const char *delimiter)
-{
-	size_t	delim_len;
-	size_t	line_len;
-
-	if (!line || !delimiter)
-		return (0);
-	delim_len = ft_strlen(delimiter);
-	line_len = ft_strlen(line);
-	if (line_len == delim_len)
-		return (ft_strncmp(line, delimiter, delim_len) == 0);
-	if (line_len == delim_len + 1 && line[line_len - 1] == '\n')
-		return (ft_strncmp(line, delimiter, delim_len) == 0);
-	return (0);
+	(void)sig;
+	g_var = 2;
+	ft_putstr_fd("\n", 1);
+	close(STDIN_FILENO);
 }
 
 static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
@@ -77,6 +40,22 @@ static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 	return (stdin_backup);
 }
 
+// Fixed clean_heredoc - DON'T reset g_var!
+void	clean_heredoc(int fd, const char *path, int in, void (*handler)(int))
+{
+	if (fd >= 0)
+		close(fd);
+	if (path)
+		unlink(path);
+	if (in >= 0)
+		restore_io(in, -1);
+	if (handler)
+		signal(SIGINT, handler);
+	// DON'T reset g_var here! Let the main loop handle it
+	// g_var = 0;  // ← REMOVE THIS LINE
+}
+
+// Fixed read_heredoc function
 static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
 {
 	char	*line;
@@ -86,11 +65,39 @@ static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
 	while (1)
 	{
 		if (g_var == 2)
-			return (clean_heredoc(fd, path, in_backup, handler), -1);
-		(write(STDOUT_FILENO, "> ", 2), line = get_next_line(0));
+		{
+			if (fd >= 0)
+				close(fd);
+			if (path)
+				unlink(path);
+			if (in_backup >= 0)
+				restore_io(in_backup, -1);
+			if (handler)
+				signal(SIGINT, handler);
+			// DON'T reset g_var here!
+			return (-1);
+		}
+
+		write(STDOUT_FILENO, "> ", 2);
+		line = get_next_line(0);
+
 		if (g_var == 2)
-			return (get_next_line(-1), free(line),
-				clean_heredoc(fd, path, in_backup, handler), -1);
+		{
+			get_next_line(-1);
+			free(line);
+			// Clean up but preserve g_var
+			if (fd >= 0)
+				close(fd);
+			if (path)
+				unlink(path);
+			if (in_backup >= 0)
+				restore_io(in_backup, -1);
+			if (handler)
+				signal(SIGINT, handler);
+			// DON'T reset g_var here!
+			return (-1);
+		}
+
 		if (!line)
 		{
 			our_perror("\nwarning: here-document delimited by end-of-file\n");
@@ -98,12 +105,18 @@ static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
 		}
 		if (compare_delimiter(line, clean_delim))
 		{
-			(get_next_line(-1), free(line));
+			get_next_line(-1);
+			free(line);
 			break ;
 		}
-		(write(fd, line, ft_strlen(line)), free(line));
+		write(fd, line, ft_strlen(line));
+		free(line);
 	}
-	return (restore_io(in_backup, -1), signal(SIGINT, handler), 0);
+
+	// Normal completion - restore IO and signal handler
+	restore_io(in_backup, -1);
+	signal(SIGINT, handler);
+	return (0);
 }
 
 char	*heredoc(t_cmd *cmd, int *index)
@@ -123,8 +136,22 @@ char	*heredoc(t_cmd *cmd, int *index)
 		clean_heredoc(fd, filepath, stdin_backup, NULL);
 		return (NULL);
 	}
-	if (read_heredoc(fd, clean_delim, stdin_backup, filepath) == -1)
-		return (NULL);
+
+	int result = read_heredoc(fd, clean_delim, stdin_backup, filepath);
 	close(fd);
+
+	// Check if heredoc was interrupted
+	if (result == -1)
+	{
+		unlink(filepath);  // Clean up the temp file
+		if (g_var == 2)
+		{
+			// Print error message here if not already printed
+			our_perror("Error: Failed to process heredoc\n");
+			// DON'T reset g_var here - let main loop handle it and set exit code 130
+			return (NULL);
+		}
+		return (NULL);
+	}
 	return (our_strdup(cmd->gc, filepath));
 }

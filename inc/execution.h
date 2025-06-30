@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 16:48:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:50:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	generate_filename(char *dest, size_t size, int index);
 int		tmp_to_heredoc(t_cmd *cmd);
 void	handle_heredoc_sigint(int sig);
 void	clean_heredoc(int fd, const char *path, int in, void (*handler)(int));
+int		compare_delimiter(const char *line, const char *delimiter);
+char	*remove_quotes(t_cmd *cmd);
 
 //utils
 void	restore_io(int in_copy, int out_copy);

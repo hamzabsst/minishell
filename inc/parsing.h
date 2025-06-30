@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 18:13:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:24:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PARSING_H
 
 # include <stdbool.h>
-# include "memory.h"
 
 typedef struct s_env
 {
@@ -33,6 +32,7 @@ typedef struct s_cmd
 	char			*delimiter;
 	bool			heredoc_processed;
 	bool			forked;
+	int				exit_code;
 	t_env			*env;
 	t_mem			*gc;
 	struct s_cmd	*next;

@@ -1,8 +1,6 @@
 NAME	= minishell
 CC		= cc
-# CFLAGS	= -Wall -Wextra -Werror -Iinc -g
-
-CFLAGS	= -Wall -Wextra -Werror -Iinc -g \
+CFLAGS	= -Wall -Wextra -Werror -Iinc \
 		  -Wunused -Wunused-variable -Wunused-function -Wunused-parameter \
 		  -Wshadow -Wformat=2 -Wstrict-prototypes -Wmissing-declarations \
 		  -Wmissing-prototypes -Wunreachable-code -Wcast-align -Wcast-qual \
@@ -29,12 +27,8 @@ $(MYLIB):
 %.o: %.c inc/minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-# $(NAME): $(OBJS) $(MYLIB)
-# 	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
-
-#!for gcc
 $(NAME): $(OBJS) $(MYLIB)
-	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory -no-pie
+	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME) -lreadline -lhistory
 
 clean:
 	@rm -f $(OBJS)

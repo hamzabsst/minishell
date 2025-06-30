@@ -6,18 +6,57 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 18:32:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:50:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_heredoc_sigint(int sig)
+char	*remove_quotes(t_cmd *cmd)
 {
-	(void)sig;
-	g_var = 2;
-	ft_putstr_fd("\n", 1);
-	close(STDIN_FILENO);
+	size_t	i;
+	size_t	j;
+	char	*result;
+	char	quote_char;
+
+	if (!cmd || !cmd->delimiter)
+		return (NULL);
+	result = ft_malloc(cmd->gc , ft_strlen(cmd->delimiter) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < ft_strlen(cmd->delimiter))
+	{
+		if (cmd->delimiter[i] == '\'' || cmd->delimiter[i] == '"')
+		{
+			quote_char = cmd->delimiter[i++];
+			while (i < ft_strlen(cmd->delimiter) && cmd->delimiter[i] != quote_char)
+				result[j++] = cmd->delimiter[i++];
+			if (i < ft_strlen(cmd->delimiter))
+				i++;
+		}
+		else
+			result[j++] = cmd->delimiter[i++];
+	}
+	result[j] = '\0';
+	return (our_strdup(cmd->gc, result));
+}
+
+int	compare_delimiter(const char *line, const char *delimiter)
+{
+	size_t	delim_len;
+	size_t	line_len;
+
+	if (!line || !delimiter)
+		return (0);
+	delim_len = ft_strlen(delimiter);
+	line_len = ft_strlen(line);
+	if (line_len == delim_len)
+		return (ft_strncmp(line, delimiter, delim_len) == 0);
+	if (line_len == delim_len + 1 && line[line_len - 1] == '\n')
+		return (ft_strncmp(line, delimiter, delim_len) == 0);
+	return (0);
 }
 
 int	tmp_to_heredoc(t_cmd *cmd)
@@ -32,7 +71,7 @@ int	tmp_to_heredoc(t_cmd *cmd)
 	if (fd < 0)
 	{
 		unlink(cmd->heredoc);
-		return (our_perror("minishell: input redirection failed\n"));
+		return (our_perror("minishell: redirection from tmp file failed\n"));
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
@@ -43,19 +82,6 @@ int	tmp_to_heredoc(t_cmd *cmd)
 	unlink(cmd->heredoc);
 	cmd->heredoc_processed = 1;
 	return (0);
-}
-
-void	clean_heredoc(int fd, const char *path, int in, void (*handler)(int))
-{
-	if (fd >= 0)
-		close(fd);
-	if (path)
-		unlink(path);
-	if (in >= 0)
-		restore_io(in, -1);
-	if (handler)
-		signal(SIGINT, handler);
-	g_var = 0;
 }
 
 static pid_t	get_pid_from_proc(void)
@@ -86,11 +112,12 @@ static pid_t	get_pid_from_proc(void)
 
 void	generate_filename(char *dest, size_t size, int index)
 {
-	const char	*prefix = "/tmp/.minishell_heredoc_";
-	pid_t		pid;
-	long		combined_num;
+	const char	*prefix;
 	char		*num_str;
+	long		combined_num;
+	pid_t		pid;
 
+	prefix = "/tmp/.minishell_heredoc_";
 	if (ft_strlen(prefix) >= size - 1)
 		return ;
 	pid = get_pid_from_proc();
