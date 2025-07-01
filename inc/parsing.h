@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/30 14:24:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:20:31 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ typedef struct s_env
 
 typedef struct s_cmd
 {
+	t_env			*env;
+	t_mem			*gc;
 	char			**av;
 	char			**infiles;
 	char			**outfiles;
@@ -33,8 +35,8 @@ typedef struct s_cmd
 	bool			heredoc_processed;
 	bool			forked;
 	int				exit_code;
-	t_env			*env;
-	t_mem			*gc;
+	int				in_copy;
+	int 			out_copy;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -45,7 +47,7 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc);
+t_cmd	*parse_input(char *line, t_env *g_env, int *exit_code, t_mem *gc);
 t_token	*tokenize(t_mem *gc, char **tokens);
 char	**mysplit(char *str, t_mem *gc);
 int		check_syntax_error(t_token *tokens, t_mem *gc);

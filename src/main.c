@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/30 15:03:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:35:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,12 @@ static void	handle_sigint(int signal)
 {
 	if (signal == SIGINT)
 	{
-		g_var = 1;
+		g_var = 130;
 		write(1, "\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
 	}
-}
-
-static int get_input(char **line, int exit_code, t_mem *gc)
-{
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	*line = readline(create_prompt(gc, exit_code));
-	if (!*line)
-		return (write(1, "exit\n", 5), 0);
-	if (!**line)
-		return (free(*line), 1);
-	add_history(*line);
-	return (2);
 }
 
 static char *create_pwd_env(t_mem *gc)
@@ -82,10 +69,20 @@ static t_env	*init_shell(char **env, t_mem *gc)
 		g_env = dup_env(env, gc);
 	if (!g_env)
 		return(our_perror("Failed to duplicate environment\n"), NULL);
-	g_var = 0;
+	return (g_env);
+}
+
+static int	get_input(char **line, int exit_code, t_mem *gc)
+{
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	return (g_env);
+	*line = readline(create_prompt(gc, exit_code));
+	if (!*line)
+		return (write(1, "exit\n", 5), 0);
+	if (!**line)
+		return (free(*line), 1);
+	add_history(*line);
+	return (2);
 }
 
 int	main(int ac, char **av, char **env)
@@ -105,27 +102,24 @@ int	main(int ac, char **av, char **env)
 	exit_code = 0;
 	while (1)
 	{
-		g_var = 0;
 		input = get_input(&line, exit_code, &gc);
 		if (input == 0)
 			break;
 		if (input == 1)
 			continue;
 		signal(SIGINT, SIG_IGN);
-		cmd = parse_input(line, g_env, exit_code, &gc);
+		cmd = parse_input(line, g_env, &exit_code, &gc);
 		free(line);
 		if (cmd)
 			exit_code = process_command(cmd);
 		else
 		{
-			if (g_var == 2 || g_var == 1)
+			if (g_var == 130)
 			{
 				exit_code = 130;
 				g_var = 0;
 			}
 		}
-		signal(SIGINT, handle_sigint);
-		signal(SIGQUIT, SIG_IGN);
 	}
 	ft_free_all(&gc);
 	exit(exit_code);

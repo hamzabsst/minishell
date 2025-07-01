@@ -1,5 +1,5 @@
 #!/bin/bash
-# Linux/macOS version - concat_files.sh
+
 # Usage: ./concat_files.sh /path/to/source/folder
 
 if [ $# -eq 0 ]; then
@@ -10,18 +10,16 @@ fi
 SOURCE_FOLDER="$1"
 OUTPUT_FILE="all.c"
 
-# Check if source folder exists
+
 if [ ! -d "$SOURCE_FOLDER" ]; then
     echo "Error: Source folder '$SOURCE_FOLDER' does not exist"
     exit 1
 fi
 
-# Clear the output file
 > "$OUTPUT_FILE"
 
 echo "Concatenating all files from '$SOURCE_FOLDER' into '$OUTPUT_FILE'..."
 
-# Find all files (not directories) and concatenate them, excluding hidden files/folders, .vscode, and .git
 find "$SOURCE_FOLDER" -type f \
     -not -path "*/.*" \
     -not -path "*/.vscode/*" \

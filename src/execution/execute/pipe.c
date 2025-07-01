@@ -6,20 +6,19 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 17:36:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:34:31 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	exec_child(t_cmd *cmd, int in, int out, int in_copy, int out_copy)
+static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	close(in_copy);
-	close(out_copy);
+	restore_io(cmd->in_copy, cmd->out_copy);
 	if (dup2(in, 0) == -1 || dup2(out, 1) == -1)
 		(our_perror("dup2: command failed\n"), ft_free_all(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)
@@ -30,22 +29,12 @@ static void	exec_child(t_cmd *cmd, int in, int out, int in_copy, int out_copy)
 	if (builtin(cmd->av[0]))
 	{
 		cmd->forked = 1;
-		exit_code = exec_builtin(cmd);
+		cmd->exit_code = exec_builtin(cmd);
+		exit_code = cmd->exit_code;
 		ft_free_all(cmd->gc);
 		exit(exit_code);
 	}
 	exec_cmd(cmd);
-}
-
-static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
-{
-	if (cmd->next)
-	{
-		if (pipe(pipe_fd) == -1)
-			(our_perror("pipe: command failed\n"), exit(1));
-	}
-	else
-		(pipe_fd[0] = 0, pipe_fd[1] = 1);
 }
 
 static void	wait_for_all(int *status, pid_t last_pid)
@@ -63,7 +52,7 @@ static void	wait_for_all(int *status, pid_t last_pid)
 			{
 				sig = WTERMSIG(tmp);
 				if (sig == SIGINT)
-					*status = 130, write(1, "\n", 1);
+					*status = 130, ft_putstr_fd("\n", 1);
 				else if (sig == SIGQUIT)
 					(*status = 131, ft_putstr_fd("Quit (core dumped)\n", 1));
 				else
@@ -75,7 +64,7 @@ static void	wait_for_all(int *status, pid_t last_pid)
 	}
 }
 
-static pid_t	create_process(t_cmd *cmd, int fd_in, int *pipe_fd, int in, int out)
+static pid_t	create_process(t_cmd *cmd, int fd_in, int *pipe_fd)
 {
 	pid_t	pid;
 
@@ -93,12 +82,23 @@ static pid_t	create_process(t_cmd *cmd, int fd_in, int *pipe_fd, int in, int out
 	{
 		if (pipe_fd[0] && pipe_fd[0] != 0)
 			close(pipe_fd[0]);
-		exec_child(cmd, fd_in, pipe_fd[1], in, out);
+		exec_child(cmd, fd_in, pipe_fd[1]);
 	}
 	return (pid);
 }
 
-int	ft_exec(t_cmd *cmd, int in, int out)
+static void	handle_pipe(t_cmd *cmd, int *pipe_fd)
+{
+	if (cmd->next)
+	{
+		if (pipe(pipe_fd) == -1)
+			(our_perror("pipe: command failed\n"), exit(1));
+	}
+	else
+		(pipe_fd[0] = 0, pipe_fd[1] = 1);
+}
+
+int	ft_exec(t_cmd *cmd)
 {
 	pid_t	pid;
 	pid_t	last_pid;
@@ -111,7 +111,7 @@ int	ft_exec(t_cmd *cmd, int in, int out)
 	while (cmd)
 	{
 		handle_pipe(cmd, pipe_fd);
-		pid = create_process(cmd, fd_in, pipe_fd, in, out);
+		pid = create_process(cmd, fd_in, pipe_fd);
 		if (pid == -1)
 			return (1);
 		if (fd_in != 0)

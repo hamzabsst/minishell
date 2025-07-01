@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/30 14:24:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:20:31 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,12 @@ static void init_struct(t_token *tokens, t_cmd *cmd, int exit_code, t_env *g_env
 	cmd->outfiles = NULL;
 	cmd->append_flags = 0;
 	cmd->heredoc = NULL;
-	cmd->heredoc_processed = 0;
 	cmd->delimiter = NULL;
+	cmd->heredoc_processed = 0;
+	cmd->forked = 0;
 	cmd->exit_code = exit_code;
+	cmd->in_copy = -1;
+	cmd->out_copy = -1;
 	cmd->next = NULL;
 }
 
@@ -169,11 +172,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_m
 				current->delimiter = tokens->content;
 				current->heredoc = heredoc(current, &heredoc_counter);
 				if (!current->heredoc)
-				{
-					if (g_var == 2)
-						return (NULL);
 					return (our_perror("Error: Failed to process heredoc\n"), NULL);
-				}
 				current->delimiter = NULL;
 			}
 		}
@@ -183,7 +182,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_m
 	return (head);
 }
 
-t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc)
+t_cmd	*parse_input(char *line, t_env *g_env, int *exit_code, t_mem *gc)
 {
 	char	**splited;
 	t_token	*token_list;
@@ -192,9 +191,9 @@ t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, t_mem *gc)
 	if (!splited)
 		return (NULL);
 	token_list = tokenize(gc, splited);
-	if (check_syntax_error(token_list, gc) == 1)
-		return (NULL);
-	get_exit(&token_list, exit_code, gc);
+	if (check_syntax_error(token_list, gc))
+		return (*exit_code = 2, NULL);
 	check_quotes(&token_list, gc);
-	return (start_of_parsing(token_list, g_env , exit_code, gc));
+	get_exit(&token_list, *exit_code, gc);
+	return (start_of_parsing(token_list, g_env ,*exit_code, gc));
 }

@@ -6,11 +6,27 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/30 13:50:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:35:27 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
+{
+	int		stdin_backup;
+
+	if (!cmd || !cmd->delimiter)
+		return (-1);
+	unlink(filepath);
+	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (*fd < 0)
+		return (our_perror("heredoc: failed to create temp file"), -1);
+	stdin_backup = dup(STDIN_FILENO);
+	if (stdin_backup == -1)
+		return (clean_heredoc(*fd, filepath, -1, NULL), -1);
+	return (stdin_backup);
+}
 
 char	*remove_quotes(t_cmd *cmd)
 {

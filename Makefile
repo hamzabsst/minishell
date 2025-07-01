@@ -43,7 +43,7 @@ fclean: clean
 
 t: clean all
 	@rm -f $(OBJS)
-	@./$(NAME)
+	@./valgrindd ./$(NAME)
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:51:50 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 16:12:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:57:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void *ft_malloc(t_mem *gc, size_t size)
 	ptr = malloc(size);
 	if (!ptr)
 		return (NULL);
+	ft_memset(ptr, 0, size);
 	new_node = malloc(sizeof(t_mem_node));
 	if (!new_node)
 	{

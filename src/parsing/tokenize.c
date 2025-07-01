@@ -12,18 +12,6 @@
 
 #include "minishell.h"
 
-//? debugging
-// static void	print_tokens(t_token *tokens)
-// {
-// 	int i = 0;
-// 	while (tokens)
-// 	{
-// 		ft_printf("Token[%d]: %s Type: %s\n", i, tokens->content, tokens->type);
-// 		tokens = tokens->next;
-// 		i++;
-// 	}
-// }
-
 static void	add_token_back(t_token **head, t_token *new)
 {
 	t_token *tmp;
@@ -55,14 +43,13 @@ static t_token	*allocate_token(t_mem *gc, char *content, const char *type)
 
 t_token	*tokenize(t_mem *gc, char **tokens)
 {
+	const char	*type;
 	t_token		*head;
 	t_token 	*new;
-	const char	*type;
 	int			i;
 
-	i = 0;
-	head = NULL;
-	while (tokens[i])
+	(i = -1, head = NULL);
+	while (tokens[++i])
 	{
 		type = "WORD";
 		if (ft_strcmp(tokens[i], "|") == 0)
@@ -79,9 +66,7 @@ t_token	*tokenize(t_mem *gc, char **tokens)
 			type = "DELIMITER";
 		new = allocate_token(gc, tokens[i], type);
 		add_token_back(&head, new);
-		i++;
 	}
-	// print_tokens(head);
 	return (head);
 }
 
