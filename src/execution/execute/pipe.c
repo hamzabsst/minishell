@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 15:34:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:56:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;
 
+	close(cmd->in_copy);
+	close(cmd->out_copy);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	restore_io(cmd->in_copy, cmd->out_copy);
 	if (dup2(in, 0) == -1 || dup2(out, 1) == -1)
 		(our_perror("dup2: command failed\n"), ft_free_all(cmd->gc), exit(1));
 	if (in != STDIN_FILENO)

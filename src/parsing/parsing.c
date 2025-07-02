@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/07/01 15:20:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 00:59:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void init_struct(t_token *tokens, t_cmd *cmd, int exit_code, t_env *g_env
 	cmd->next = NULL;
 }
 
-static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_mem *gc)
+static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int *exit_code, t_mem *gc)
 {
 	int		i;
 	int		heredoc_counter;
@@ -124,7 +124,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_m
 	head = ft_malloc(gc, sizeof(t_cmd));
 	if (!head)
 		return (NULL);
-	init_struct(tokens, head, exit_code, g_env, gc);
+	init_struct(tokens, head, *exit_code, g_env, gc);
 	if (!head->av)
 		return (NULL);
 	current = head;
@@ -137,7 +137,7 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_m
 			new_cmd = ft_malloc(gc, sizeof(t_cmd));
 			if (!new_cmd)
 				return (NULL);
-			init_struct(tokens->next, new_cmd, exit_code, g_env, gc);
+			init_struct(tokens->next, new_cmd, *exit_code, g_env, gc);
 			if (!new_cmd->av)
 				return (NULL);
 			current->next = new_cmd;
@@ -170,9 +170,13 @@ static t_cmd	*start_of_parsing(t_token *tokens, t_env *g_env, int exit_code, t_m
 			if (tokens && ft_strcmp(tokens->type, "DELIMITER") == 0)
 			{
 				current->delimiter = tokens->content;
-				current->heredoc = heredoc(current, &heredoc_counter);
+				current->heredoc = heredoc(current, &heredoc_counter, exit_code);
 				if (!current->heredoc)
+				{
+					if (*exit_code == 130)
+						return (NULL);
 					return (our_perror("Error: Failed to process heredoc\n"), NULL);
+				}
 				current->delimiter = NULL;
 			}
 		}
@@ -195,5 +199,5 @@ t_cmd	*parse_input(char *line, t_env *g_env, int *exit_code, t_mem *gc)
 		return (*exit_code = 2, NULL);
 	check_quotes(&token_list, gc);
 	get_exit(&token_list, *exit_code, gc);
-	return (start_of_parsing(token_list, g_env ,*exit_code, gc));
+	return (start_of_parsing(token_list, g_env ,exit_code, gc));
 }

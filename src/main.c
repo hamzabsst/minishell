@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 14:35:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 01:00:20 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static t_env	*init_shell(char **env, t_mem *gc)
 
 static int	get_input(char **line, int exit_code, t_mem *gc)
 {
+	g_var = 0;
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 	*line = readline(create_prompt(gc, exit_code));
@@ -112,14 +113,6 @@ int	main(int ac, char **av, char **env)
 		free(line);
 		if (cmd)
 			exit_code = process_command(cmd);
-		else
-		{
-			if (g_var == 130)
-			{
-				exit_code = 130;
-				g_var = 0;
-			}
-		}
 	}
 	ft_free_all(&gc);
 	exit(exit_code);
