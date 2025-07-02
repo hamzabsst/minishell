@@ -6,11 +6,23 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 17:22:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 01:59:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	builtin_pwd(void)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		return (our_perror("pwd: getcwd failed\n"));
+	ft_printf("%s\n", cwd);
+	free(cwd);
+	return (0);
+}
 
 static void	handle_flag(char **av, int *i, int *newline)
 {

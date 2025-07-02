@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 15:20:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:50:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_cmd
 	bool			forked;
 	int				exit_code;
 	int				in_copy;
-	int 			out_copy;
+	int				out_copy;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -53,12 +53,13 @@ char	**mysplit(char *str, t_mem *gc);
 int		check_syntax_error(t_token *tokens, t_mem *gc);
 void	check_quotes(t_token **tokens, t_mem *gc);
 void	get_exit(t_token **tokens, int exit_code, t_mem *gc);
-void	add_token(t_token **start, t_token **end, char *content, const char *type, t_mem *gc);
+void	add_token(t_token **start, t_token **end, char *content,
+			const char *type, t_mem *gc);
 void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *end);
 
 //utils
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);
-char	*our_strdup(t_mem *gc ,const char *s);
+char	*our_strdup(t_mem *gc, const char *s);
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 
 #endif

@@ -6,13 +6,14 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 01:03:17 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:34:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_perror(const char *prefix, const char *token, const char *suffix, t_mem *gc)
+int	ft_perror(const char *prefix, const char *token,
+	const char *suffix, t_mem *gc)
 {
 	char	*complete_msg;
 	size_t	total_len;
@@ -45,7 +46,8 @@ static char	*get_short_pwd(t_mem *gc)
 	short_pwd = ft_malloc(gc, 256);
 	if (!cwd || !short_pwd)
 		return (free(cwd), ft_strlcpy(short_pwd, "~", 256), short_pwd);
-	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"), ft_strlen(cwd)) == cwd)
+	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"),
+			ft_strlen(cwd)) == cwd)
 	{
 		ft_strlcpy(short_pwd, "~", 256);
 		ft_strlcat(short_pwd, cwd + ft_strlen(getenv("HOME")), 256);
@@ -64,8 +66,8 @@ static char	*get_short_pwd(t_mem *gc)
 
 static char	*get_username(t_mem *gc)
 {
-	char	*username;
 	const char	*user_env;
+	char		*username;
 
 	user_env = getenv("USER");
 	if (!user_env)
@@ -91,8 +93,8 @@ static void	add_color(char *prompt, const char *color, size_t size)
 
 char	*create_prompt(t_mem *gc, int exit_code)
 {
-	char	*prompt;
 	const char	*pwd;
+	char		*prompt;
 
 	pwd = get_short_pwd(gc);
 	if (!pwd || !get_username(gc))

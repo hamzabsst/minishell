@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 15:31:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:30:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,18 @@ static char	*handle_absolute_path(t_cmd *cmd)
 	}
 }
 
-static char	*get_cmd_path(t_cmd *cmd, char **env)
+static char	*check_permission(t_cmd *cmd, char *resolved)
+{
+	if (access(resolved, X_OK) != 0)
+	{
+		ft_perror(cmd->av[0], ": Permission denied", "\n", cmd->gc);
+		cmd->exit_code = 126;
+		return (NULL);
+	}
+	return (resolved);
+}
+
+char	*get_cmd_path(t_cmd *cmd, char **env)
 {
 	char	**paths;
 	char	*resolved;
@@ -81,40 +92,16 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 	if (!paths)
 	{
 		ft_perror(cmd->av[0], ": command not found", "\n", cmd->gc);
-		return (cmd->exit_code = 127, NULL);
+		cmd->exit_code = 127;
+		return (NULL);
 	}
 	resolved = find_in_paths(cmd->av[0], paths, cmd->gc);
 	ft_free(paths);
 	if (!resolved)
 	{
 		ft_perror(cmd->av[0], ": command not found", "\n", cmd->gc);
-		return (cmd->exit_code = 127, NULL);
+		cmd->exit_code = 127;
+		return (NULL);
 	}
-	if (access(resolved, X_OK) != 0)
-	{
-		ft_perror(cmd->av[0], ": Permission denied", "\n", cmd->gc);
-		return (cmd->exit_code = 126, NULL);
-	}
-	return (resolved);
-}
-
-void	exec_cmd(t_cmd *cmd)
-{
-	char	*path;
-	char	**env;
-	int		exit_code;
-
-	env = env_to_array(cmd);
-	if (!cmd->av || !cmd->av[0])
-		(ft_free_all(cmd->gc), exit(0));
-	path = get_cmd_path(cmd, env);
-	if (!path)
-	{
-		exit_code = cmd->exit_code;
-		(ft_free_all(cmd->gc), exit(exit_code));
-	}
-	execve(path, cmd->av, env);
-	perror("execve");
-	ft_free_all(cmd->gc);
-	exit(126);
+	return (check_permission(cmd, resolved));
 }

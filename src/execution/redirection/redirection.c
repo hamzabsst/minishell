@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 14:44:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 01:34:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ static int	valid_input(t_cmd *cmd)
 	{
 		fd = open(cmd->infiles[i], O_RDONLY);
 		if (fd == -1)
-			return (ft_perror("minishell: Error opening ", cmd->infiles[i], "\n", cmd->gc));
+			return (ft_perror("minishell: Error opening ",
+					cmd->infiles[i], "\n", cmd->gc));
 		close(fd);
 		i++;
 	}
@@ -47,7 +48,8 @@ static int	valid_output(t_cmd *cmd)
 			flags = O_WRONLY | O_CREAT | O_TRUNC;
 		fd = open(cmd->outfiles[i], flags, 0644);
 		if (fd == -1)
-			return (ft_perror("minishell: Error opening ", cmd->outfiles[i], "\n", cmd->gc));
+			return (ft_perror("minishell: Error opening ",
+					cmd->outfiles[i], "\n", cmd->gc));
 		close(fd);
 		i++;
 	}
@@ -65,9 +67,11 @@ static int	input_redir(t_cmd *cmd)
 	last--;
 	fd = open(cmd->infiles[last], O_RDONLY);
 	if (fd == -1)
-		return (ft_perror("minishell: Error opening ", cmd->infiles[last], "\n", cmd->gc), 1);
+		return (ft_perror("minishell: Error opening ",
+				cmd->infiles[last], "\n", cmd->gc), 1);
 	if (dup2(fd, STDIN_FILENO) == -1)
-		return (close(fd), ft_perror("minishell:", " dup2 failed", "\n", cmd->gc));
+		return (close(fd), ft_perror("minishell:",
+				" dup2 failed", "\n", cmd->gc));
 	close(fd);
 	return (0);
 }
@@ -89,9 +93,11 @@ static int	output_redir(t_cmd *cmd)
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
 	fd = open(cmd->outfiles[last], flags, 0644);
 	if (fd == -1)
-		return (ft_perror("minishell: Error opening ", cmd->outfiles[last], "\n", cmd->gc), 1);
+		return (ft_perror("minishell: Error opening ",
+				cmd->outfiles[last], "\n", cmd->gc), 1);
 	if (dup2(fd, STDOUT_FILENO) == -1)
-		return (close(fd), ft_perror("minishell: ", "dup2 failed", "\n", cmd->gc));
+		return (close(fd), ft_perror("minishell: ",
+				"dup2 failed", "\n", cmd->gc));
 	close(fd);
 	return (0);
 }

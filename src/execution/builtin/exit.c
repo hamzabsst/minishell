@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 15:27:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 01:33:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static int	is_not_num(const char *str)
 	return (0);
 }
 
-static void cleanup_and_exit(t_cmd *cmd)
+static void	cleanup_and_exit(t_cmd *cmd)
 {
-	int exit_code;
+	int	exit_code;
 
 	exit_code = cmd->exit_code;
 	restore_io(cmd->in_copy, cmd->out_copy);

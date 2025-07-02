@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:50:24 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/29 16:55:00 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:47:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,5 @@ void	*ft_malloc(t_mem *manager, size_t size);
 void	ft_free_all(t_mem *manager);
 void	ft_free_ptr(t_mem *manager, void *ptr);
 int		ft_add_ptr(t_mem *manager, void *ptr);
-
 
 #endif

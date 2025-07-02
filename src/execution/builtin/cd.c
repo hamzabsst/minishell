@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:21:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:46:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,14 @@ int	update_env(t_cmd *cmd, const char *key, const char *value)
 
 static int	handle_path(t_cmd *cmd)
 {
-	if (!cmd->av || !*cmd->av)
+	if (!cmd->av[1])
 		return (0);
-	else if (*cmd->av[0] == '~' || *cmd->av[0] == '-')
+	else if (*cmd->av[1] == '~' || *cmd->av[1] == '-')
 		return (our_perror("cd: only absolute or relative paths are allowed\n"));
-	else if (cmd->av[1])
+	else if (cmd->av[2])
 		return (our_perror("cd: too many arguments\n"));
 	else
-		return (1);
+		return (0);
 }
 
 int	builtin_cd(t_cmd *cmd)
@@ -76,7 +76,7 @@ int	builtin_cd(t_cmd *cmd)
 	int		ret;
 	char	*path;
 
-	if (handle_path(cmd) == 1)
+	if (handle_path(cmd))
 		return (1);
 	if (!cmd->av[1] || !*cmd->av[1])
 		path = ft_getenv(cmd->env, "HOME");

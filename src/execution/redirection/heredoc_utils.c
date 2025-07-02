@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/01 23:29:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 01:52:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,11 @@ int	tmp_to_heredoc(t_cmd *cmd)
 
 char	*remove_quotes(t_cmd *cmd)
 {
+	char	*result;
 	size_t	i;
 	size_t	j;
-	char	*result;
-	char	quote_char;
 
-	if (!cmd || !cmd->delimiter)
-		return (NULL);
-	result = ft_malloc(cmd->gc , ft_strlen(cmd->delimiter) + 1);
+	result = ft_malloc(cmd->gc, ft_strlen(cmd->delimiter) + 1);
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -55,8 +52,9 @@ char	*remove_quotes(t_cmd *cmd)
 	{
 		if (cmd->delimiter[i] == '\'' || cmd->delimiter[i] == '"')
 		{
-			quote_char = cmd->delimiter[i++];
-			while (i < ft_strlen(cmd->delimiter) && cmd->delimiter[i] != quote_char)
+			i++;
+			while (i < ft_strlen(cmd->delimiter)
+				&& cmd->delimiter[i] != cmd->delimiter[i - 1])
 				result[j++] = cmd->delimiter[i++];
 			if (i < ft_strlen(cmd->delimiter))
 				i++;

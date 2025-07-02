@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 23:07:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:00:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc)
 	return (substr);
 }
 
-char	*our_strdup(t_mem *gc ,const char *s)
+char	*our_strdup(t_mem *gc, const char *s)
 {
 	size_t	i;
 	size_t	size;
@@ -72,7 +72,7 @@ char	*our_strjoin(t_mem *gc, char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	res = ft_malloc(gc , ft_strlen(s1) + ft_strlen(s2) + 1);
+	res = ft_malloc(gc, ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 		return (NULL);
 	i = 0;
