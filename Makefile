@@ -1,6 +1,6 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc \
+CFLAGS	= -Wall -Wextra -Werror -g -Iinc \
 		  -Wunused -Wunused-variable -Wunused-function -Wunused-parameter \
 		  -Wshadow -Wformat=2 -Wstrict-prototypes -Wmissing-declarations \
 		  -Wmissing-prototypes -Wunreachable-code -Wcast-align -Wcast-qual \

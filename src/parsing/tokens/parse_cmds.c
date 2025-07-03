@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:25:09 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 01:34:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:25:53 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	count_til_pipe(t_token *tokens)
 	int	count;
 
 	count = 0;
+	if (tokens && ft_strcmp(tokens->type, "PIPE") == 0)
+		tokens = tokens->next;
 	while (tokens && ft_strcmp(tokens->type, "PIPE") != 0)
 	{
 		if (ft_strcmp(tokens->type, "WORD") == 0)
