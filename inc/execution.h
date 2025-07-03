@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:48:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int		tmp_to_heredoc(t_cmd *cmd);
 //utils
 void	restore_io(int in_copy, int out_copy);
 char	*create_prompt(t_mem *gc, int exit_code);
-int		ft_perror(const char *prefix, const char *token,
+int		ft_error(const char *prefix, const char *token,
 			const char *suffix, t_mem *gc);
 int		our_perror(const char *msg);
 

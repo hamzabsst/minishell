@@ -14,7 +14,8 @@
 
 static void	add_token_back(t_token **head, t_token *new)
 {
-	t_token *tmp;
+	t_token	*tmp;
+
 	if (!*head)
 	{
 		*head = new;
@@ -32,7 +33,7 @@ static t_token	*allocate_token(t_mem *gc, char *content, const char *type)
 {
 	t_token	*new;
 
-	new = ft_malloc(gc ,sizeof(t_token));
+	new = ft_malloc(gc, sizeof(t_token));
 	if (!new)
 		return (NULL);
 	new->content = our_strdup(gc, content);
@@ -41,32 +42,30 @@ static t_token	*allocate_token(t_mem *gc, char *content, const char *type)
 	return (new);
 }
 
-t_token	*tokenize(t_mem *gc, char **tokens)
+t_token	*tokenize(t_parse *data)
 {
 	const char	*type;
 	t_token		*head;
-	t_token 	*new;
 	int			i;
 
-	(i = -1, head = NULL);
-	while (tokens[++i])
+	head = NULL;
+	i = -1;
+	while (data->splited[++i])
 	{
 		type = "WORD";
-		if (ft_strcmp(tokens[i], "|") == 0)
+		if (ft_strcmp(data->splited[i], "|") == 0)
 			type = "PIPE";
-		else if (ft_strcmp(tokens[i], ">") == 0)
+		else if (ft_strcmp(data->splited[i], ">") == 0)
 			type = "REDIRECTION_OUT";
-		else if (ft_strcmp(tokens[i], "<") == 0)
+		else if (ft_strcmp(data->splited[i], "<") == 0)
 			type = "REDIRECTION_IN";
-		else if(ft_strcmp(tokens[i], ">>") == 0)
+		else if (ft_strcmp(data->splited[i], ">>") == 0)
 			type = "APPEND";
-		else if (ft_strcmp(tokens[i], "<<") == 0)
+		else if (ft_strcmp(data->splited[i], "<<") == 0)
 			type = "HEREDOC";
-		else if(i > 0 && ft_strcmp(tokens[i - 1], "<<") == 0)
+		else if (i > 0 && ft_strcmp(data->splited[i - 1], "<<") == 0)
 			type = "DELIMITER";
-		new = allocate_token(gc, tokens[i], type);
-		add_token_back(&head, new);
+		add_token_back(&head, allocate_token(data->gc, data->splited[i], type));
 	}
 	return (head);
 }
-

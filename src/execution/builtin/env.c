@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:14:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,10 @@ int	builtin_env(t_cmd *cmd)
 	t_env	*current;
 
 	if (cmd->av[1])
-		return (ft_perror("env: No arguments or options allowed\n"
+		return (ft_error("env: No arguments or options allowed\n"
 				, NULL, NULL, cmd->gc));
 	if (!cmd->env)
-		return (ft_perror("command not found: env\n", NULL, NULL, cmd->gc));
+		return (ft_error("command not found: env\n", NULL, NULL, cmd->gc));
 	current = cmd->env;
 	while (current)
 	{

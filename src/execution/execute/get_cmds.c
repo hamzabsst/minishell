@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:30:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static char	*handle_absolute_path(t_cmd *cmd)
 {
 	if (access(cmd->av[0], F_OK) != 0)
 	{
-		ft_perror(cmd->av[0], ": No such file or directory\n", "\n", cmd->gc);
+		ft_error(cmd->av[0], ": No such file or directory\n", "\n", cmd->gc);
 		cmd->exit_code = 127;
 		return (NULL);
 	}
@@ -62,7 +62,7 @@ static char	*handle_absolute_path(t_cmd *cmd)
 		return (our_strdup(cmd->gc, cmd->av[0]));
 	else
 	{
-		ft_perror(cmd->av[0], ": Permission denied", "\n", cmd->gc);
+		ft_error(cmd->av[0], ": Permission denied", "\n", cmd->gc);
 		cmd->exit_code = 126;
 		return (NULL);
 	}
@@ -72,7 +72,7 @@ static char	*check_permission(t_cmd *cmd, char *resolved)
 {
 	if (access(resolved, X_OK) != 0)
 	{
-		ft_perror(cmd->av[0], ": Permission denied", "\n", cmd->gc);
+		ft_error(cmd->av[0], ": Permission denied", "\n", cmd->gc);
 		cmd->exit_code = 126;
 		return (NULL);
 	}
@@ -91,7 +91,7 @@ char	*get_cmd_path(t_cmd *cmd, char **env)
 	paths = get_path(env);
 	if (!paths)
 	{
-		ft_perror(cmd->av[0], ": command not found", "\n", cmd->gc);
+		ft_error(cmd->av[0], ": command not found", "\n", cmd->gc);
 		cmd->exit_code = 127;
 		return (NULL);
 	}
@@ -99,7 +99,7 @@ char	*get_cmd_path(t_cmd *cmd, char **env)
 	ft_free(paths);
 	if (!resolved)
 	{
-		ft_perror(cmd->av[0], ": command not found", "\n", cmd->gc);
+		ft_error(cmd->av[0], ": command not found", "\n", cmd->gc);
 		cmd->exit_code = 127;
 		return (NULL);
 	}

@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:34:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:26:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_perror(const char *prefix, const char *token,
+int	ft_error(const char *prefix, const char *token,
 	const char *suffix, t_mem *gc)
 {
 	char	*complete_msg;
@@ -97,8 +97,6 @@ char	*create_prompt(t_mem *gc, int exit_code)
 	char		*prompt;
 
 	pwd = get_short_pwd(gc);
-	if (!pwd || !get_username(gc))
-		pwd = "~";
 	prompt = ft_malloc(gc, 1024);
 	if (!prompt)
 		return (NULL);

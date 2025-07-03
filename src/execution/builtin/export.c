@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:12:53 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	builtin_export(t_cmd *cmd)
 	while (cmd->av[i])
 	{
 		if (!identifier(cmd->av[i]))
-			ft_perror("export: `", cmd->av[i],
+			ft_error("export: `", cmd->av[i],
 				"': not a valid identifier\n", cmd->gc);
 		else
 			process_av(cmd, cmd->av[i]);

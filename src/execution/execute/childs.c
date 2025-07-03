@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 02:23:40 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:30:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:18:39 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;
 
-	close(cmd->in_copy);
-	close(cmd->out_copy);
+	if (cmd->in_copy > -1)
+		close(cmd->in_copy);
+	if (cmd->out_copy > -1)
+		close(cmd->out_copy);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (dup2(in, 0) == -1 || dup2(out, 1) == -1)

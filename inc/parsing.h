@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:50:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 01:34:38 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,42 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_parse
+{
+	char	*line;
+	char	**splited;
+	t_token	*tokens;
+	t_env	*env;
+	t_mem	*gc;
+}	t_parse;
+
+typedef struct s_split
+{
+	char	**word;
+	char	*line;
+	t_mem	*gc;
+	int		to_join;
+	int		last;
+	int		i;
+	int		j;
+	int		len;
+}	t_split;
+
+void	init_cmds(t_cmd *cmd, t_parse *data, int exit_code);
+t_cmd	*process_tokens(t_cmd *head, t_parse *data, int *exit_code);
+int		check_quotes_syntax(t_token *tokens);
+int		parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *code);
+int		parse_redir(t_token **tokens, t_cmd *current);
 t_cmd	*parse_input(char *line, t_env *g_env, int *exit_code, t_mem *gc);
-t_token	*tokenize(t_mem *gc, char **tokens);
-char	**mysplit(char *str, t_mem *gc);
-int		check_syntax_error(t_token *tokens, t_mem *gc);
+int		count_token(char *s);
+char	**mysplit(t_parse *data);
+t_token	*tokenize(t_parse *data);
+void	handle_quotes(t_split *s);
+int		check_syntax_error(t_parse *data);
 void	check_quotes(t_token **tokens, t_mem *gc);
 void	get_exit(t_token **tokens, int exit_code, t_mem *gc);
-void	add_token(t_token **start, t_token **end, char *content,
-			const char *type, t_mem *gc);
-void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *end);
+void	add_token(t_token **start, char *content, const char *type, t_mem *gc);
+void	repl_token(t_token **token, t_token *curr, t_token *new, t_token *end);
 
 //utils
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);

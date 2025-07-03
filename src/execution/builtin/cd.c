@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:46:01 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	builtin_cd(t_cmd *cmd)
 		path = cmd->av[1];
 	oldpwd = ft_getenv(cmd->env, "PWD");
 	if (chdir(path) == -1)
-		return (ft_perror(path, ": No such file or directory", "\n", cmd->gc));
+		return (ft_error(path, ": No such file or directory", "\n", cmd->gc));
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
 		return (1);
 	newpwd = getcwd(NULL, 0);
