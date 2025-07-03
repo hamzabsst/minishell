@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:10:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:14:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:43:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	unset_variable(t_cmd *cmd, char *var_name)
 	prev = NULL;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, var_name) == 0)
+		if (current->var && !ft_strcmp(current->var, var_name))
 		{
 			if (prev)
 				prev->next = current->next;

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:42:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_getenv(t_env *env, const char *key)
 	current = env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 			return (current->content);
 		current = current->next;
 	}
@@ -38,7 +38,7 @@ int	update_env(t_cmd *cmd, const char *key, const char *value)
 	current = cmd->env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 		{
 			if (current->content)
 				current->content = our_strdup(cmd->gc, value);
@@ -85,7 +85,7 @@ int	builtin_cd(t_cmd *cmd)
 	oldpwd = ft_getenv(cmd->env, "PWD");
 	if (chdir(path) == -1)
 		return (ft_error(path, ": No such file or directory", "\n", cmd->gc));
-	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
+	if (update_env(cmd, "OLDPWD", oldpwd))
 		return (1);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)

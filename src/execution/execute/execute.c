@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:22:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:44:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	process_command(t_cmd *cmd)
 {
 	if (backup_io(&cmd->in_copy, &cmd->out_copy))
 		return (our_perror("Failed to backup stdio\n"));
-	if (!cmd->next && redirection(cmd) != 0)
+	if (!cmd->next && redirection(cmd))
 		return (restore_io(cmd->in_copy, cmd->out_copy), 1);
 	if (builtin(cmd->av[0]) && !cmd->next)
 	{

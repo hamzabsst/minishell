@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 18:11:48 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:13:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:42:35 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	var_exists(t_env *env, const char *key)
 	current = env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 			return (1);
 		current = current->next;
 	}
@@ -39,7 +39,7 @@ static int	update_env_append(t_cmd *cmd, char *key, char *value)
 	current = cmd->env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 		{
 			old = current->content;
 			if (old)
