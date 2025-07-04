@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 15:03:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:26:29 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ static t_env	*init_shell(char **env, t_mem *gc)
 		gc->head = NULL;
 	if (!env || !env[0])
 	{
-		mini_env[0] = getcwd(NULL, 0);
-		if (!mini_env[0])
-			mini_env[0] = our_strdup(gc, "PWD=/");
+		mini_env[0] = our_strdup(gc, "PWD=/home/");
 		mini_env[1] = our_strdup(gc, "HOME=/tmp");
 		mini_env[2] = our_strdup(gc, "SHELL=./minishell");
 		mini_env[3] = our_strdup(gc, "PATH=/bin:/usr/bin:/usr/local/bin");

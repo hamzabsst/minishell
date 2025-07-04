@@ -3,15 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 01:38:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:18:35 by abchaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// abchaman@~/minishell
+// ➜ cat << a
+// heredoc> ^C
+// abchaman@~/minishell
+// ➜ ^C
+
+// ➜ ^C
+
+// ➜ ^C
 static void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
