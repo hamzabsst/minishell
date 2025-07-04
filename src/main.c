@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 14:26:29 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static t_env	*init_shell(char **env, t_mem *gc)
 	else
 		g_env = dup_env(env, gc);
 	if (!g_env)
-		return (our_perror("Failed to duplicate environment\n"), NULL);
+		return (our_error("Failed to duplicate environment\n"), NULL);
 	return (g_env);
 }
 
@@ -89,7 +89,7 @@ int	main(int ac, char **av, char **env)
 	int		exit_code;
 
 	if (ac != 1)
-		return ((void)av, our_perror("Invalid number of arguments\n"));
+		return ((void)av, our_error("Invalid number of arguments\n"));
 	g_env = init_shell(env, &gc);
 	if (!g_env)
 		return (1);

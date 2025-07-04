@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:32:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 00:06:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	add_outfile(t_cmd *cmd, char *filename, int append)
 	new_outfiles = ft_malloc(cmd->gc, sizeof(char *) * (i + 2));
 	new_flags = ft_malloc(cmd->gc, sizeof(int) * (i + 2));
 	if (!new_outfiles || !new_flags)
-		return (our_perror("Memory allocation failed\n"));
+		return (our_error("Memory allocation failed\n"));
 	j = 0;
 	while (j < i)
 	{
@@ -53,7 +53,7 @@ static void	add_infile(t_cmd *cmd, char *filename)
 	infiles = ft_malloc(cmd->gc, sizeof(char *) * (i + 2));
 	if (!infiles)
 	{
-		our_perror("Memory allocation failed\n");
+		our_error("Memory allocation failed\n");
 		return ;
 	}
 	j = 0;
@@ -103,7 +103,7 @@ int	parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *exit_code)
 		{
 			if (*exit_code == 130)
 				return (1);
-			return (our_perror("Error: Failed to process heredoc\n"), -1);
+			return (our_error("Error: Failed to process heredoc\n"), -1);
 		}
 		current->delimiter = NULL;
 	}

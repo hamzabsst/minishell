@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 01:52:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ int	tmp_to_heredoc(t_cmd *cmd)
 	if (fd < 0)
 	{
 		unlink(cmd->heredoc);
-		return (our_perror("minishell: redirection from tmp file failed\n"));
+		return (our_error("minishell: redirection from tmp file failed\n"));
 	}
 	if (dup2(fd, STDIN_FILENO) < 0)
 	{
 		unlink(cmd->heredoc);
-		return (close(fd), our_perror("minishell: dup2 failed\n"));
+		return (close(fd), our_error("minishell: dup2 failed\n"));
 	}
 	close(fd);
 	unlink(cmd->heredoc);

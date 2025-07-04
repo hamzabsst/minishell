@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 14:33:11 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	builtin_exit(t_cmd *cmd)
 		cleanup_and_exit(cmd);
 	}
 	if (cmd->av[2])
-		return (our_perror("exit: too many arguments\n"));
+		return (our_error("exit: too many arguments\n"));
 	cmd->exit_code = (int)(exit_code_ll & 0xFF);
 	cleanup_and_exit(cmd);
 	return (0);

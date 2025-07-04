@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 22:44:43 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 23:47:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	check_quotes_syntax(t_token *tokens)
 		}
 	}
 	if (flag)
-		return (our_perror("error in quoting\n"));
+		return (our_error("error in quoting\n"));
 	else
 		return (0);
 }

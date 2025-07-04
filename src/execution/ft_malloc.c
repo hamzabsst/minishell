@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 10:51:50 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 01:54:23 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:34:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,32 +48,6 @@ int	ft_add_ptr(t_mem *gc, void *ptr)
 	new_node->next = gc->head;
 	gc->head = new_node;
 	return (1);
-}
-
-void	ft_free_ptr(t_mem *gc, void *ptr)
-{
-	t_mem_node	*current;
-	t_mem_node	*prev;
-
-	if (!gc || !ptr)
-		return ;
-	current = gc->head;
-	prev = NULL;
-	while (current)
-	{
-		if (current->ptr == ptr)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				gc->head = current->next;
-			free(current->ptr);
-			free(current);
-			return ;
-		}
-		prev = current;
-		current = current->next;
-	}
 }
 
 void	ft_free_all(t_mem *gc)

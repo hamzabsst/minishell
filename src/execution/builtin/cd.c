@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 17:42:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static int	handle_path(t_cmd *cmd)
 	if (!cmd->av[1])
 		return (0);
 	else if (*cmd->av[1] == '~' || *cmd->av[1] == '-')
-		return (our_perror("cd: only absolute or relative paths are allowed\n"));
+		return (our_error("cd: only absolute or relative paths are allowed\n"));
 	else if (cmd->av[2])
-		return (our_perror("cd: too many arguments\n"));
+		return (our_error("cd: too many arguments\n"));
 	else
 		return (0);
 }
@@ -89,7 +89,7 @@ int	builtin_cd(t_cmd *cmd)
 		return (1);
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-		return (our_perror("cd: getcwd failed\n"));
+		return (our_error("cd: getcwd failed\n"));
 	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

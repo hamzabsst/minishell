@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:32:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static void	init_pipe(t_cmd *cmd, int *pipe_fd)
 	{
 		if (pipe(pipe_fd) == -1)
 		{
-			our_perror("pipe: command failed\n");
+			our_error("pipe: command failed\n");
 			exit(1);
 		}
 	}

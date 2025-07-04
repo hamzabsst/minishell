@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 14:18:35 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	read_heredoc(int fd, char *delim, int in_backup, int *exit_code)
 			return (*exit_code = 130, g_var = 0,
 				free(line), signal(SIGINT, old_handler), 1);
 		if (!line)
-			return (our_perror("warning: here-doc delimited by EOF\n"),
+			return (our_error("warning: here-doc delimited by EOF\n"),
 				restore_io(in_backup, -1), signal(SIGINT, old_handler)
 				, g_var = 0, 0);
 		if (!ft_strcmp(line, delim))
@@ -76,7 +76,7 @@ static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 	unlink(filepath);
 	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (*fd < 0)
-		return (our_perror("heredoc: failed to create temp file"), -1);
+		return (our_error("heredoc: failed to create temp file"), -1);
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
 		return (clean_heredoc(*fd, filepath, -1), -1);

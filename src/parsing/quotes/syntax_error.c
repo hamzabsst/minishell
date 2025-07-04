@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:57:03 by abchaman          #+#    #+#             */
-/*   Updated: 2025/07/02 23:46:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	check_redir(t_token *tkn, t_token *prv, t_mem *gc, const char *op)
 			return (0);
 		if (!curr->next)
 		{
-			our_perror("syntax error near unexpected token `newline'\n");
+			our_error("syntax error near unexpected token `newline'\n");
 			return (1);
 		}
 		if (ft_strcmp(curr->next->type, "WORD") != 0)
@@ -45,7 +45,7 @@ static int	check_heredoc(t_token *tokens, t_mem *gc)
 	{
 		if (!curr->next)
 		{
-			our_perror("syntax error near unexpected token `newline'\n");
+			our_error("syntax error near unexpected token `newline'\n");
 			return (1);
 		}
 		if (!ft_strcmp(curr->next->type, "HEREDOC")
@@ -67,14 +67,14 @@ static int	check_append(t_token *tokens, t_mem *gc)
 	curr = tokens;
 	if (ft_strcmp(curr->content, ">>>") == 0)
 	{
-		our_perror("syntax error near unexpected token `>'\n");
+		our_error("syntax error near unexpected token `>'\n");
 		return (1);
 	}
 	if (ft_strcmp(curr->content, ">>") == 0)
 	{
 		if (curr->next == NULL)
 		{
-			our_perror("syntax error near unexpected token `newline'\n");
+			our_error("syntax error near unexpected token `newline'\n");
 			return (1);
 		}
 		else if (ft_strcmp(curr->next->type, "WORD") != 0)
@@ -96,7 +96,7 @@ static int	check_pipe(t_token *tokens, t_token *prev)
 	{
 		if (!prev || !curr->next || ft_strcmp(curr->next->content, "|") == 0)
 		{
-			our_perror("syntax error near unexpected token `|`\n");
+			our_error("syntax error near unexpected token `|`\n");
 			return (1);
 		}
 	}
