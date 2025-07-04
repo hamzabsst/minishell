@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 00:26:19 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 23:43:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,6 @@ char	*create_prompt(t_mem *gc, int exit_code)
 	ft_strlcat(prompt, "\n", 1024);
 	if (exit_code == 0)
 		add_color(prompt, BOLD_GREEN, 1024);
-	else if (exit_code >= 130)
-		add_color(prompt, "\033[1;33m", 1024);
 	else
 		add_color(prompt, BOLD_RED, 1024);
 	ft_strlcat(prompt, "\001➜\002 \x7f", 1024);

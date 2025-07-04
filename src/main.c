@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 17:15:43 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 23:42:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	handle_sigint(int signal)
 {
 	if (signal == SIGINT)
 	{
-		g_var = 130;
+		g_var = 2;
 		ft_putstr_fd("\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
@@ -52,6 +52,7 @@ static int	get_input(char **line, int exit_code, t_mem *gc)
 	g_var = 0;
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
+	rl_outstream = stderr;
 	*line = readline(create_prompt(gc, exit_code));
 	if (!*line)
 		return (write(1, "exit\n", 5), 0);
@@ -74,6 +75,11 @@ static void	minishell(t_mem *gc, t_env *g_env, int *exit_code)
 			break ;
 		if (input == 1)
 			continue ;
+		if (g_var == 2)
+		{
+			*exit_code = 130;
+			g_var = 0;
+		}
 		signal(SIGINT, SIG_IGN);
 		cmd = parse_input(line, g_env, exit_code, gc);
 		free(line);
