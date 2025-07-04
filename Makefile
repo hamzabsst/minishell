@@ -1,25 +1,24 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -g -Iinc \
-		  -Wunused -Wunused-variable -Wunused-function -Wunused-parameter \
-		  -Wshadow -Wformat=2 -Wstrict-prototypes -Wmissing-declarations \
-		  -Wmissing-prototypes -Wunreachable-code -Wcast-align -Wcast-qual \
-		  -Wwrite-strings -Wpointer-arith -Winit-self -Wdouble-promotion \
-		  -Wfloat-equal -Wundef -Wbad-function-cast -Wold-style-definition
+CFLAGS	= -Wall -Wextra -Werror -Iinc
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-# preload_test:
-# 	LD_PRELOAD=./fail.so ./$(NAME)
-
-SRCS := $(shell find src -name '*.c')
-#!need to modify this later
+SRCS := src/execution/builtin/cd.c src/execution/builtin/echo.c src/execution/builtin/env.c \
+		src/execution/builtin/exit.c src/execution/builtin/export.c src/execution/builtin/export_utils.c \
+		src/execution/builtin/unset.c src/execution/execute/childs.c src/execution/execute/env_to_array.c \
+		src/execution/execute/execute.c src/execution/execute/get_cmds.c src/execution/execute/parent.c \
+		src/execution/ft_malloc.c src/execution/redirection/heredoc.c \
+		src/execution/redirection/heredoc_utils.c src/execution/redirection/redirection.c \
+		src/execution/utils.c src/interface.c src/main.c src/parsing/exit_code.c src/parsing/parsing.c \
+		src/parsing/quotes/check_quotes.c src/parsing/quotes/syntax_error.c \
+		src/parsing/split/count_token.c src/parsing/split/split.c src/parsing/split/split_utils.c \
+		src/parsing/tokens/parse_cmds.c src/parsing/tokens/parse_redir.c src/parsing/tokens/tokenize.c \
 
 OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
-	@echo "build complete \033[1;34m✔\033[0m"
 
 $(MYLIB):
 	@$(MAKE) -s -C $(MYLIB_DIR)

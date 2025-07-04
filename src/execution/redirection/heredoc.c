@@ -6,21 +6,12 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 17:25:00 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// abchaman@~/minishell
-// ➜ cat << a
-// heredoc> ^C
-// abchaman@~/minishell
-// ➜ ^C
-
-// ➜ ^C
-
-// ➜ ^C
 static void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
@@ -76,7 +67,7 @@ static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 	unlink(filepath);
 	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (*fd < 0)
-		return (our_error("heredoc: failed to create temp file"), -1);
+		return (our_error("heredoc: failed to create temp file\n"), -1);
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
 		return (clean_heredoc(*fd, filepath, -1), -1);
