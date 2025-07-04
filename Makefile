@@ -34,15 +34,10 @@ clean:
 	@$(MAKE) -s clean -C $(MYLIB_DIR)
 	@echo "clean completed \033[1;34m✔\033[0m"
 
-
 fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -s fclean -C $(MYLIB_DIR)
 	@echo "full clean completed \033[1;31m✔\033[0m"
-
-t: clean all
-	@rm -f $(OBJS)
-	@./valgrindd ./$(NAME)
 
 re: fclean all
 
