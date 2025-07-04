@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 02:23:40 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 17:18:39 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:50:12 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 		close(in);
 	if (out != STDOUT_FILENO)
 		close(out);
-	redirection(cmd);
+	if (redirection(cmd))
+		(ft_free_all(cmd->gc), exit(1));
 	if (builtin(cmd->av[0]))
 	{
 		cmd->forked = 1;

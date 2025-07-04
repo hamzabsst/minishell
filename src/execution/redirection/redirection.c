@@ -6,18 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 15:40:38 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:46:47 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// ➜ cat < Makefil | wc -l | cat -e  | cat << a | wc -c
-// heredoc>
-// heredoc> s
-// heredoc> a
-// Error opening: Makefil
-// 3
 
 static int	valid_input(t_cmd *cmd)
 {
