@@ -3,66 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/27 18:47:33 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:47:21 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-# include "../mylib/myLib.h"
-# include <stdio.h>
-# include <signal.h>
-# include <sys/wait.h>
-# include <stdbool.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include "memory.h"
+//init_parse
+t_cmd	*parse_input(char *line, t_env *g_env, int *exit_code, t_mem *gc);
+void	init_cmds(t_cmd *cmd, t_parse *data, int exit_code);
 
-typedef struct s_env
-{
-	char			*var;
-	char			*content;
-	struct s_env	*next;
-}	t_env;
+//split
+char	**mysplit(t_parse *data);
+int		count_token(char *s);
 
-typedef struct s_cmd
-{
-	char			**av;
-	char			**infiles;
-	char			**outfiles;
-	int				*append_flags;
-	char			*heredoc;
-	char			*delimiter;
-	bool			forked;
-	t_env			*env;
-	t_mem			*gc;
-	struct s_cmd	*next;
-}	t_cmd;
+//tokens
+t_token	*tokenize(t_parse *data);
+t_cmd	*process_tokens(t_cmd *head, t_parse *data, int *exit_code);
+int		parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *code);
+int		parse_redir(t_token **tokens, t_cmd *current);
 
-typedef struct s_token
-{
-	char			*content;		//"echo" ">" "hello"
-	char			*type;			//"WORD" "REDIR_IN" "REDIR_OUT"
-	struct s_token	*next;
-}	t_token;
-
-t_cmd	*parse_input(char *line, t_env *g_env, int exit_code, int *input, t_mem *gc);
-t_token	*tokenize(t_mem *gc, char **tokens);
-int		check_syntax_error(t_token *tokens, t_mem *gc);
+//check sytnax
+int		check_syntax_error(t_parse *data);
+void	handle_quotes(t_split *s);
 void	check_quotes(t_token **tokens, t_mem *gc);
-char	**mysplit(char *str, t_mem *gc);
+int		check_quotes_syntax(t_token *tokens);
+
+//exit_code
 void	get_exit(t_token **tokens, int exit_code, t_mem *gc);
-void	add_token(t_token **start, t_token **end, char *content, const char *type, t_mem *gc);
-void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *end);
+void	add_token(t_token **start, char *content, const char *type, t_mem *gc);
+void	repl_token(t_token **token, t_token *curr, t_token *new, t_token *end);
 
 //utils
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);
-char	*our_strdup(t_mem *gc ,const char *s);
-char	*our_strndup(t_mem *gc, const char *str, size_t len, char skip_single_q, char skip_double_q);
+char	*our_strdup(t_mem *gc, const char *s);
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 
 #endif

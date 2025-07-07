@@ -6,11 +6,19 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 14:58:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:46:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	our_error(const char *msg)
+{
+	if (!msg)
+		return (1);
+	ft_putstr_fd(msg, 2);
+	return (1);
+}
 
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc)
 {
@@ -36,33 +44,14 @@ char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc)
 	return (substr);
 }
 
-char	*our_strndup(t_mem *gc, const char *str, size_t len, char skip_single_q, char skip_double_q)
-{
-	size_t	i;
-	char	*results;
-	int		k;
-
-	k = 0;
-	results = ft_malloc(gc, len + 1);
-	if (!results)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		if(str[i] != skip_single_q && str[i] != skip_double_q)
-			results[k++] = str[i];
-		i++;
-	}
-	results[k] = '\0';
-	return (results);
-}
-
-char	*our_strdup(t_mem *gc ,const char *s)
+char	*our_strdup(t_mem *gc, const char *s)
 {
 	size_t	i;
 	size_t	size;
 	char	*results;
 
+	if (!s)
+		return (NULL);
 	size = ft_strlen(s);
 	results = ft_malloc(gc, (size + 1) * sizeof(char));
 	if (!results)
@@ -85,7 +74,7 @@ char	*our_strjoin(t_mem *gc, char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	res = ft_malloc(gc , ft_strlen(s1) + ft_strlen(s2) + 1);
+	res = ft_malloc(gc, ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 		return (NULL);
 	i = 0;

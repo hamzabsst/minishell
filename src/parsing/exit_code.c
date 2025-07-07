@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exit_code.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 11:10:58 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/27 18:22:11 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:20:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_token(t_token **start, t_token **end, char *content, const char *type, t_mem *gc)
+void	add_token(t_token **start, char *content, const char *type, t_mem *gc)
 {
 	t_token	*new;
+	t_token	*current;
 
 	new = ft_malloc(gc, sizeof(t_token));
 	if (!new)
@@ -23,48 +24,51 @@ void	add_token(t_token **start, t_token **end, char *content, const char *type, 
 	new->type = our_strdup(gc, type);
 	new->next = NULL;
 	if (!*start)
+	{
 		*start = new;
-	else
-		(*end)->next = new;
-	*end = new;
+		return ;
+	}
+	current = *start;
+	while (current->next)
+		current = current->next;
+	current->next = new;
 }
 
-void	replace_token(t_token **tokens, t_token *curr, t_token *new_list, t_token *end)
+void	repl_token(t_token **tokens, t_token *curr, t_token *new, t_token *end)
 {
 	t_token	*tmp;
 
 	tmp = *tokens;
 	if (*tokens == curr)
-		*tokens = new_list;
+		*tokens = new;
 	else
 	{
 		while (tmp && tmp->next != curr)
 			tmp = tmp->next;
 		if (tmp)
-			tmp->next = new_list;
+			tmp->next = new;
 	}
 	if (end)
 		end->next = curr->next;
 }
 
-static void show_exit_code(t_token **tokens, t_token *curr, int exit_code, t_mem *gc)
+static void	repl_dollar(t_token **tokens, t_token *curr, int e_code, t_mem *gc)
 {
 	t_token	*new_list;
 	t_token	*end;
 	char	*code;
 
 	new_list = NULL;
-	end = NULL;
-	code = ft_itoa(exit_code);
+	code = ft_itoa(e_code);
 	ft_add_ptr(gc, code);
-	if (ft_strcmp(curr->content, "$?") == 0 || ft_strcmp(curr->content, "\"$?\"") == 0)
-		add_token(&new_list, &end, code, "WORD", gc);
-	else
-		add_token(&new_list, &end, ft_strdup(curr->content), curr->type, gc);
-	replace_token(tokens, curr, new_list, end);
+	add_token(&new_list, code, "WORD", gc);
+	end = new_list;
+	while (end && end->next)
+		end = end->next;
+	repl_token(tokens, curr, new_list, end);
 }
 
-void get_exit(t_token **tokens, int exit_code, t_mem *gc)
+void	get_exit(t_token **tokens, int exit_code, t_mem *gc)
 {
 	t_token	*curr;
 	t_token	*next;
@@ -73,12 +77,12 @@ void get_exit(t_token **tokens, int exit_code, t_mem *gc)
 	while (curr)
 	{
 		next = curr->next;
-		if ((ft_strcmp(curr->content, "$?") == 0 || ft_strcmp(curr->content, "\"$?\"") == 0)
-			&& ft_strcmp(curr->type, "WORD") == 0)
+		if ((!ft_strcmp(curr->content, "$?")
+				|| !ft_strcmp(curr->content, "\"$?\""))
+			&& !ft_strcmp(curr->type, "WORD"))
 		{
-			show_exit_code(tokens, curr, exit_code, gc);
+			repl_dollar(tokens, curr, exit_code, gc);
 		}
 		curr = next;
 	}
 }
-

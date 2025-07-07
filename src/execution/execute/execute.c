@@ -1,45 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.c                                          :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/19 15:21:34 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:59:25 by hbousset         ###   ########.fr       */
+/*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
+/*   Updated: 2025/07/07 15:25:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int builtin_pwd(void)
-{
-	char	*cwd;
-
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (our_perror("pwd: getcwd failed\n"));
-	ft_printf("%s\n", cwd);
-	free(cwd);
-	return (0);
-}
-
-static int	builtin_env(t_cmd *cmd)
-{
-	t_env	*current;
-
-	if (cmd->av[1])
-		return (ft_perror("env: No arguments or options allowed\n", NULL, NULL, cmd->gc));
-	if (!cmd->env)
-		return (ft_perror("command not found: env\n", NULL, NULL, cmd->gc));
-	current = cmd->env;
-	while (current)
-	{
-		ft_printf("%s=%s\n", current->var, current->content);
-		current = current->next;
-	}
-	return (0);
-}
 
 int	builtin(char *av)
 {
@@ -59,7 +30,7 @@ int	exec_builtin(t_cmd *cmd)
 	if (!ft_strcmp(cmd->av[0], "echo"))
 		return (builtin_echo(cmd));
 	else if (!ft_strcmp(cmd->av[0], "pwd"))
-		return (builtin_pwd());
+		return (builtin_pwd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "cd"))
 		return (builtin_cd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "env"))
@@ -71,4 +42,47 @@ int	exec_builtin(t_cmd *cmd)
 	else if (!ft_strcmp(cmd->av[0], "export"))
 		return (builtin_export(cmd));
 	return (1);
+}
+
+void	restore_io(int in_copy, int out_copy)
+{
+	if (in_copy != -1)
+		(dup2(in_copy, 0), close(in_copy));
+	if (out_copy != -1)
+		(dup2(out_copy, 1), close(out_copy));
+}
+
+static int	backup_io(int *in_copy, int *out_copy)
+{
+	*in_copy = dup(STDIN_FILENO);
+	*out_copy = dup(STDOUT_FILENO);
+	if (*in_copy == -1 || *out_copy == -1)
+	{
+		if (*in_copy != -1)
+			close(*in_copy);
+		if (*out_copy != -1)
+			close(*out_copy);
+		return (1);
+	}
+	return (0);
+}
+
+//handle the case when stdout is closed
+int	process_command(t_cmd *cmd)
+{
+	if (builtin(cmd->av[0]) && !cmd->next)
+	{
+		if (backup_io(&cmd->in_copy, &cmd->out_copy))
+			return (our_error("Failed to backup stdio\n"));
+		if (redirection(cmd))
+			return (restore_io(cmd->in_copy, cmd->out_copy), 1);
+		cmd->exit_code = exec_builtin(cmd);
+		restore_io(cmd->in_copy, cmd->out_copy);
+	}
+	else
+	{
+		cmd->exit_code = init_exec(cmd);
+		restore_io(cmd->in_copy, cmd->out_copy);
+	}
+	return (cmd->exit_code);
 }
