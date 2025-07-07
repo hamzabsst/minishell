@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:03:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	generate_filename(char *dest, int index)
 	long		combined_num;
 	pid_t		pid;
 
-	prefix = "/tmp/.minishell_heredoc_";
+	prefix = "/tmp/.heredoc_";
 	pid = get_pid_from_proc();
 	if (pid < 0)
 		pid = 1;

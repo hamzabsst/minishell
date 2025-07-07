@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:49:51 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:09:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*ft_getenv(t_env *env, const char *key);
 
 //built-in cmds
 int		builtin(char *av);
-int		builtin_pwd(void);
+int		builtin_pwd(t_cmd *cmd);
 int		builtin_env(t_cmd *cmd);
 int		builtin_echo(t_cmd *cmd);
 int		builtin_cd(t_cmd *cmd);
@@ -58,8 +58,7 @@ void	ft_free_all(t_mem *manager);
 char	*create_prompt(t_mem *gc, int exit_code);
 
 //error messages
-int		ft_error(const char *prefix, const char *token,
-			const char *suffix, t_mem *gc);
+int		ft_error(const char *prefix, const char *error, t_mem *gc);
 int		our_error(const char *msg);
 
 #endif

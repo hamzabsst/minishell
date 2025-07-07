@@ -6,33 +6,30 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 23:56:34 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:08:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_error(const char *prefix, const char *token,
-	const char *suffix, t_mem *gc)
+int	ft_error(const char *prefix, const char *error, t_mem *gc)
 {
 	char	*complete_msg;
 	size_t	total_len;
 
-	if (!prefix)
-		return (1);
 	total_len = ft_strlen(prefix);
-	if (token)
-		total_len += ft_strlen(token);
-	if (suffix)
-		total_len += ft_strlen(suffix);
+	if (error)
+		total_len += ft_strlen(error) + 3;
 	complete_msg = ft_malloc(gc, total_len + 1);
 	if (!complete_msg)
 		return (1);
 	ft_strlcpy(complete_msg, prefix, total_len + 1);
-	if (token)
-		ft_strlcat(complete_msg, token, total_len + 1);
-	if (suffix)
-		ft_strlcat(complete_msg, suffix, total_len + 1);
+	if (error)
+	{
+		ft_strlcat(complete_msg, ": ", total_len + 1);
+		ft_strlcat(complete_msg, error, total_len + 1);
+		ft_strlcat(complete_msg, "\n", total_len + 1);
+	}
 	ft_putstr_fd(complete_msg, 2);
 	return (1);
 }

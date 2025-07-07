@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:32:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:26:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,19 @@ static void	add_infile(t_cmd *cmd, char *filename)
 
 int	parse_redir(t_token **tokens, t_cmd *current)
 {
-	if (ft_strcmp((*tokens)->type, "REDIRECTION_OUT") == 0)
+	if (!ft_strcmp((*tokens)->type, "REDIRECTION_OUT"))
 	{
 		*tokens = (*tokens)->next;
 		if (*tokens)
 			add_outfile(current, (*tokens)->content, 0);
 	}
-	else if (ft_strcmp((*tokens)->type, "APPEND") == 0)
+	else if (!ft_strcmp((*tokens)->type, "APPEND"))
 	{
 		*tokens = (*tokens)->next;
 		if (*tokens)
 			add_outfile(current, (*tokens)->content, 1);
 	}
-	else if (ft_strcmp((*tokens)->type, "REDIRECTION_IN") == 0)
+	else if (!ft_strcmp((*tokens)->type, "REDIRECTION_IN"))
 	{
 		*tokens = (*tokens)->next;
 		if (*tokens)
@@ -92,10 +92,11 @@ int	parse_redir(t_token **tokens, t_cmd *current)
 	return (1);
 }
 
+//fix here_doc and infiles priority
 int	parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *exit_code)
 {
 	*tokens = (*tokens)->next;
-	if (*tokens && ft_strcmp((*tokens)->type, "DELIMITER") == 0)
+	if (*tokens && !ft_strcmp((*tokens)->type, "DELIMITER"))
 	{
 		current->delimiter = (*tokens)->content;
 		current->heredoc = heredoc(current, count, exit_code);

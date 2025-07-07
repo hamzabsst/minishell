@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 16:36:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:47:14 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <signal.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "structs.h"

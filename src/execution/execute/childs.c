@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 02:23:40 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:51:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:25:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@ static void	exec_cmd(t_cmd *cmd)
 		(ft_free_all(cmd->gc), exit(exit_code));
 	}
 	execve(path, cmd->av, env);
-	perror("execve");
+	ft_error("execve", strerror(errno), cmd->gc);
 	ft_free_all(cmd->gc);
 	exit(126);
 }
 
+//child process should inherite parent signal
 static void	exec_child(t_cmd *cmd, int in, int out)
 {
 	int	exit_code;

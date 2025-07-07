@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmds.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:25:09 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 15:25:53 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:20:30 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static int	count_til_pipe(t_token *tokens)
 	int	count;
 
 	count = 0;
-	if (tokens && ft_strcmp(tokens->type, "PIPE") == 0)
+	if (tokens && !ft_strcmp(tokens->type, "PIPE"))
 		tokens = tokens->next;
-	while (tokens && ft_strcmp(tokens->type, "PIPE") != 0)
+	while (tokens && ft_strcmp(tokens->type, "PIPE"))
 	{
-		if (ft_strcmp(tokens->type, "WORD") == 0)
+		if (!ft_strcmp(tokens->type, "WORD"))
 			count++;
 		tokens = tokens->next;
 	}
@@ -75,7 +75,7 @@ static int	parse_token(t_cmd **current, t_parse *data, int *i, int *exit_code)
 	int	count;
 
 	count = 0;
-	if (ft_strcmp(data->tokens->type, "PIPE") == 0)
+	if (!ft_strcmp(data->tokens->type, "PIPE"))
 	{
 		(*current)->next = create_cmd(data, *exit_code);
 		if (!(*current)->next)
@@ -83,11 +83,11 @@ static int	parse_token(t_cmd **current, t_parse *data, int *i, int *exit_code)
 		*current = (*current)->next;
 		*i = 0;
 	}
-	else if (ft_strcmp(data->tokens->type, "WORD") == 0)
+	else if (!ft_strcmp(data->tokens->type, "WORD"))
 	{
 		(*current)->av[(*i)++] = data->tokens->content;
 	}
-	else if (ft_strcmp(data->tokens->type, "HEREDOC") == 0)
+	else if (!ft_strcmp(data->tokens->type, "HEREDOC"))
 	{
 		if (parse_heredoc(&data->tokens, *current, &count, exit_code))
 			return (-1);

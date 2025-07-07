@@ -6,21 +6,25 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:38:36 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_cmd *cmd)
 {
 	char	*cwd;
+	char	*full;
 
-	cwd = getcwd(NULL, 0);
+	cwd = malloc(1024);
+	if (cwd != NULL)
+		getcwd(cwd, 1024);
 	if (!cwd)
 		return (our_error("pwd: getcwd failed\n"));
-	ft_printf("%s\n", cwd);
+	full = our_strjoin(cmd->gc, cwd, "\n");
 	free(cwd);
+	ft_putstr_fd(full, 1);
 	return (0);
 }
 
@@ -53,18 +57,21 @@ int	builtin_echo(t_cmd *cmd)
 {
 	int		i;
 	int		newline;
+	char	*result;
 
 	newline = 1;
 	i = 1;
+	result = our_strdup(cmd->gc, "");
 	handle_flag(cmd->av, &i, &newline);
 	while (cmd->av[i])
 	{
-		ft_putstr_fd(cmd->av[i], 1);
+		result = our_strjoin(cmd->gc, result, cmd->av[i]);
 		if (cmd->av[i + 1])
-			ft_putstr_fd(" ", 1);
+			result = our_strjoin(cmd->gc, result, " ");
 		i++;
 	}
 	if (newline)
-		ft_putstr_fd("\n", 1);
+		result = our_strjoin(cmd->gc, result, "\n");
+	ft_putstr_fd(result, 1);
 	return (0);
 }

@@ -53,17 +53,17 @@ t_token	*tokenize(t_parse *data)
 	while (data->splited[++i])
 	{
 		type = "WORD";
-		if (ft_strcmp(data->splited[i], "|") == 0)
+		if (!ft_strcmp(data->splited[i], "|"))
 			type = "PIPE";
-		else if (ft_strcmp(data->splited[i], ">") == 0)
+		else if (!ft_strcmp(data->splited[i], ">"))
 			type = "REDIRECTION_OUT";
-		else if (ft_strcmp(data->splited[i], "<") == 0)
+		else if (!ft_strcmp(data->splited[i], "<"))
 			type = "REDIRECTION_IN";
-		else if (ft_strcmp(data->splited[i], ">>") == 0)
+		else if (!ft_strcmp(data->splited[i], ">>"))
 			type = "APPEND";
-		else if (ft_strcmp(data->splited[i], "<<") == 0)
+		else if (!ft_strcmp(data->splited[i], "<<"))
 			type = "HEREDOC";
-		else if (i > 0 && ft_strcmp(data->splited[i - 1], "<<") == 0)
+		else if (i > 0 && !ft_strcmp(data->splited[i - 1], "<<"))
 			type = "DELIMITER";
 		add_token_back(&head, allocate_token(data->gc, data->splited[i], type));
 	}

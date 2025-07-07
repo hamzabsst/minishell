@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 10:39:41 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:46:23 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ char	*our_strdup(t_mem *gc, const char *s)
 	size_t	size;
 	char	*results;
 
+	if (!s)
+		return (NULL);
 	size = ft_strlen(s);
 	results = ft_malloc(gc, (size + 1) * sizeof(char));
 	if (!results)

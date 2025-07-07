@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:10:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ int	builtin_exit(t_cmd *cmd)
 	exit_code_ll = ft_atoll(cmd->av[1]);
 	if (is_not_num(cmd->av[1]) || exit_code_ll == LLONG_MAX + 1ULL)
 	{
-		ft_error("exit: ", cmd->av[1],
-			": numeric argument required\n", cmd->gc);
+		ft_error("exit", "numeric argument required", cmd->gc);
 		cmd->exit_code = 2;
 		cleanup_and_exit(cmd);
 	}

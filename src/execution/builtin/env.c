@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 14:22:58 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:09:47 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,15 +108,15 @@ int	builtin_env(t_cmd *cmd)
 
 	if (cmd->av[1])
 	{
-		ft_error("env: ", "No arguments or options allowed", "\n", cmd->gc);
+		ft_error("env", "No arguments or options allowed", cmd->gc);
 		return (1);
 	}
 	if (!cmd->env)
-		return (ft_error("env: ", "is not set", "\n", cmd->gc));
+		return (ft_error("env", "Environments are not set", cmd->gc));
 	current = cmd->env;
 	while (current)
 	{
-		ft_printf("%s=%s\n", current->var, current->content);
+		printf("%s=%s\n", current->var, current->content);
 		current = current->next;
 	}
 	return (0);

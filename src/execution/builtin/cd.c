@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:08:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,20 +76,25 @@ int	builtin_cd(t_cmd *cmd)
 	int		ret;
 	char	*path;
 
+	oldpwd = malloc(1024);
+	if (oldpwd != NULL)
+		getcwd(oldpwd, 1024);
 	if (handle_path(cmd))
-		return (1);
+		return (free(oldpwd), 1);
 	if (!cmd->av[1] || !*cmd->av[1])
 		path = ft_getenv(cmd->env, "HOME");
 	else
 		path = cmd->av[1];
-	oldpwd = ft_getenv(cmd->env, "PWD");
+	if (!path)
+		return (free(oldpwd), 0);
 	if (chdir(path) == -1)
-		return (ft_error(path, ": No such file or directory", "\n", cmd->gc));
-	if (update_env(cmd, "OLDPWD", oldpwd))
-		return (1);
-	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
-		return (our_error("cd: getcwd failed\n"));
+		return (free(oldpwd), ft_error(path, strerror(errno), cmd->gc));
+	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
+		return (free(oldpwd), 1);
+	free(oldpwd);
+	newpwd = malloc(1024);
+	if (newpwd != NULL)
+		getcwd(newpwd, 1024);
 	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

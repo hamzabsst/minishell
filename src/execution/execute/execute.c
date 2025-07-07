@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:25:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	exec_builtin(t_cmd *cmd)
 	if (!ft_strcmp(cmd->av[0], "echo"))
 		return (builtin_echo(cmd));
 	else if (!ft_strcmp(cmd->av[0], "pwd"))
-		return (builtin_pwd());
+		return (builtin_pwd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "cd"))
 		return (builtin_cd(cmd));
 	else if (!ft_strcmp(cmd->av[0], "env"))
@@ -67,6 +67,7 @@ static int	backup_io(int *in_copy, int *out_copy)
 	return (0);
 }
 
+//handle the case when stdout is closed
 int	process_command(t_cmd *cmd)
 {
 	if (builtin(cmd->av[0]) && !cmd->next)

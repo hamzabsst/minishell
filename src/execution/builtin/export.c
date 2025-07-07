@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 14:54:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:10:24 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ static int	print_export(t_cmd *cmd)
 		if (equal)
 		{
 			*equal = '\0';
-			ft_printf("declare -x %s=\"%s\"\n", env_array[i], equal + 1);
+			printf("declare -x %s=\"%s\"\n", env_array[i], equal + 1);
 			*equal = '=';
 		}
 		else
-			ft_printf("declare -x %s\n", env_array[i]);
+			printf("declare -x %s\n", env_array[i]);
 		i++;
 	}
 	return (0);
@@ -92,8 +92,7 @@ int	builtin_export(t_cmd *cmd)
 	while (cmd->av[i])
 	{
 		if (!identifier(cmd->av[i]))
-			ft_error("export: `", cmd->av[i],
-				"': not a valid identifier\n", cmd->gc);
+			ft_error(cmd->av[i], "not a valid identifier", cmd->gc);
 		else
 			process_av(cmd, cmd->av[i]);
 		i++;
