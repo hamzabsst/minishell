@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 11:47:29 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:09:47 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	add_var_back(t_env **head, t_env *new)
 	if (!*head)
 	{
 		*head = new;
-		return;
+		return ;
 	}
 	tmp = *head;
 	while (tmp->next)
@@ -77,8 +77,8 @@ static int	parse_env(const char *env, char **var, char **value, t_mem *gc)
 
 t_env	*dup_env(char **env, t_mem *gc)
 {
-	t_env	*head;
-	t_env	*new;
+	t_env		*head;
+	t_env		*new;
 	char		*var;
 	char		*value;
 	int			i;
@@ -102,41 +102,22 @@ t_env	*dup_env(char **env, t_mem *gc)
 	return (head);
 }
 
-char **env_to_array(t_cmd *cmd)
+int	builtin_env(t_cmd *cmd)
 {
 	t_env	*current;
-	char	**array;
-	char	*temp;
-	int		count;
-	int		i;
 
-	count = 0;
+	if (cmd->av[1])
+	{
+		ft_error("env", "No arguments or options allowed", cmd->gc);
+		return (1);
+	}
+	if (!cmd->env)
+		return (ft_error("env", "Environments are not set", cmd->gc));
 	current = cmd->env;
 	while (current)
 	{
-		count++;
+		printf("%s=%s\n", current->var, current->content);
 		current = current->next;
 	}
-	array = ft_malloc(cmd->gc, sizeof(char *) * (count + 1));
-	if (!array)
-		return (NULL);
-	current = cmd->env;
-	i = 0;
-	while (current && i < count)
-	{
-		if (current->content && ft_strlen(current->content) > 0)
-		{
-			temp = our_strjoin(cmd->gc, current->var, "=");
-			if (temp)
-				array[i] = our_strjoin(cmd->gc, temp, current->content);
-		}
-		else
-			array[i] = our_strdup(cmd->gc, current->var);
-		if (!array[i])
-			return (NULL);
-		current = current->next;
-		i++;
-	}
-	array[i] = NULL;
-	return (array);
+	return (0);
 }

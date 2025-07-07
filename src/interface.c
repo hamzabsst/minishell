@@ -6,40 +6,30 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:51:27 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:08:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	our_perror(const char *msg)
-{
-	if (!msg)
-		return (1);
-	ft_putstr_fd(msg, 2);
-	return (1);
-}
-
-int ft_perror(const char *prefix, const char *token, const char *suffix, t_mem *gc)
+int	ft_error(const char *prefix, const char *error, t_mem *gc)
 {
 	char	*complete_msg;
 	size_t	total_len;
 
-	if (!prefix)
-		return (1);
 	total_len = ft_strlen(prefix);
-	if (token)
-		total_len += ft_strlen(token);
-	if (suffix)
-		total_len += ft_strlen(suffix);
+	if (error)
+		total_len += ft_strlen(error) + 3;
 	complete_msg = ft_malloc(gc, total_len + 1);
 	if (!complete_msg)
 		return (1);
 	ft_strlcpy(complete_msg, prefix, total_len + 1);
-	if (token)
-		ft_strlcat(complete_msg, token, total_len + 1);
-	if (suffix)
-		ft_strlcat(complete_msg, suffix, total_len + 1);
+	if (error)
+	{
+		ft_strlcat(complete_msg, ": ", total_len + 1);
+		ft_strlcat(complete_msg, error, total_len + 1);
+		ft_strlcat(complete_msg, "\n", total_len + 1);
+	}
 	ft_putstr_fd(complete_msg, 2);
 	return (1);
 }
@@ -53,7 +43,8 @@ static char	*get_short_pwd(t_mem *gc)
 	short_pwd = ft_malloc(gc, 256);
 	if (!cwd || !short_pwd)
 		return (free(cwd), ft_strlcpy(short_pwd, "~", 256), short_pwd);
-	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"), ft_strlen(cwd)) == cwd)
+	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"),
+			ft_strlen(cwd)) == cwd)
 	{
 		ft_strlcpy(short_pwd, "~", 256);
 		ft_strlcat(short_pwd, cwd + ft_strlen(getenv("HOME")), 256);
@@ -72,18 +63,18 @@ static char	*get_short_pwd(t_mem *gc)
 
 static char	*get_username(t_mem *gc)
 {
-	char	*username;
 	const char	*user_env;
+	char		*username;
 
 	user_env = getenv("USER");
 	if (!user_env)
 		user_env = getenv("LOGNAME");
 	if (!user_env)
 		user_env = "user";
-	username = ft_malloc(gc, strlen(user_env) + 1);
+	username = ft_malloc(gc, ft_strlen(user_env) + 1);
 	if (!username)
 		return (NULL);
-	ft_strlcpy(username, user_env, strlen(user_env) + 1);
+	ft_strlcpy(username, user_env, ft_strlen(user_env) + 1);
 	return (username);
 }
 
@@ -99,12 +90,10 @@ static void	add_color(char *prompt, const char *color, size_t size)
 
 char	*create_prompt(t_mem *gc, int exit_code)
 {
-	char	*prompt;
 	const char	*pwd;
+	char		*prompt;
 
 	pwd = get_short_pwd(gc);
-	if (!pwd || !get_username(gc))
-		pwd = "~";
 	prompt = ft_malloc(gc, 1024);
 	if (!prompt)
 		return (NULL);
@@ -119,7 +108,7 @@ char	*create_prompt(t_mem *gc, int exit_code)
 	ft_strlcat(prompt, "\n", 1024);
 	if (exit_code == 0)
 		add_color(prompt, BOLD_GREEN, 1024);
-	else
+	else if (exit_code <= 128)
 		add_color(prompt, BOLD_RED, 1024);
 	ft_strlcat(prompt, "\001➜\002 \x7f", 1024);
 	add_color(prompt, RESET, 1024);

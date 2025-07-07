@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/26 09:21:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 15:08:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_getenv(t_env *env, const char *key)
 	current = env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 			return (current->content);
 		current = current->next;
 	}
@@ -38,7 +38,7 @@ int	update_env(t_cmd *cmd, const char *key, const char *value)
 	current = cmd->env;
 	while (current)
 	{
-		if (current->var && ft_strcmp(current->var, key) == 0)
+		if (current->var && !ft_strcmp(current->var, key))
 		{
 			if (current->content)
 				current->content = our_strdup(cmd->gc, value);
@@ -59,14 +59,14 @@ int	update_env(t_cmd *cmd, const char *key, const char *value)
 
 static int	handle_path(t_cmd *cmd)
 {
-	if (!cmd->av || !*cmd->av)
+	if (!cmd->av[1])
 		return (0);
-	else if (*cmd->av[0] == '~' || *cmd->av[0] == '-')
-		return (our_perror("cd: only absolute or relative paths are allowed\n"));
-	else if (cmd->av[1])
-		return (our_perror("cd: too many arguments\n"));
+	else if (*cmd->av[1] == '~' || *cmd->av[1] == '-')
+		return (our_error("cd: only absolute or relative paths are allowed\n"));
+	else if (cmd->av[2])
+		return (our_error("cd: too many arguments\n"));
 	else
-		return (1);
+		return (0);
 }
 
 int	builtin_cd(t_cmd *cmd)
@@ -76,20 +76,25 @@ int	builtin_cd(t_cmd *cmd)
 	int		ret;
 	char	*path;
 
-	if (handle_path(cmd) == 1)
-		return (1);
+	oldpwd = malloc(1024);
+	if (oldpwd != NULL)
+		getcwd(oldpwd, 1024);
+	if (handle_path(cmd))
+		return (free(oldpwd), 1);
 	if (!cmd->av[1] || !*cmd->av[1])
 		path = ft_getenv(cmd->env, "HOME");
 	else
 		path = cmd->av[1];
-	oldpwd = ft_getenv(cmd->env, "PWD");
+	if (!path)
+		return (free(oldpwd), 0);
 	if (chdir(path) == -1)
-		return (ft_perror(path, ": No such file or directory", "\n", cmd->gc));
+		return (free(oldpwd), ft_error(path, strerror(errno), cmd->gc));
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)
-		return (1);
-	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
-		return (our_perror("cd: getcwd failed\n"));
+		return (free(oldpwd), 1);
+	free(oldpwd);
+	newpwd = malloc(1024);
+	if (newpwd != NULL)
+		getcwd(newpwd, 1024);
 	ret = update_env(cmd, "PWD", newpwd);
 	return (free(newpwd), ret);
 }

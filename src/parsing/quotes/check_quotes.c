@@ -3,20 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   check_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchaman <abchaman@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:30:00 by abchaman          #+#    #+#             */
-/*   Updated: 2025/06/26 14:23:17 by abchaman         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:17:12 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
+
+static int	count_quoted_chars(char *input, int *i)
+{
+	char	quote;
+	int		count;
+
+	count = 0;
+	quote = input[(*i)++];
+	while (input[*i] && input[*i] != quote)
+	{
+		(*i)++;
+		count++;
+	}
+	return (count);
+}
 
 static int	count_without_quotes(t_token *curr)
 {
-	int		count;
-	char	quote;
 	char	*input;
+	int		count;
 	int		i;
 
 	input = curr->content;
@@ -24,24 +38,8 @@ static int	count_without_quotes(t_token *curr)
 	i = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'')
-		{
-			quote = input[i++];
-			while (input[i] && input[i] != quote)
-			{
-				i++;
-				count++;
-			}
-		}
-		else if (input[i] == '"')
-		{
-			quote = input[i++];
-			while (input[i] && input[i] != quote)
-			{
-				i++;
-				count++;
-			}
-		}
+		if (input[i] == '\'' || input[i] == '"')
+			count += count_quoted_chars(input, &i);
 		else
 			count++;
 		i++;
@@ -49,42 +47,40 @@ static int	count_without_quotes(t_token *curr)
 	return (count);
 }
 
+static char	*process_quotes(char *input, int *i, char *word, int *j)
+{
+	char	quote;
+
+	if (input[*i] == '\'' || input[*i] == '\"')
+	{
+		quote = input[(*i)++];
+		while (input[*i] && input[*i] != quote)
+			word[(*j)++] = input[(*i)++];
+	}
+	else
+		word[(*j)++] = input[*i];
+	(*i)++;
+	return (word);
+}
+
 static void	remove_quotation(t_token **tokens, t_token *curr, t_mem *gc)
 {
-	char	*input;
+	t_token	*new_list;
 	char	*word;
 	int		i;
-	int		k;
-	t_token	*new_list;
-	t_token	*end;
+	int		j;
 
 	new_list = NULL;
-	end = NULL;
-	k = 0;
 	i = 0;
-	input = curr->content;
+	j = 0;
 	word = ft_malloc(gc, count_without_quotes(curr) + 1);
-	while (input[i])
-	{
-		if (input[i] == '\'')
-		{
-			i++;
-			while (input[i] && input[i] != '\'')
-				word[k++] = input[i++];
-		}
-		else if (input[i] == '\"')
-		{
-			i++;
-			while (input[i] && input[i] != '\"')
-				word[k++] = input[i++];
-		}
-		else
-			word[k++] = input[i];
-		i++;
-	}
-	word[k] = '\0';
-	add_token(&new_list, &end, word, "WORD", gc);
-	replace_token(tokens, curr, new_list, end);
+	while (curr->content[i])
+		process_quotes(curr->content, &i, word, &j);
+	word[j] = '\0';
+	add_token(&new_list, word, "WORD", gc);
+	while (new_list && new_list->next)
+		new_list = new_list->next;
+	repl_token(tokens, curr, new_list, new_list);
 }
 
 void	check_quotes(t_token **tokens, t_mem *gc)
@@ -96,7 +92,9 @@ void	check_quotes(t_token **tokens, t_mem *gc)
 	while (curr)
 	{
 		next = curr->next;
-		if (ft_strcmp(curr->type, "WORD") == 0 && (ft_strchr(curr->content, '\'') || ft_strchr(curr->content, '\"')))
+		if (!ft_strcmp(curr->type, "WORD")
+			&& (ft_strchr(curr->content, '\'')
+				|| ft_strchr(curr->content, '\"')))
 		{
 			remove_quotation(tokens, curr, gc);
 		}

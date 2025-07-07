@@ -6,104 +6,89 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/06/25 20:51:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/07 14:11:06 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*remove_quotes(t_cmd *cmd)
+static void	handle_heredoc_sigint(int sig)
 {
-	size_t	len;
-
-	if (!cmd->delimiter)
-		return (NULL);
-	len = ft_strlen(cmd->delimiter);
-	if (len >= 2 && ((cmd->delimiter[0] == '\'' && cmd->delimiter[len - 1] == '\'')
-			|| (cmd->delimiter[0] == '"' && cmd->delimiter[len - 1] == '"')))
-		return (our_strndup(cmd->gc, cmd->delimiter + 1, len - 2, 0, 0));
-	return (our_strdup(cmd->gc, cmd->delimiter));
+	(void)sig;
+	g_var = 2;
+	ft_putstr_fd("\n", 1);
+	close(STDIN_FILENO);
 }
 
-static int	compare_delimiter(const char *line, const char *delimiter)
+static void	clean_heredoc(int fd, const char *path, int in)
 {
-	size_t	delim_len;
-	size_t	line_len;
+	if (fd >= 0)
+		close(fd);
+	if (path)
+		unlink(path);
+	if (in >= 0)
+		restore_io(in, -1);
+}
 
-	if (!line || !delimiter)
-		return (0);
-	delim_len = ft_strlen(delimiter);
-	line_len = ft_strlen(line);
-	if (line_len == delim_len)
-		return (ft_strncmp(line, delimiter, delim_len) == 0);
-	if (line_len == delim_len + 1 && line[line_len - 1] == '\n')
-		return (ft_strncmp(line, delimiter, delim_len) == 0);
-	return (0);
+static int	read_heredoc(int fd, char *delim, int in_backup, int *exit_code)
+{
+	char	*line;
+	void	(*old_handler)(int);
+
+	old_handler = signal(SIGINT, handle_heredoc_sigint);
+	while (1)
+	{
+		if (g_var == 2)
+			return (*exit_code = 130, g_var = 0,
+				signal(SIGINT, old_handler), 1);
+		line = readline("heredoc> ");
+		if (g_var == 2)
+			return (*exit_code = 130, g_var = 0,
+				free(line), signal(SIGINT, old_handler), 1);
+		if (!line)
+			return (our_error("warning: here-doc delimited by EOF\n"),
+				restore_io(in_backup, -1), signal(SIGINT, old_handler)
+				, g_var = 0, 0);
+		if (!ft_strcmp(line, delim))
+			return (free(line), restore_io(in_backup, -1),
+				signal(SIGINT, old_handler), g_var = 0, 0);
+		add_history(line);
+		ft_putendl_fd(line, fd);
+		free(line);
+	}
 }
 
 static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 {
-	char	*clean_delim;
-	int		stdin_backup;
+	int	stdin_backup;
 
 	if (!cmd || !cmd->delimiter)
-		return (-1);
-	clean_delim = remove_quotes(cmd);
-	if (!clean_delim)
 		return (-1);
 	unlink(filepath);
 	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (*fd < 0)
-		return (our_perror("heredoc: failed to create temp file"), -1);
+		return (our_error("heredoc: failed to create temp file\n"), -1);
 	stdin_backup = dup(STDIN_FILENO);
 	if (stdin_backup == -1)
-		return (clean_heredoc(*fd, filepath, -1, NULL), -1);
+		return (clean_heredoc(*fd, filepath, -1), -1);
 	return (stdin_backup);
 }
 
-static int	read_heredoc(int fd, char *clean_delim, int in_backup, char *path)
-{
-	char	*line;
-	void	(*handler)(int);
-
-	handler = signal(SIGINT, handle_heredoc_sigint);
-	while (1)
-	{
-		if (g_var == 2)
-			return (clean_heredoc(fd, path, in_backup, handler), -1);
-		(write(STDOUT_FILENO, "> ", 2), line = get_next_line(0));
-		if (g_var == 2)
-			return (get_next_line(-1), free(line),
-				clean_heredoc(fd, path, in_backup, handler), -1);
-		if (!line)
-		{
-			our_perror("\nwarning: here-document delimited by end-of-file\n");
-			break ;
-		}
-		if (compare_delimiter(line, clean_delim))
-		{
-			(get_next_line(-1), free(line));
-			break ;
-		}
-		(write(fd, line, ft_strlen(line)), free(line));
-	}
-	return (restore_io(in_backup, -1), signal(SIGINT, handler), 0);
-}
-
-char	*heredoc(t_cmd *cmd, int *index)
+char	*heredoc(t_cmd *cmd, int *index, int *exit_code)
 {
 	char	*clean_delim;
 	char	filepath[128];
 	int		fd;
 	int		stdin_backup;
 
-	generate_filename(filepath, sizeof(filepath), (*index)++);
+	generate_filename(filepath, (*index)++);
 	stdin_backup = setup_heredoc(cmd, filepath, &fd);
 	if (stdin_backup == -1)
 		return (NULL);
 	clean_delim = remove_quotes(cmd);
-	if (read_heredoc(fd, clean_delim, stdin_backup, filepath) == -1)
-		return (NULL);
-	close(fd);
-	return (our_strdup(cmd->gc, filepath));
+	if (!clean_delim)
+		return (clean_heredoc(fd, filepath, stdin_backup), NULL);
+	if (read_heredoc(fd, clean_delim, stdin_backup, exit_code))
+		return (clean_heredoc(fd, filepath, stdin_backup), NULL);
+	return (close(fd), our_strdup(cmd->gc, filepath));
 }
