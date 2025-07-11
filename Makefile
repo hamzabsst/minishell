@@ -1,11 +1,11 @@
 NAME	= minishell
-CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc
+CC		= gcc
+CFLAGS	= -Iinc
 
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS := src/execution/builtin/cd.c src/execution/builtin/echo.c src/execution/builtin/env.c \
+SRCS := src/execution/builtin/echo.c src/execution/builtin/cd.c src/execution/builtin/env.c \
 		src/execution/builtin/exit.c src/execution/builtin/export.c src/execution/builtin/export_utils.c \
 		src/execution/builtin/unset.c src/execution/execute/childs.c src/execution/execute/env_to_array.c \
 		src/execution/execute/execute.c src/execution/execute/get_cmds.c src/execution/execute/parent.c \
