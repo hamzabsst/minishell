@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 14:38:36 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 13:26:15 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@ int	builtin_pwd(t_cmd *cmd)
 	char	*cwd;
 	char	*full;
 
-	cwd = malloc(1024);
-	if (cwd != NULL)
-		getcwd(cwd, 1024);
+	cwd = get_cwd();
 	if (!cwd)
-		return (our_error("pwd: getcwd failed\n"));
+		return (1);
 	full = our_strjoin(cmd->gc, cwd, "\n");
 	free(cwd);
 	ft_putstr_fd(full, 1);

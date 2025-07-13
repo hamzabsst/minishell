@@ -41,4 +41,8 @@ fclean: clean
 
 re: fclean all
 
+t: clean all
+	@rm -f $(OBJS)
+	@./valgrindd ./$(NAME)
+
 .PHONY: all clean fclean re

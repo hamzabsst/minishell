@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:25:52 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 19:13:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static char	**get_path(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 //this need to be rechecked
-
 static char	*find_in_paths(char *av, char **paths, t_mem *gc)
 {
 	char	*full;

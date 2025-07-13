@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:54:37 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 02:52:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 13:37:50 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>
+# include <linux/limits.h>
 # include <stdarg.h>
 # include <fcntl.h>
 

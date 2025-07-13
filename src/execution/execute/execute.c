@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:25:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 19:29:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,22 @@ void	restore_io(int in_copy, int out_copy)
 
 static int	backup_io(int *in_copy, int *out_copy)
 {
+	int	temp_fd;
+
 	*in_copy = dup(STDIN_FILENO);
+	while (*in_copy != -1 && *in_copy < 3)
+	{
+		temp_fd = *in_copy;
+		*in_copy = dup(STDIN_FILENO);
+		close(temp_fd);
+	}
 	*out_copy = dup(STDOUT_FILENO);
+	while (*out_copy != -1 && *out_copy < 3)
+	{
+		temp_fd = *out_copy;
+		*out_copy = dup(STDOUT_FILENO);
+		close(temp_fd);
+	}
 	if (*in_copy == -1 || *out_copy == -1)
 	{
 		if (*in_copy != -1)
@@ -67,13 +81,12 @@ static int	backup_io(int *in_copy, int *out_copy)
 	return (0);
 }
 
-//handle the case when stdout is closed
 int	process_command(t_cmd *cmd)
 {
 	if (builtin(cmd->av[0]) && !cmd->next)
 	{
 		if (backup_io(&cmd->in_copy, &cmd->out_copy))
-			return (our_error("Failed to backup stdio\n"));
+			return (our_error("write error: Bad file descriptor\n"));
 		if (redirection(cmd))
 			return (restore_io(cmd->in_copy, cmd->out_copy), 1);
 		cmd->exit_code = exec_builtin(cmd);

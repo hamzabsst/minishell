@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 02:23:40 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:25:30 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 18:51:33 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,18 @@ static void	exec_cmd(t_cmd *cmd)
 }
 
 //child process should inherite parent signal
-static void	exec_child(t_cmd *cmd, int in, int out)
+static void	exec_child(t_cmd *cmd, int stdin, int pipeout)
 {
 	int	exit_code;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (dup2(in, 0) == -1 || dup2(out, 1) == -1)
-		(our_error("dup2: command failed\n"), ft_free_all(cmd->gc), exit(1));
-	if (in != STDIN_FILENO)
-		close(in);
-	if (out != STDOUT_FILENO)
-		close(out);
+	dup2(stdin, 0);
+	dup2(pipeout, 1);
+	if (stdin != STDIN_FILENO)
+		close(stdin);
+	if (pipeout != STDOUT_FILENO)
+		close(pipeout);
 	if (redirection(cmd))
 		(ft_free_all(cmd->gc), exit(1));
 	if (builtin(cmd->av[0]))
@@ -59,7 +59,7 @@ static void	exec_child(t_cmd *cmd, int in, int out)
 	exec_cmd(cmd);
 }
 
-pid_t	init_childs(t_cmd *cmd, int fd_in, int *pipe_fd)
+pid_t	init_childs(t_cmd *cmd, int stdin, int *pipe_fd)
 {
 	pid_t	pid;
 
@@ -67,8 +67,8 @@ pid_t	init_childs(t_cmd *cmd, int fd_in, int *pipe_fd)
 	if (pid == -1)
 	{
 		our_error("fork failed\n");
-		if (fd_in != 0)
-			close(fd_in);
+		if (stdin != 0)
+			close(stdin);
 		if (cmd->next && pipe_fd[1] != 1)
 			close(pipe_fd[1]);
 		return (-1);
@@ -77,7 +77,7 @@ pid_t	init_childs(t_cmd *cmd, int fd_in, int *pipe_fd)
 	{
 		if (pipe_fd[0] && pipe_fd[0] != 0)
 			close(pipe_fd[0]);
-		exec_child(cmd, fd_in, pipe_fd[1]);
+		exec_child(cmd, stdin, pipe_fd[1]);
 	}
 	return (pid);
 }

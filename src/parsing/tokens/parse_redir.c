@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:32:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:26:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 12:56:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int	parse_redir(t_token **tokens, t_cmd *current)
 	}
 	else if (!ft_strcmp((*tokens)->type, "REDIRECTION_IN"))
 	{
+		current->heredoc = NULL;
+		current->delimiter = NULL;
 		*tokens = (*tokens)->next;
 		if (*tokens)
 			add_infile(current, (*tokens)->content);
@@ -92,12 +94,12 @@ int	parse_redir(t_token **tokens, t_cmd *current)
 	return (1);
 }
 
-//fix here_doc and infiles priority
 int	parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *exit_code)
 {
 	*tokens = (*tokens)->next;
 	if (*tokens && !ft_strcmp((*tokens)->type, "DELIMITER"))
 	{
+		current->infiles = NULL;
 		current->delimiter = (*tokens)->content;
 		current->heredoc = heredoc(current, count, exit_code);
 		if (!current->heredoc)
