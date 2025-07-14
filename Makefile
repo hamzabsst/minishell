@@ -1,5 +1,5 @@
 NAME	= minishell
-CC		= gcc
+CC		= cc
 CFLAGS	= -Iinc
 
 MYLIB_DIR	= mylib

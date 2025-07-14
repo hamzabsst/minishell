@@ -53,7 +53,8 @@ static int	get_input(char **line, int exit_code, t_mem *gc)
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
 	rl_outstream = stderr;
-	*line = readline(create_prompt(gc, exit_code));
+	// *line = readline(create_prompt(gc, exit_code));
+	*line = readline("mini > ");
 	if (!*line)
 		return (write(1, "exit\n", 5), 0);
 	if (!**line)

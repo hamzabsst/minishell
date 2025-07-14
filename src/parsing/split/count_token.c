@@ -40,8 +40,9 @@ static int	handle_operator(char *s, int *i)
 
 static int	handle_word(char *s, int *i)
 {
-	while (s[*i] && s[*i] != ' ' && s[*i] != '>' && s[*i] != '<'
-		&& s[*i] != '|' && s[*i] != '\'' && s[*i] != '\"')
+	while (s[*i] && s[*i] != ' ' && s[*i] != '\t' && s[*i] != '\n' 
+		&& s[*i] != '>' && s[*i] != '<' && s[*i] != '|' 
+		&& s[*i] != '\'' && s[*i] != '\"')
 		(*i)++;
 	return (1);
 }
@@ -55,7 +56,7 @@ int	count_token(char *s)
 	count = 0;
 	while (s[i])
 	{
-		while (s[i] == ' ')
+		while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
 			i++;
 		if (!s[i])
 			break ;
