@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 02:23:40 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 18:51:33 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:13:00 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,12 @@ static void	exec_cmd(t_cmd *cmd)
 	exit(126);
 }
 
-//child process should inherite parent signal
 static void	exec_child(t_cmd *cmd, int stdin, int pipeout)
 {
 	int	exit_code;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, cmd->sigint);
+	signal(SIGQUIT, cmd->sigquit);
 	dup2(stdin, 0);
 	dup2(pipeout, 1);
 	if (stdin != STDIN_FILENO)

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:09:47 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:19:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,8 @@ t_env	*allocate_var(const char *var, const char *content, t_mem *gc)
 	if (content)
 		new->content = our_strdup(gc, content);
 	else
-		new->content = our_strdup(gc, "");
-	if (!new->content)
-		return (NULL);
+		new->content = NULL;
+	//changed here empty string to NULL idk if its the rright choice
 	new->next = NULL;
 	return (new);
 }
@@ -116,6 +115,8 @@ int	builtin_env(t_cmd *cmd)
 	current = cmd->env;
 	while (current)
 	{
+		if (write(STDOUT_FILENO, "", 0) == -1)
+			return (125);
 		printf("%s=%s\n", current->var, current->content);
 		current = current->next;
 	}

@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc
-
+CFLAGS	= -Wall -Wextra -Werror -Iinc -g
+#remove -g
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
@@ -40,7 +40,7 @@ fclean: clean
 	@echo "full clean completed \033[1;31m✔\033[0m"
 
 re: fclean all
-
+#remove this as well
 t: clean all
 	@rm -f $(OBJS)
 	@./valgrindd ./$(NAME)

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:03:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:07:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	tmp_to_heredoc(t_cmd *cmd)
 		return (1);
 	if (cmd->heredoc_processed)
 		return (0);
-	fd = open(cmd->heredoc, O_RDONLY);
+	fd = ft_open(cmd->heredoc, O_RDONLY, 0);
 	if (fd < 0)
 	{
 		unlink(cmd->heredoc);
@@ -74,7 +74,7 @@ static pid_t	get_pid_from_proc(void)
 	int		pid;
 	int		i;
 
-	fd = open("/proc/self/stat", O_RDONLY);
+	fd = ft_open("/proc/self/stat", O_RDONLY, 0);
 	if (fd < 0)
 		return (-1);
 	bytes_read = read(fd, buffer, sizeof(buffer) - 1);

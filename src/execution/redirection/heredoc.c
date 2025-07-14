@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 14:11:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 17:31:28 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	setup_heredoc(t_cmd *cmd, char *filepath, int *fd)
 	if (!cmd || !cmd->delimiter)
 		return (-1);
 	unlink(filepath);
-	*fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	*fd = ft_open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (*fd < 0)
 		return (our_error("heredoc: failed to create temp file\n"), -1);
 	stdin_backup = dup(STDIN_FILENO);

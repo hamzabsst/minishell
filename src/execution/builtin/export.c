@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 09:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:10:24 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:50:58 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ static int	print_export(t_cmd *cmd)
 		return (1);
 	sort_env(env_array);
 	i = 0;
+	if (write(STDOUT_FILENO, "", 0) == -1)
+		return (1);
 	while (env_array[i])
 	{
 		equal = ft_strchr(env_array[i], '=');

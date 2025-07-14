@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 18:53:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:17:04 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static char	*get_short_pwd(t_mem *gc)
 	char	*short_pwd;
 	char	*cwd;
 
-	cwd = get_cwd();
+	cwd = get_cwd(gc);
 	short_pwd = ft_malloc(gc, 256);
 	if (!cwd || !short_pwd)
-		return (free(cwd), ft_strlcpy(short_pwd, "~", 256), short_pwd);
+		return (ft_strlcpy(short_pwd, "~", 256), short_pwd);
 	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"),
 			ft_strlen(cwd)) == cwd)
 	{
@@ -51,7 +51,6 @@ static char	*get_short_pwd(t_mem *gc)
 	}
 	else
 		ft_strlcpy(short_pwd, cwd, 256);
-	free(cwd);
 	if (ft_strlen(short_pwd) > 28 && ft_strrchr(short_pwd, '/')
 		&& ft_strrchr(short_pwd, '/') != short_pwd)
 	{

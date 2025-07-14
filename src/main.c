@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 19:29:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:22:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,17 @@ static int	get_input(char **line, int exit_code, t_mem *gc)
 	add_history(*line);
 	return (2);
 }
-
+//added sig handler idk its segv currecntly
 static void	minishell(t_mem *gc, t_env *g_env, int *exit_code)
 {
 	t_cmd	*cmd;
 	char	*line;
 	int		input;
+	void	(*old_sigint)(int);
+	void	(*old_sigquit)(int);
 
+	old_sigint = signal(SIGINT, handle_sigint);
+	old_sigquit = signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		input = get_input(&line, *exit_code, gc);
@@ -76,12 +80,11 @@ static void	minishell(t_mem *gc, t_env *g_env, int *exit_code)
 		if (input == 1)
 			continue ;
 		if (g_var == 2)
-		{
-			*exit_code = 130;
-			g_var = 0;
-		}
+			(*exit_code = 130, g_var = 0);
 		signal(SIGINT, SIG_IGN);
 		cmd = parse_input(line, g_env, exit_code, gc);
+		cmd->sigint = old_sigint;
+		cmd->sigquit = old_sigquit;
 		free(line);
 		if (cmd)
 			*exit_code = process_command(cmd);

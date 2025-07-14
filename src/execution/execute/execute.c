@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 19:29:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:21:05 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,6 @@ static int	backup_io(int *in_copy, int *out_copy)
 		*out_copy = dup(STDOUT_FILENO);
 		close(temp_fd);
 	}
-	if (*in_copy == -1 || *out_copy == -1)
-	{
-		if (*in_copy != -1)
-			close(*in_copy);
-		if (*out_copy != -1)
-			close(*out_copy);
-		return (1);
-	}
 	return (0);
 }
 
@@ -85,10 +77,9 @@ int	process_command(t_cmd *cmd)
 {
 	if (builtin(cmd->av[0]) && !cmd->next)
 	{
-		if (backup_io(&cmd->in_copy, &cmd->out_copy))
-			return (our_error("write error: Bad file descriptor\n"));
+		backup_io(&cmd->in_copy, &cmd->out_copy);
 		if (redirection(cmd))
-			return (restore_io(cmd->in_copy, cmd->out_copy), 1);
+			return (restore_io(cmd->in_copy, cmd->out_copy), our_error("redirection failed\n"));
 		cmd->exit_code = exec_builtin(cmd);
 		restore_io(cmd->in_copy, cmd->out_copy);
 	}

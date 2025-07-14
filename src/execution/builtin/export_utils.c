@@ -6,11 +6,40 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 18:11:48 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/03 17:42:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 23:09:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	update_env_export(t_cmd *cmd, const char *key, const char *value)
+{
+	t_env	*current;
+	t_env	*new_var;
+
+	if (!cmd->env || !key || !cmd->gc)
+		return (1);
+	current = cmd->env;
+	while (current)
+	{
+		if (current->var && !ft_strcmp(current->var, key))
+		{
+			if (value)
+				current->content = our_strdup(cmd->gc, value);
+			else
+				current->content = our_strdup(cmd->gc, "");
+			if (!current->content)
+				return (1);
+			return (0);
+		}
+		current = current->next;
+	}
+	new_var = allocate_var(key, value, cmd->gc);
+	if (!new_var)
+		return (1);
+	add_var_back(&cmd->env, new_var);
+	return (0);
+}
 
 static int	var_exists(t_env *env, const char *key)
 {
@@ -53,7 +82,7 @@ static int	update_env_append(t_cmd *cmd, char *key, char *value)
 		}
 		current = current->next;
 	}
-	return (update_env(cmd, key, value));
+	return (update_env_export(cmd, key, value));
 }
 
 static char	*find_key(const char *arg, t_mem *gc)
@@ -81,8 +110,8 @@ void	process_av(t_cmd *cmd, char *arg)
 		if (equal > arg && *(equal - 1) == '+')
 			update_env_append(cmd, key, equal + 1);
 		else
-			update_env(cmd, key, equal + 1);
+			update_env_export(cmd, key, equal + 1);
 	}
 	else if (!var_exists(cmd->env, key))
-		update_env(cmd, key, "");
+		update_env_export(cmd, key, "");
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:38:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:39:32 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:12:09 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ typedef struct s_cmd
 	int				exit_code;
 	int				in_copy;
 	int				out_copy;
+	void			(*sigint)(int);
+	void			(*sigquit)(int);
 	struct s_cmd	*next;
 }	t_cmd;
 

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 19:29:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:05:46 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ t_env	*dup_env(char **env, t_mem *gc);
 t_env	*allocate_var(const char *var, const char *content, t_mem *gc);
 void	add_var_back(t_env **head, t_env *new);
 char	**env_to_array(t_cmd *cmd);
-int		update_env(t_cmd *cmd, const char *key, const char *value);
 
 //built-in cmds
 int		builtin(char *av);
@@ -54,7 +53,8 @@ int		ft_add_ptr(t_mem *manager, void *ptr);
 void	ft_free_all(t_mem *manager);
 
 //utils
-char	*get_cwd(void);
+int		ft_open(const char *pathname, int flags, mode_t mode);
+char	*get_cwd(t_mem *gc);
 char	*create_prompt(t_mem *gc, int exit_code);
 
 //error messages

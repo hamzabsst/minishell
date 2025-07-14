@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 13:26:15 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 00:30:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	builtin_pwd(t_cmd *cmd)
 	char	*cwd;
 	char	*full;
 
-	cwd = get_cwd();
+	cwd = get_cwd(cmd->gc);
 	if (!cwd)
 		return (1);
 	full = our_strjoin(cmd->gc, cwd, "\n");
-	free(cwd);
-	ft_putstr_fd(full, 1);
+	if (ft_putstr_fd(full, 1))
+		return (1);
 	return (0);
 }
 
@@ -70,6 +70,7 @@ int	builtin_echo(t_cmd *cmd)
 	}
 	if (newline)
 		result = our_strjoin(cmd->gc, result, "\n");
-	ft_putstr_fd(result, 1);
+	if (ft_putstr_fd(result, 1))
+		return (1);
 	return (0);
 }
