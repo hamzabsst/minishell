@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:38:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/15 14:39:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:25:40 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct s_data
 	t_mem	*gc;
 }	t_data;
 
-typedef struct s_expand_context
+typedef struct s_expand
 {
 	char	*result;
 	int		i;
@@ -92,6 +92,6 @@ typedef struct s_expand_context
 	int		in_squote;
 	int		in_dquote;
 	int		result_len;
-}	t_expand_context;
+}	t_expand;
 
 #endif
