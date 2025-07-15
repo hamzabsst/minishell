@@ -43,4 +43,8 @@ char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);
 char	*our_strdup(t_mem *gc, const char *s);
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
 
+//Expansion
+char	*expand_string(char *str, t_data *data);
+void	expand_tokens(t_token **tokens, t_data *data);
+
 #endif

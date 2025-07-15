@@ -77,4 +77,11 @@ typedef struct s_split
 	int		len;
 }	t_split;
 
+typedef struct s_data
+{
+	t_env	*env;
+	int		exit_code;
+	t_mem	*gc;
+}	t_data;
+
 #endif

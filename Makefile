@@ -15,6 +15,7 @@ SRCS := src/execution/builtin/echo.c src/execution/builtin/cd.c src/execution/bu
 		src/parsing/quotes/check_quotes.c src/parsing/quotes/syntax_error.c \
 		src/parsing/split/count_token.c src/parsing/split/split.c src/parsing/split/split_utils.c \
 		src/parsing/tokens/parse_cmds.c src/parsing/tokens/parse_redir.c src/parsing/tokens/tokenize.c \
+		src/parsing/expansion.c \
 
 OBJS	= $(SRCS:.c=.o)
 
