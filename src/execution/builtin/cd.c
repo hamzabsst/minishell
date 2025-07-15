@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/15 15:07:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 16:31:11 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ static int	handle_path(t_cmd *cmd)
 	return (0);
 }
 
-//export home= still dont behave like bash
 int	builtin_cd(t_cmd *cmd)
 {
 	char	*oldpwd;

@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc -g
-#remove -g
+CFLAGS	= -Wall -Wextra -Werror -Iinc
+
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a
 
@@ -9,13 +9,12 @@ SRCS := src/execution/builtin/cd.c src/execution/builtin/echo.c src/execution/bu
 		src/execution/builtin/exit.c src/execution/builtin/export.c src/execution/builtin/export_utils.c \
 		src/execution/builtin/unset.c src/execution/execute/childs.c src/execution/execute/env_to_array.c \
 		src/execution/execute/execute.c src/execution/execute/get_cmds.c src/execution/execute/parent.c \
-		src/execution/ft_malloc.c src/execution/redirection/heredoc.c \
+		src/execution/ft_malloc.c src/execution/redirection/heredoc.c src/interface.c src/main.c \
 		src/execution/redirection/heredoc_utils.c src/execution/redirection/redirection.c \
-		src/execution/utils.c src/interface.c src/main.c src/parsing/parsing.c \
-		src/parsing/quotes/check_quotes.c src/parsing/quotes/syntax_error.c \
-		src/parsing/split/count_token.c src/parsing/split/split.c src/parsing/split/split_utils.c \
-		src/parsing/tokens/parse_cmds.c src/parsing/tokens/parse_redir.c src/parsing/tokens/tokenize.c \
-		src/parsing/expand.c src/parsing/expand_len.c src/parsing/expand_utils.c
+		src/execution/utils.c src/parsing/check_quotes.c src/parsing/count_token.c src/parsing/expand.c \
+		src/parsing/expand_len.c src/parsing/expand_utils.c src/parsing/parse_cmds.c \
+		src/parsing/parse_redir.c src/parsing/parsing.c src/parsing/split.c src/parsing/split_utils.c \
+		src/parsing/syntax_error.c src/parsing/tokenize.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -41,7 +40,7 @@ fclean: clean
 	@echo "full clean completed \033[1;31m✔\033[0m"
 
 re: fclean all
-#remove this as well
+
 t: clean all
 	@rm -f $(OBJS)
 	@./valgrindd ./$(NAME)
