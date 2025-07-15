@@ -6,11 +6,40 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:03:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:06:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_open(const char *pathname, int flags, mode_t mode)
+{
+	int	fd;
+	int	temp_fds[20];
+	int	i;
+
+	fd = open(pathname, flags, mode);
+	if (fd == -1)
+		return (-1);
+	if (fd >= 20)
+		return (fd);
+	i = 0;
+	while (fd < 20)
+	{
+		temp_fds[i] = fd;
+		fd = dup(fd);
+		if (fd == -1)
+		{
+			while (--i >= 0)
+				close(temp_fds[i]);
+			return (-1);
+		}
+		i++;
+	}
+	while (--i >= 0)
+		close(temp_fds[i]);
+	return (fd);
+}
 
 int	tmp_to_heredoc(t_cmd *cmd)
 {
@@ -20,7 +49,7 @@ int	tmp_to_heredoc(t_cmd *cmd)
 		return (1);
 	if (cmd->heredoc_processed)
 		return (0);
-	fd = open(cmd->heredoc, O_RDONLY);
+	fd = ft_open(cmd->heredoc, O_RDONLY, 0);
 	if (fd < 0)
 	{
 		unlink(cmd->heredoc);
@@ -74,7 +103,7 @@ static pid_t	get_pid_from_proc(void)
 	int		pid;
 	int		i;
 
-	fd = open("/proc/self/stat", O_RDONLY);
+	fd = ft_open("/proc/self/stat", O_RDONLY, 0);
 	if (fd < 0)
 		return (-1);
 	bytes_read = read(fd, buffer, sizeof(buffer) - 1);

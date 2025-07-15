@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 23:42:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:05:59 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	handle_sigint(int signal)
 	if (signal == SIGINT)
 	{
 		g_var = 2;
-		ft_putstr_fd("\n", 1);
+		ft_write("\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();

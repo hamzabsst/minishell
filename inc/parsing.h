@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:34:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/04 15:47:21 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:04:27 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,12 @@ void	repl_token(t_token **token, t_token *curr, t_token *new, t_token *end);
 char	*our_strjoin(t_mem *gc, char const *s1, char const *s2);
 char	*our_strdup(t_mem *gc, const char *s);
 char	*our_substr(char const *s, unsigned int start, size_t len, t_mem *gc);
+
+//expansion
+int		expand_len(char *str, t_data *data);
+int		get_var_len(char *str, int start);
+char	*get_var_name(char *str, int start, int len, t_mem *gc);
+char	*handle_dollar_sign(char *str, int *i, t_data *data);
+void	expand_tokens(t_token **tokens, t_data *data);
 
 #endif

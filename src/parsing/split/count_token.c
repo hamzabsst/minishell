@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 17:28:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/02 23:41:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:26:22 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ static int	handle_operator(char *s, int *i)
 
 static int	handle_word(char *s, int *i)
 {
-	while (s[*i] && s[*i] != ' ' && s[*i] != '>' && s[*i] != '<'
-		&& s[*i] != '|' && s[*i] != '\'' && s[*i] != '\"')
+	while (s[*i] && s[*i] != ' ' && s[*i] != '\t' && s[*i] != '\n'
+		&& s[*i] != '>' && s[*i] != '<' && s[*i] != '|'
+		&& s[*i] != '\'' && s[*i] != '\"')
 		(*i)++;
 	return (1);
 }
@@ -55,7 +56,7 @@ int	count_token(char *s)
 	count = 0;
 	while (s[i])
 	{
-		while (s[i] == ' ')
+		while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n')
 			i++;
 		if (!s[i])
 			break ;

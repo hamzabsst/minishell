@@ -6,25 +6,35 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 14:38:36 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_write(const char *s, int fd)
+{
+	if (fd < 0 || !s)
+		return (1);
+	if (write(fd, s, ft_strlen(s)) == -1)
+	{
+		write(2, "write error: Bad file descriptor\n", 33);
+		return (1);
+	}
+	return (0);
+}
 
 int	builtin_pwd(t_cmd *cmd)
 {
 	char	*cwd;
 	char	*full;
 
-	cwd = malloc(1024);
-	if (cwd != NULL)
-		getcwd(cwd, 1024);
+	cwd = get_cwd(cmd->gc);
 	if (!cwd)
-		return (our_error("pwd: getcwd failed\n"));
+		return (1);
 	full = our_strjoin(cmd->gc, cwd, "\n");
-	free(cwd);
-	ft_putstr_fd(full, 1);
+	if (ft_write(full, 1))
+		return (1);
 	return (0);
 }
 
@@ -72,6 +82,7 @@ int	builtin_echo(t_cmd *cmd)
 	}
 	if (newline)
 		result = our_strjoin(cmd->gc, result, "\n");
-	ft_putstr_fd(result, 1);
+	if (ft_write(result, 1))
+		return (1);
 	return (0);
 }

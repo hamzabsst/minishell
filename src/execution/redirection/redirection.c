@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:26:00 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:12:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:06:39 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	valid_input(t_cmd *cmd)
 	i = 0;
 	while (cmd->infiles[i])
 	{
-		fd = open(cmd->infiles[i], O_RDONLY);
+		fd = open(cmd->infiles[i], O_RDONLY, 0);
 		if (fd == -1)
 		{
 			ft_error(cmd->infiles[i], strerror(errno), cmd->gc);
@@ -69,7 +69,7 @@ static int	input_redir(t_cmd *cmd)
 	while (cmd->infiles[last])
 		last++;
 	last--;
-	fd = open(cmd->infiles[last], O_RDONLY);
+	fd = ft_open(cmd->infiles[last], O_RDONLY, 0);
 	if (fd == -1)
 	{
 		ft_error(cmd->infiles[last], strerror(errno), cmd->gc);
@@ -96,7 +96,7 @@ static int	output_redir(t_cmd *cmd)
 		flags = O_WRONLY | O_CREAT | O_APPEND;
 	else
 		flags = O_WRONLY | O_CREAT | O_TRUNC;
-	fd = open(cmd->outfiles[last], flags, 0644);
+	fd = ft_open(cmd->outfiles[last], flags, 0644);
 	if (fd == -1)
 	{
 		ft_error(cmd->outfiles[last], strerror(errno), cmd->gc);

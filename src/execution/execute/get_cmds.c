@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 10:02:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:25:52 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/13 21:19:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,45 +23,53 @@ static char	**get_path(char **env)
 		return (NULL);
 	return (ft_split(env[i] + 5, ':'));
 }
-//this need to be rechecked
 
 static char	*find_in_paths(char *av, char **paths, t_mem *gc)
 {
-	char	*full;
-	int		i;
-	char	*path;
+	struct stat	file;
+	char		*full;
+	char		*path;
+	int			i;
 
-	i = 0;
+	i = -1;
 	path = NULL;
-	while (paths && paths[i])
+	while (paths && paths[++i])
 	{
 		full = ft_malloc(gc, ft_strlen(paths[i]) + ft_strlen(av) + 2);
 		if (!full)
 			return (NULL);
 		ft_strcpy(full, paths[i]);
-		ft_strcat(full, "/");
-		ft_strcat(full, av);
-		if (access(full, F_OK) == 0)
+		(ft_strcat(full, "/"), ft_strcat(full, av));
+		if (!access(full, F_OK))
 		{
-			if (access(full, X_OK) == 0)
+			if (!stat(full, &file) && S_ISDIR(file.st_mode))
+				continue ;
+			if (!access(full, X_OK))
 				return (our_strdup(gc, full));
 			if (path == NULL)
 				path = full;
 		}
-		i++;
 	}
 	return (path);
 }
 
 static char	*handle_absolute_path(t_cmd *cmd)
 {
-	if (access(cmd->av[0], F_OK) != 0)
+	struct stat	file_stat;
+
+	if (!stat(cmd->av[0], &file_stat) && S_ISDIR(file_stat.st_mode))
+	{
+		ft_error(cmd->av[0], "Is a directory", cmd->gc);
+		cmd->exit_code = 126;
+		return (NULL);
+	}
+	if (access(cmd->av[0], F_OK))
 	{
 		ft_error(cmd->av[0], strerror(errno), cmd->gc);
 		cmd->exit_code = 127;
 		return (NULL);
 	}
-	if (access(cmd->av[0], X_OK) == 0)
+	if (!access(cmd->av[0], X_OK))
 		return (our_strdup(cmd->gc, cmd->av[0]));
 	else
 	{
@@ -73,7 +81,15 @@ static char	*handle_absolute_path(t_cmd *cmd)
 
 static char	*check_permission(t_cmd *cmd, char *resolved)
 {
-	if (access(resolved, X_OK) != 0)
+	struct stat	file;
+
+	if (!stat(resolved, &file) && S_ISDIR(file.st_mode))
+	{
+		ft_error(cmd->av[0], "Is a directory", cmd->gc);
+		cmd->exit_code = 126;
+		return (NULL);
+	}
+	if (access(resolved, X_OK))
 	{
 		ft_error(cmd->av[0], strerror(errno), cmd->gc);
 		cmd->exit_code = 126;

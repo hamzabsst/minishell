@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 10:51:14 by abchaman          #+#    #+#             */
-/*   Updated: 2025/07/02 23:25:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:09:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static char	*simple_word(t_split *s)
 
 	start = s->i;
 	i = s->i;
-	while (s->line[i] && s->line[i] != ' ' && s->line[i] != '\"'
-		&& s->line[i] != '\'' && s->line[i] != '>' && s->line[i] != '<'
-		&& s->line[i] != '|')
+	while (s->line[i] && s->line[i] != ' ' && s->line[i] != '\t'
+		&& s->line[i] != '\n' && s->line[i] != '\"' && s->line[i] != '\''
+		&& s->line[i] != '>' && s->line[i] != '<' && s->line[i] != '|')
 		i++;
 	s->to_join = (s->line[i] == '\'' || s->line[i] == '\"');
 	s->last = i - start;
@@ -102,7 +102,9 @@ char	**mysplit(t_parse *data)
 		return (NULL);
 	while (split->i < split->len && split->line[split->i])
 	{
-		while (split->line[split->i] == ' ')
+		while (split->line[split->i] == ' '
+			|| split->line[split->i] == '\t'
+			|| split->line[split->i] == '\n')
 		{
 			split->i++;
 			split->to_join = 0;

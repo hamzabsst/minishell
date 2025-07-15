@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:08:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_error(const char *prefix, const char *error, t_mem *gc)
 		ft_strlcat(complete_msg, error, total_len + 1);
 		ft_strlcat(complete_msg, "\n", total_len + 1);
 	}
-	ft_putstr_fd(complete_msg, 2);
+	ft_write(complete_msg, 2);
 	return (1);
 }
 
@@ -39,10 +39,10 @@ static char	*get_short_pwd(t_mem *gc)
 	char	*short_pwd;
 	char	*cwd;
 
-	cwd = getcwd(NULL, 0);
+	cwd = get_cwd(gc);
 	short_pwd = ft_malloc(gc, 256);
 	if (!cwd || !short_pwd)
-		return (free(cwd), ft_strlcpy(short_pwd, "~", 256), short_pwd);
+		return (ft_strlcpy(short_pwd, "~", 256), short_pwd);
 	if (getenv("HOME") && ft_strnstr(cwd, getenv("HOME"),
 			ft_strlen(cwd)) == cwd)
 	{
@@ -51,7 +51,6 @@ static char	*get_short_pwd(t_mem *gc)
 	}
 	else
 		ft_strlcpy(short_pwd, cwd, 256);
-	free(cwd);
 	if (ft_strlen(short_pwd) > 28 && ft_strrchr(short_pwd, '/')
 		&& ft_strrchr(short_pwd, '/') != short_pwd)
 	{
@@ -108,7 +107,7 @@ char	*create_prompt(t_mem *gc, int exit_code)
 	ft_strlcat(prompt, "\n", 1024);
 	if (exit_code == 0)
 		add_color(prompt, BOLD_GREEN, 1024);
-	else if (exit_code <= 128)
+	else
 		add_color(prompt, BOLD_RED, 1024);
 	ft_strlcat(prompt, "\001➜\002 \x7f", 1024);
 	add_color(prompt, RESET, 1024);

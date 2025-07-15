@@ -83,6 +83,8 @@ int	parse_redir(t_token **tokens, t_cmd *current)
 	}
 	else if (!ft_strcmp((*tokens)->type, "REDIRECTION_IN"))
 	{
+		current->heredoc = NULL;
+		current->delimiter = NULL;
 		*tokens = (*tokens)->next;
 		if (*tokens)
 			add_infile(current, (*tokens)->content);
@@ -92,12 +94,12 @@ int	parse_redir(t_token **tokens, t_cmd *current)
 	return (1);
 }
 
-//fix here_doc and infiles priority
 int	parse_heredoc(t_token **tokens, t_cmd *current, int *count, int *exit_code)
 {
 	*tokens = (*tokens)->next;
 	if (*tokens && !ft_strcmp((*tokens)->type, "DELIMITER"))
 	{
+		current->infiles = NULL;
 		current->delimiter = (*tokens)->content;
 		current->heredoc = heredoc(current, count, exit_code);
 		if (!current->heredoc)
