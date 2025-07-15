@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 21:34:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 00:17:04 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_error(const char *prefix, const char *error, t_mem *gc)
 		ft_strlcat(complete_msg, error, total_len + 1);
 		ft_strlcat(complete_msg, "\n", total_len + 1);
 	}
-	ft_putstr_fd(complete_msg, 2);
+	ft_write(complete_msg, 2);
 	return (1);
 }
 

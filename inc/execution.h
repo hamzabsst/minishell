@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:35:14 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 00:05:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:49:10 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int		ft_add_ptr(t_mem *manager, void *ptr);
 void	ft_free_all(t_mem *manager);
 
 //utils
+int		ft_write(const char *s, int fd);
 int		ft_open(const char *pathname, int flags, mode_t mode);
 char	*get_cwd(t_mem *gc);
 char	*create_prompt(t_mem *gc, int exit_code);

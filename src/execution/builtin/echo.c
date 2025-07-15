@@ -6,11 +6,23 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:57:03 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 00:30:57 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_write(const char *s, int fd)
+{
+	if (fd < 0 || !s)
+		return (1);
+	if (write(fd, s, ft_strlen(s)) == -1)
+	{
+		write(2, "write error: Bad file descriptor\n", 33);
+		return (1);
+	}
+	return (0);
+}
 
 int	builtin_pwd(t_cmd *cmd)
 {
@@ -21,7 +33,7 @@ int	builtin_pwd(t_cmd *cmd)
 	if (!cwd)
 		return (1);
 	full = our_strjoin(cmd->gc, cwd, "\n");
-	if (ft_putstr_fd(full, 1))
+	if (ft_write(full, 1))
 		return (1);
 	return (0);
 }
@@ -70,7 +82,7 @@ int	builtin_echo(t_cmd *cmd)
 	}
 	if (newline)
 		result = our_strjoin(cmd->gc, result, "\n");
-	if (ft_putstr_fd(result, 1))
+	if (ft_write(result, 1))
 		return (1);
 	return (0);
 }

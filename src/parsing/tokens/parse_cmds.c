@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:25:09 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 17:58:25 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:33:59 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	init_cmds(t_cmd *cmd, t_parse *data, int exit_code)
 	cmd->exit_code = exit_code;
 	cmd->in_copy = -1;
 	cmd->out_copy = -1;
-	cmd->sigint = NULL;
-	cmd->sigquit = NULL;
 	cmd->next = NULL;
 }
 

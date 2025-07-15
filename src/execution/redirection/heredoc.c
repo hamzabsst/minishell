@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:25:52 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 17:31:28 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	handle_heredoc_sigint(int sig)
 {
 	(void)sig;
 	g_var = 2;
-	ft_putstr_fd("\n", 1);
+	ft_write("\n", 1);
 	close(STDIN_FILENO);
 }
 

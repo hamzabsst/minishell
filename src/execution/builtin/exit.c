@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 09:51:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/07 15:10:10 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	builtin_exit(t_cmd *cmd)
 	unsigned long long	exit_code_ll;
 
 	if (!cmd->forked)
-		ft_putstr_fd("exit\n", 2);
+		ft_write("exit\n", 2);
 	if (!cmd->av[1])
 		cleanup_and_exit(cmd);
 	exit_code_ll = ft_atoll(cmd->av[1]);

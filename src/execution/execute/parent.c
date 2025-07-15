@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 10:57:53 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 18:43:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@ static void	setup_signals(int *status, int sig)
 	if (sig == SIGINT)
 	{
 		*status = 130;
-		ft_putstr_fd("\n", 1);
+		ft_write("\n", 1);
 	}
 	else if (sig == SIGQUIT)
 	{
 		*status = 131;
-		ft_putstr_fd("Quit (core dumped)\n", 1);
+		ft_write("Quit (core dumped)\n", 1);
 	}
 	else if (sig == SIGSEGV)
 	{
 		*status = 139;
-		ft_putstr_fd("Segmentation fault (core dumped)\n", 1);
+		ft_write("Segmentation fault (core dumped)\n", 1);
 	}
 	else
 		*status = 128 + sig;
