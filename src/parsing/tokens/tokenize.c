@@ -12,6 +12,46 @@
 
 #include "minishell.h"
 
+void	add_token(t_token **start, char *content, const char *type, t_mem *gc)
+{
+	t_token	*new;
+	t_token	*current;
+
+	new = ft_malloc(gc, sizeof(t_token));
+	if (!new)
+		return ;
+	new->content = content;
+	new->type = our_strdup(gc, type);
+	new->next = NULL;
+	if (!*start)
+	{
+		*start = new;
+		return ;
+	}
+	current = *start;
+	while (current->next)
+		current = current->next;
+	current->next = new;
+}
+
+void	repl_token(t_token **tokens, t_token *curr, t_token *new, t_token *end)
+{
+	t_token	*tmp;
+
+	tmp = *tokens;
+	if (*tokens == curr)
+		*tokens = new;
+	else
+	{
+		while (tmp && tmp->next != curr)
+			tmp = tmp->next;
+		if (tmp)
+			tmp->next = new;
+	}
+	if (end)
+		end->next = curr->next;
+}
+
 static void	add_token_back(t_token **head, t_token *new)
 {
 	t_token	*tmp;

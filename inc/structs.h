@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:38:23 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 18:34:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 14:39:03 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,22 @@ typedef struct s_split
 	int		j;
 	int		len;
 }	t_split;
+
+typedef struct s_data
+{
+	t_env	*env;
+	int		exit_code;
+	t_mem	*gc;
+}	t_data;
+
+typedef struct s_expand_context
+{
+	char	*result;
+	int		i;
+	int		j;
+	int		in_squote;
+	int		in_dquote;
+	int		result_len;
+}	t_expand_context;
 
 #endif

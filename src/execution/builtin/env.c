@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 18:50:26 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 18:19:57 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:07:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	add_var_back(t_env **head, t_env *new)
 	tmp->next = new;
 }
 
+//changed here empty string to NULL idk if its the rright choice
 t_env	*allocate_var(const char *var, const char *content, t_mem *gc)
 {
 	t_env	*new;
@@ -47,7 +48,6 @@ t_env	*allocate_var(const char *var, const char *content, t_mem *gc)
 		new->content = our_strdup(gc, content);
 	else
 		new->content = NULL;
-	//changed here empty string to NULL idk if its the rright choice
 	new->next = NULL;
 	return (new);
 }

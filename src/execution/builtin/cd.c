@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 18:19:10 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:07:02 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_cwd(t_mem *gc)
 	return (cwd);
 }
 
-static char	*ft_getenv(t_env *env, const char *key)
+char	*ft_getenv(t_env *env, const char *key)
 {
 	t_env	*current;
 
@@ -74,6 +74,7 @@ static int	handle_path(t_cmd *cmd)
 		return (our_error("cd: too many arguments\n"));
 	return (0);
 }
+
 //export home= still dont behave like bash
 int	builtin_cd(t_cmd *cmd)
 {
@@ -92,7 +93,8 @@ int	builtin_cd(t_cmd *cmd)
 		if (!path)
 			return (our_error("cd: HOME not set\n"));
 	}
-	path = cmd->av[1];
+	else
+		path = cmd->av[1];
 	if (chdir(path) == -1)
 		return (ft_error(path, strerror(errno), cmd->gc));
 	if (update_env(cmd, "OLDPWD", oldpwd) != 0)

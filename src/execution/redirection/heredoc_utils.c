@@ -6,11 +6,40 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 15:03:27 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 00:07:07 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:06:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_open(const char *pathname, int flags, mode_t mode)
+{
+	int	fd;
+	int	temp_fds[20];
+	int	i;
+
+	fd = open(pathname, flags, mode);
+	if (fd == -1)
+		return (-1);
+	if (fd >= 20)
+		return (fd);
+	i = 0;
+	while (fd < 20)
+	{
+		temp_fds[i] = fd;
+		fd = dup(fd);
+		if (fd == -1)
+		{
+			while (--i >= 0)
+				close(temp_fds[i]);
+			return (-1);
+		}
+		i++;
+	}
+	while (--i >= 0)
+		close(temp_fds[i]);
+	return (fd);
+}
 
 int	tmp_to_heredoc(t_cmd *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:59:49 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 18:48:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:05:59 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,34 +47,6 @@ static void	handle_sigint(int signal)
 	}
 }
 
-/* static int	get_input(char **line, int exit_code, t_mem *gc)
-{
-	g_var = 0;
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	if (isatty(STDIN_FILENO))
-	{
-		rl_outstream = stderr;
-		*line = readline(create_prompt(gc, exit_code));
-		if (!*line)
-			return (write(1, "exit\n", 5), 0);
-		if (!**line)
-			return (free(*line), 1);
-		add_history(*line);
-	}
-	else
-	{
-		*line = get_next_line(STDIN_FILENO);
-		if (*line)
-			return (0);
-		// if (ft_strlen(*line) > 0 && (*line)[ft_strlen(*line) - 1] == '\n')
-		// 	(*line)[ft_strlen(*line) - 1] = '\0';
-		if (!**line)
-			return (free(*line), 1);
-	}
-	return (2);
-} */
-
 static int	get_input(char **line, int exit_code, t_mem *gc)
 {
 	g_var = 0;
@@ -89,7 +61,7 @@ static int	get_input(char **line, int exit_code, t_mem *gc)
 	add_history(*line);
 	return (2);
 }
-//added sig handler idk its segv currecntly
+
 static void	minishell(t_mem *gc, t_env *g_env, int *exit_code)
 {
 	t_cmd	*cmd;
@@ -104,7 +76,10 @@ static void	minishell(t_mem *gc, t_env *g_env, int *exit_code)
 		if (input == 1)
 			continue ;
 		if (g_var == 2)
-			(*exit_code = 130, g_var = 0);
+		{
+			*exit_code = 130;
+			g_var = 0;
+		}
 		signal(SIGINT, SIG_IGN);
 		cmd = parse_input(line, g_env, exit_code, gc);
 		free(line);

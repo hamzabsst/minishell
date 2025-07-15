@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:12:35 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/14 18:21:05 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:08:40 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	process_command(t_cmd *cmd)
 	{
 		backup_io(&cmd->in_copy, &cmd->out_copy);
 		if (redirection(cmd))
-			return (restore_io(cmd->in_copy, cmd->out_copy), our_error("redirection failed\n"));
+			return (restore_io(cmd->in_copy, cmd->out_copy), 1);
 		cmd->exit_code = exec_builtin(cmd);
 		restore_io(cmd->in_copy, cmd->out_copy);
 	}
