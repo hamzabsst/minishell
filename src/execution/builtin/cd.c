@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/16 14:07:22 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/16 20:39:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,9 @@ char	*get_cwd(t_mem *gc)
 		return (NULL);
 	if (!getcwd(cwd, PATH_MAX))
 	{
-		if (errno == ENOENT)
-		{
-			write(2, "minishell: current directory was deleted\n", 42);
-			if (chdir("/") == 0 && getcwd(cwd, PATH_MAX))
-				return (cwd);
-		}
-		return (NULL);
+		our_error("minishell: current directory was deleted\n");
+		if (chdir("/home") == 0 && getcwd(cwd, PATH_MAX))
+			return (cwd);
 	}
 	return (cwd);
 }
