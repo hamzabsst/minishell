@@ -1,6 +1,6 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror -Iinc -g
+CFLAGS	= -Iinc -g
 #remove -g
 MYLIB_DIR	= mylib
 MYLIB		= $(MYLIB_DIR)/myLib.a

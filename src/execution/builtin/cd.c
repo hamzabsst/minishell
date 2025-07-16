@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/15 15:07:02 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/16 18:43:13 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@ char	*get_cwd(t_mem *gc)
 	if (!cwd)
 		return (NULL);
 	if (!getcwd(cwd, PATH_MAX))
+	{
+		if (chdir("/home") == 0)
+		{
+			ft_strcpy(cwd, "/home");
+			return (cwd);
+		}
 		return (NULL);
+	}
 	return (cwd);
 }
 
