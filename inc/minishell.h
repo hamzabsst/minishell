@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:48:57 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 19:34:08 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 18:09:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # define BOLD_CYAN	"\033[1;36m"
 # define BOLD_GREEN	"\033[1;32m"
 # define BOLD_RED	"\033[1;31m"
-
 # include "../mylib/myLib.h"
 # include <stdbool.h>
 # include <signal.h>
