@@ -20,7 +20,15 @@ char	*get_cwd(t_mem *gc)
 	if (!cwd)
 		return (NULL);
 	if (!getcwd(cwd, PATH_MAX))
+	{
+		if (errno == ENOENT)
+		{
+			write(2, "minishell: current directory was deleted\n", 42);
+			if (chdir("/") == 0 && getcwd(cwd, PATH_MAX))
+				return (cwd);
+		}
 		return (NULL);
+	}
 	return (cwd);
 }
 
