@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 18:11:48 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/13 23:09:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/08/02 17:03:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	update_env_append(t_cmd *cmd, char *key, char *value)
 		{
 			old = current->content;
 			if (old)
-				new = ft_strjoin(old, value);
+				new = our_strjoin(cmd->gc, old, value);
 			else
 				new = our_strdup(cmd->gc, value);
 			if (!new)
