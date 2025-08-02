@@ -31,7 +31,10 @@ int	builtin_pwd(t_cmd *cmd)
 
 	cwd = get_cwd(cmd->gc);
 	if (!cwd)
+	{
+		write(2, "pwd: error retrieving current directory\n", 40);
 		return (1);
+	}
 	full = our_strjoin(cmd->gc, cwd, "\n");
 	if (ft_write(full, 1))
 		return (1);

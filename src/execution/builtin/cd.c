@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:35:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/16 18:43:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/16 20:39:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,9 @@ char	*get_cwd(t_mem *gc)
 		return (NULL);
 	if (!getcwd(cwd, PATH_MAX))
 	{
-		if (chdir("/home") == 0)
-		{
-			ft_strcpy(cwd, "/home");
+		our_error("minishell: current directory was deleted\n");
+		if (chdir("/home") == 0 && getcwd(cwd, PATH_MAX))
 			return (cwd);
-		}
-		return (NULL);
 	}
 	return (cwd);
 }
@@ -82,7 +79,6 @@ static int	handle_path(t_cmd *cmd)
 	return (0);
 }
 
-//export home= still dont behave like bash
 int	builtin_cd(t_cmd *cmd)
 {
 	char	*oldpwd;

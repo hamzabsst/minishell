@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 13:43:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/07/15 15:12:33 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:25:36 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	process_quotes(char *str, t_expand_context *ctx)
+static void	process_quotes(char *str, t_expand *ctx)
 {
 	if (str[ctx->i] == '\'' && !ctx->in_dquote)
 	{
@@ -26,7 +26,7 @@ static void	process_quotes(char *str, t_expand_context *ctx)
 	}
 }
 
-static void	process_character(char *str, t_expand_context *ctx, t_data *data)
+static void	process_character(char *str, t_expand *ctx, t_data *data)
 {
 	char	*expanded;
 	int		i;
@@ -54,11 +54,11 @@ static void	process_character(char *str, t_expand_context *ctx, t_data *data)
 		ctx->result[ctx->j++] = str[ctx->i++];
 }
 
-static t_expand_context	*init_expand_context(char *str, t_data *data)
+static t_expand	*init_expand(char *str, t_data *data)
 {
-	t_expand_context	*ctx;
+	t_expand	*ctx;
 
-	ctx = ft_malloc(data->gc, sizeof(t_expand_context));
+	ctx = ft_malloc(data->gc, sizeof(t_expand));
 	if (!ctx)
 		return (NULL);
 	ctx->result_len = expand_len(str, data);
@@ -74,9 +74,9 @@ static t_expand_context	*init_expand_context(char *str, t_data *data)
 
 static char	*expand_vars(char *str, t_data *data)
 {
-	t_expand_context	*ctx;
+	t_expand	*ctx;
 
-	ctx = init_expand_context(str, data);
+	ctx = init_expand(str, data);
 	if (!ctx)
 		return (NULL);
 	while (str[ctx->i])
